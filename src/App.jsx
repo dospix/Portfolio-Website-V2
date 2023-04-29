@@ -7,9 +7,9 @@ function App() {
     <div className="App">
     <>
       <DarkModeSlider />
-      <div className='text-center'>
-        <h1>Hello, I'm Dospinescu Daniel</h1>
-        <h2>A python programmer who enjoys problem solving</h2>
+      <div className='mt-10 text-center'>
+        <h1 className='text-2xl font-semibold'>Hello, I'm Dospinescu Daniel</h1>
+        <h2 className='mt-3 font-extralight' >I am a programmer that uses Python and JavaScript</h2>
       </div>
     </>
     </div>

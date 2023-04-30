@@ -9,6 +9,10 @@ function App() {
     <>
       <DarkModeSlider />
       <PageTitle />
+      <div className='mt-20 flex flex-col items-center justify-items-center'>
+        <h1 className='text-2xl font-semibold'>Personal Projects</h1>
+        <div className='mt-1 h-0.5 w-20 bg-blue-400'></div>
+      </div>
     </>
     </div>
   )

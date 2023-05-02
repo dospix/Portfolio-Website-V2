@@ -4,7 +4,20 @@ import PageTitle from './components/PageTitle'
 import projects from './Projects'
 
 function App() {
-  const projectsHTML = projects.map(project => <h1 className='mt-10' key={project.key}>{project.name}</h1>)
+  const projectsHTML = projects.map(project => (
+    <div className='flex mt-20 mx-20 items-center justify-center' key={project.key}>
+      <div className='w-2/3 h-full'>
+        <h1>{project.name}</h1>
+        <p>{project.description}</p>
+        <div className='border-black'>
+          <h2>View Project</h2>
+        </div>
+      </div>
+      <div className='w-1/3 bg-black'>
+        <h1>hellooo</h1>
+      </div>
+    </div>
+  ))
 
   return (
     <div className="App">

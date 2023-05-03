@@ -5,7 +5,7 @@ import projects from './Projects'
 
 function App() {
   const projectsHTML = projects.map(project => (
-    <div className='flex mt-20 mx-20 items-center justify-center' key={project.key}>
+    <div className='flex mt-20 mx-96 items-center justify-center' key={project.key}>
       <div className='w-2/3 h-full'>
         <h1>{project.name}</h1>
         <p>{project.description}</p>
@@ -13,8 +13,8 @@ function App() {
           <h2>View Project</h2>
         </div>
       </div>
-      <div className='w-1/3 bg-black'>
-        <h1>hellooo</h1>
+      <div className='w-1/3'>
+        <img src={project.image} alt='machine learning' />
       </div>
     </div>
   ))

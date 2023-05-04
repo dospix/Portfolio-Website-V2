@@ -5,7 +5,7 @@ import projects from './Projects'
 
 function App() {
   const projectsHTML = projects.map(project => (
-    <div className='flex mt-20 mx-96 items-center justify-center' key={project.key}>
+    <div className={`flex mt-20 mx-96 items-center justify-center ${project.key % 2 == 1 ? "flex-row-reverse" : ""}`} key={project.key}>
       <div className='w-2/3 h-full'>
         <h1>{project.name}</h1>
         <p>{project.description}</p>

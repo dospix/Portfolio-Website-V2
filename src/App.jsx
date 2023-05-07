@@ -2,6 +2,7 @@ import { useState } from 'react'
 import DarkModeSlider from './components/DarkModeSlider'
 import PageTitle from './components/PageTitle'
 import projects from './Projects'
+import Footer from './components/Footer'
 
 function App() {
   const projectsHTML = projects.map(project => (
@@ -14,7 +15,7 @@ function App() {
         </div>
       </div>
       <div className='w-1/3'>
-        <img src={project.image} alt='machine learning' />
+        <img src={project.image} className='h-48' alt='machine learning' />
       </div>
     </div>
   ))
@@ -31,6 +32,7 @@ function App() {
       <div className='mt-20 text-center'>
         {projectsHTML}
       </div>
+      <Footer />
     </>
     </div>
   )

@@ -1,9 +1,16 @@
+import { useState } from 'react'
 import DarkModeSlider from './components/DarkModeSlider'
 import PageTitle from './components/PageTitle'
 import projects from './Projects'
 import Footer from './components/Footer'
 
 function App() {
+  const [darkMode, setDarkMode] = useState(false)
+
+  function handleDarkMode(){
+    setDarkMode((prevState) => !prevState)
+  }
+
   const projectsHTML = projects.map(project => (
     <div className={`h-56 flex items-center justify-center rounded-xl shadow-md shadow-gray-300 hover:shadow-lg hover:shadow-gray-300 mt-20 mx-96 ${project.key % 2 == 1 ? "flex-row-reverse" : ""}`} key={project.key}>
       <div className='w-2/3 h-full'>
@@ -20,9 +27,9 @@ function App() {
   ))
 
   return (
-    <div className="App">
+    <div className={`App absolute ${darkMode ? "bg-zinc-900 text-white" : ""}`}>
     <>
-      <DarkModeSlider />
+      <DarkModeSlider onDarkMode={handleDarkMode}/>
       <PageTitle />
       <div className='mt-16 flex flex-col items-center justify-items-center'>
         <h1 className='text-3xl font-semibold'>Personal Projects</h1>

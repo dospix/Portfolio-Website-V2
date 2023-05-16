@@ -12,7 +12,7 @@ function App() {
   }
 
   const projectsHTML = projects.map(project => (
-    <div className={`h-56 flex items-center justify-center rounded-xl shadow-md shadow-gray-300 hover:shadow-lg hover:shadow-gray-300 mt-20 mx-96 ${project.key % 2 == 1 ? "flex-row-reverse" : ""}`} key={project.key}>
+    <div className={`h-56 flex items-center justify-center rounded-xl shadow-[0_2px_10px_0_rgba(0,0,0,0.3)] hover:shadow-[0_2px_15px_0_rgba(0,0,0,0.3)] ${darkMode? "shadow-blue-500 hover:shadow-blue-500" : ""} mt-20 mx-96 ${project.key % 2 == 1 ? "flex-row-reverse" : ""}`} key={project.key}>
       <div className='w-2/3 h-full'>
         <h1 className='text-lg mt-4 font-semibold'>{project.name}</h1>
         <p className='mt-8'>{project.description}</p>

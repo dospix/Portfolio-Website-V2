@@ -1,7 +1,7 @@
-import blue_sun from "../assets/images/more-blue-sun.png"
-import gray_sun from "../assets/images/sun-75.png"
-import blue_moon from "../assets/images/more-blue-moon.png"
-import gray_moon from "../assets/images/more-gray-moon.png"
+import blue_sun from "../assets/images/blue-sun.png"
+import gray_sun from "../assets/images/gray-sun.png"
+import blue_moon from "../assets/images/blue-moon.png"
+import gray_moon from "../assets/images/gray-moon.png"
 
 export default function DarkModeSlider(props){
     return (

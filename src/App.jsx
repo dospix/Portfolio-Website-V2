@@ -38,7 +38,7 @@ function App() {
       <div className='mt-20 text-center'>
         {projectsHTML}
       </div>
-      <Footer />
+      <Footer isDarkMode={darkMode} />
     </>
     </div>
   )

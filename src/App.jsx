@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import DarkModeSlider from './components/DarkModeSlider'
-import PageTitle from './components/PageTitle'
+import PageTitles from './components/PageTitles'
 import projects from './Projects'
 import Footer from './components/Footer'
 
@@ -30,11 +30,7 @@ function App() {
     <div className={`App absolute ${darkMode ? "bg-zinc-900 text-white" : ""}`}>
     <>
       <DarkModeSlider onDarkMode={handleDarkMode} isDarkMode={darkMode}/>
-      <PageTitle />
-      <div className='mt-16 flex flex-col items-center justify-items-center'>
-        <h1 className="text-3xl font-Montserrat">Personal Projects</h1>
-        <div className='mt-1 h-0.5 w-20 bg-blue-500'></div>
-      </div>
+      <PageTitles />
       <div className='mt-20 text-center'>
         {projectsHTML}
       </div>

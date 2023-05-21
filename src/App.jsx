@@ -16,8 +16,8 @@ function App() {
       <div className='w-2/3 h-full'>
         <h1 className='2xl:mt-6 lg:mt-4 h-1/6 text-lg font-semibold font-Montserrat'>{project.name}</h1>
         <p className='mt-4 h-2/6 font-Open_Sans'>{project.description}</p>
-        <div className='2xl:mt-3 mx-auto w-28 rounded-xl outline outline-offset-8 outline-1 outline-gray-600 hover:outline-2 hover:outline-blue-500 hover:cursor-pointer'>
-          <h2 className='2xl:text-[0.9rem] font-Montserrat'>View Project</h2>
+        <div className='2xl:mt-1 mx-auto w-36 rounded-xl outline outline-offset-8 outline-1 outline-gray-600 hover:outline-2 hover:outline-blue-500 hover:cursor-pointer'>
+          <h2 className='text-lg font-Montserrat'>View Project</h2>
         </div>
       </div>
       <div className='w-1/3 h-full'>

@@ -1,7 +1,7 @@
 export default function PageTitles(){
     return (
         <>
-            <div className='2xl:mt-10 lg:mt-4 text-center'>
+            <div className='2xl:mt-14 lg:mt-4 text-center'>
                 <h1 className='text-2xl font-semibold font-Montserrat'>Hello, I'm Dospinescu Daniel</h1>
                 <h2 className='mt-3 font-light font-Open_Sans'>I am a programmer that uses Python and JavaScript</h2>
             </div>

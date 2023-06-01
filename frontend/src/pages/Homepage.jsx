@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from "react-router-dom"
 import DarkModeSlider from '../components/DarkModeSlider'
 import PageTitles from '../components/PageTitles'
 import projects from '../Projects'
@@ -17,7 +18,7 @@ export default function Homepage() {
           <h1 className='2xl:mt-6 lg:mt-4 sm:mt-4 mt-2 h-1/6 sm:text-lg text-xs font-semibold font-Montserrat'>{project.name}</h1>
           <p className='sm:mt-4 mt-2 h-2/6 sm:text-base text-xs font-Open_Sans'>{project.description}</p>
           <div className='2xl:mt-1 sm:mt-1 mt-3 mx-auto sm:w-36 w-24 rounded-xl outline sm:outline-offset-8 outline-offset-4 outline-1 outline-gray-600 hover:outline-2 hover:outline-blue-500 hover:cursor-pointer'>
-            <h2 className='sm:text-lg text-sm font-Montserrat'>View Project</h2>
+            <Link to={project.path}><h2 className='sm:text-lg text-sm font-Montserrat'>View Project</h2></Link>
           </div>
         </div>
         <div className='w-1/3 h-full'>
@@ -28,14 +29,12 @@ export default function Homepage() {
   
     return (
       <div className={`App absolute w-full ${darkMode ? "bg-zinc-900 text-white" : ""}`}>
-      <>
         <DarkModeSlider onDarkMode={handleDarkMode} isDarkMode={darkMode}/>
         <PageTitles />
         <div className='2xl:mt-20 lg:mt-10 sm:mt-10 mt-10 text-center'>
           {projectsHTML}
         </div>
         <Footer isDarkMode={darkMode} />
-      </>
       </div>
     )
 }

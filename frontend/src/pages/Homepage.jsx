@@ -1,16 +1,9 @@
-import { useState } from 'react'
 import { Link } from "react-router-dom"
-import DarkModeSlider from '../components/DarkModeSlider'
 import PageTitles from '../components/PageTitles'
 import projects from '../Projects'
-import Footer from '../components/Footer'
 
 export default function Homepage() {
-    const [darkMode, setDarkMode] = useState(false)
-
-    function handleDarkMode(){
-      setDarkMode((prevState) => !prevState)
-    }
+    let darkMode = localStorage.getItem("darkMode") ? Boolean(localStorage.getItem("darkMode")) : false
   
     const projectsHTML = projects.map(project => (
       <div className={`2xl:mt-20 lg:mt-10 sm:mt-10 mt-10 mx-auto 2xl:h-56 lg:h-44 sm:h-52 h-32 2xl:w-1/2 sm:w-3/4 w-5/6 flex items-center justify-center rounded-xl shadow-[0_2px_10px_0_rgba(0,0,0,0.3)] hover:shadow-[0_2px_15px_0_rgba(0,0,0,0.3)] ${darkMode? "shadow-blue-500 hover:shadow-blue-500" : ""} ${project.key % 2 == 1 ? "flex-row-reverse" : ""}`} key={project.key}>
@@ -28,13 +21,11 @@ export default function Homepage() {
     ))
   
     return (
-      <div className={`App absolute w-full ${darkMode ? "bg-zinc-900 text-white" : ""}`}>
-        <DarkModeSlider onDarkMode={handleDarkMode} isDarkMode={darkMode}/>
+      <div >
         <PageTitles />
         <div className='2xl:mt-20 lg:mt-10 sm:mt-10 mt-10 text-center'>
           {projectsHTML}
         </div>
-        <Footer isDarkMode={darkMode} />
       </div>
     )
 }

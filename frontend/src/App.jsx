@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, cloneElement } from 'react'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import Homepage from "./pages/Homepage"
 import projects from './Projects'
@@ -16,7 +16,14 @@ function App() {
     localStorage.setItem("darkMode", String(darkMode))
   }, [darkMode])
 
-  const projectRoutes = projects.map(project => (
+  const projectsWithDarkMode = projects.map(project => (
+   {
+    ...project, 
+    page: cloneElement(project.page, {isDarkMode: darkMode})
+   } 
+  ))
+
+  const projectRoutes = projectsWithDarkMode.map(project => (
     <Route path={project.path} element={project.page} key={project.key} />
   ))
   
@@ -25,7 +32,7 @@ function App() {
       <Router>
         <DarkModeSlider onDarkMode={handleDarkMode} isDarkMode={darkMode}/>
         <Routes>
-          <Route path="/" element={<Homepage />} />
+          <Route path="/" element={<Homepage isDarkMode={darkMode} />} />
           {projectRoutes}
         </Routes>
         <Footer isDarkMode={darkMode} />

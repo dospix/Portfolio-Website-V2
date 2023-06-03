@@ -2,7 +2,7 @@ import { useState, useEffect, cloneElement } from 'react'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import Homepage from "./pages/Homepage"
 import projects from './Projects'
-import DarkModeSlider from './components/DarkModeSlider'
+import DarkModeHeader from './components/DarkModeHeader'
 import Footer from './components/Footer'
 
 function App() {
@@ -30,7 +30,7 @@ function App() {
   return (
     <div className={`absolute w-full ${darkMode ? "bg-zinc-900 text-white" : ""}`}>
       <Router>
-        <DarkModeSlider onDarkMode={handleDarkMode} isDarkMode={darkMode}/>
+        <DarkModeHeader onDarkMode={handleDarkMode} isDarkMode={darkMode}/>
         <Routes>
           <Route path="/" element={<Homepage isDarkMode={darkMode} />} />
           {projectRoutes}

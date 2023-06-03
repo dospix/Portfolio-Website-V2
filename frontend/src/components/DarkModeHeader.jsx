@@ -8,7 +8,7 @@ import back_arrow_black from "../assets/images/back-arrow-black.svg"
 import back_arrow_white from "../assets/images/back-arrow-white.svg"
 import back_arrow_blue from "../assets/images/back-arrow-blue.svg"
 
-export default function DarkModeSlider(props){
+export default function DarkModeHeader(props){
     let location = useLocation()
     const [backArrowImage, setBackArrowImage] = useState(props.isDarkMode ? back_arrow_white : back_arrow_black)
 

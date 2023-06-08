@@ -16,12 +16,10 @@ function App() {
     localStorage.setItem("darkMode", String(darkMode))
   }, [darkMode])
 
-  const projectsWithDarkMode = projects.map(project => (
-   {
+  const projectsWithDarkMode = projects.map(project => ({
     ...project, 
     page: cloneElement(project.page, {isDarkMode: darkMode})
-   } 
-  ))
+   }))
 
   const projectRoutes = projectsWithDarkMode.map(project => (
     <Route path={project.path} element={project.page} key={project.key} />

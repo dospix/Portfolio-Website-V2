@@ -26,7 +26,22 @@ export default function ApiProject() {
 
   function handleFormSubmit(event) {
     event.preventDefault()
-    console.log(formData)
+    fetch("/api-project/submit", {
+    method: "POST",
+    body: JSON.stringify(formData),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8"
+    }
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Handle the response data
+        console.log(data);
+      })
+      .catch(error => {
+        // Handle errors
+        console.error('Error:', error);
+      });
   }
 
   const bookSubjectsHtmlElements = Object.keys(bookSubjectsInsideForm).map(subject => (
@@ -58,7 +73,7 @@ export default function ApiProject() {
       <input 
         type="text"
         className="ml-2 mb-6 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md text-2xl text-black"
-        placeholder='Eg. Alice Wonderland, can be blank'
+        placeholder='E.g. Alice Wonderland, can be blank'
         id="titleKeywords"
         name="titleKeywords"
         value={formData.titleKeywords}
@@ -69,7 +84,7 @@ export default function ApiProject() {
       <input 
         type="text"
         className="ml-2 mb-6 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md text-2xl text-black"
-        placeholder='Eg. Lewis Carroll, can be blank'
+        placeholder='E.g. Lewis Carroll, can be blank'
         id="authorKeywords"
         name="authorKeywords"
         value={formData.authorKeywords}
@@ -84,9 +99,9 @@ export default function ApiProject() {
         value={formData.previewFilter}
         onChange={handleFormChange}
       >
-        <option className="text-center text-2xl" value="no filter">no filter</option>
-        <option className="text-center text-2xl" value="partial filter">part of the book must be previewable</option>
-        <option className="text-center text-2xl" value="full filter">the entire book must be previewable</option>
+        <option className="text-center text-2xl" value="none">no filter</option>
+        <option className="text-center text-2xl" value="partial">part of the book must be previewable</option>
+        <option className="text-center text-2xl" value="full">the entire book must be previewable</option>
       </select>
 
       <h1 className="ml-2 text-2xl">Book subjects:</h1>

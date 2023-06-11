@@ -20,20 +20,30 @@ def serve_react():
 @cross_origin()
 def fetch_books_from_google_api():
     form_response_json = request.get_json()
-    #"Alice Wonderland" -> "intitle:Alice+intitle:Wonderland"
+    # "Alice Wonderland" -> "intitle:Alice+intitle:Wonderland"
     title_keywords = "+".join([f"intitle:{word}" for word in form_response_json["titleKeywords"].split()])
     author_keywords = "+".join([f"inauthor:{word}" for word in form_response_json["authorKeywords"].split()])
-    preview_filter = form_response_json["previewFilter"]
-    if preview_filter == "none":
-        preview_filter = ""
-    else:
-        preview_filter = f"filter={preview_filter}"
-    subjects = [key for key in list(form_response_json.keys()) if key not in ["titleKeywords", "authorKeywords", "previewFilter"] and form_response_json[key] == True]
+    subjects = "+".join([f"subject:{key}" for key in list(form_response_json.keys()) if key not in ["titleKeywords", "authorKeywords", "previewFilter"] and form_response_json[key] == True])
+    preview_filter = "" if form_response_json['previewFilter'] == "none" else f"&filter={form_response_json['previewFilter']}"
+    
+    if author_keywords:
+        title_keywords += "+"
+    if subjects:
+        if author_keywords:
+            author_keywords += "+"
+        else:
+            title_keywords += "+"
 
-    google_api_url = f"https://www.googleapis.com/books/v1/volumes?q=intitle:{title_keywords}+inauthor:{author_keywords}"
-    response = requests.get(google_api_url).json()
+    returned_fields = "&fields=items(volumeInfo/title, volumeInfo/subtitle, volumeInfo/authors, volumeInfo/description, volumeInfo/imageLinks/thumbnail, volumeInfo/ratingsCount, volumeInfo/averageRating, volumeInfo/previewLink)"
+    google_api_url = f"https://www.googleapis.com/books/v1/volumes?q={title_keywords}{author_keywords}{subjects}{preview_filter}{returned_fields}"
+
+    gzip_headers = {
+        "Accept-Encoding": "gzip",
+        "User-Agent": "FlaskApp (gzip)"
+    }
+    response = requests.get(google_api_url, headers=gzip_headers).json()
 
     return response
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()

@@ -3,7 +3,7 @@ import { useState } from "react"
 export default function ApiProject() {
   const bookSubjectsInsideForm = {
     "history": false,
-    "math": true,
+    "math": false,
     "science": false,
     "self-help": false,
     "social": false
@@ -12,9 +12,11 @@ export default function ApiProject() {
   const [formData, setFormData] = useState({
     titleKeywords: "",
     authorKeywords: "",
-    previewFilter: "no filter",
+    previewFilter: "none",
     ...bookSubjectsInsideForm
   })
+
+  const [booksDisplayed, setBooksDisplayed] = useState([])
 
   function handleFormChange(event) {
     const {name, value, type, checked} = event.target
@@ -26,6 +28,7 @@ export default function ApiProject() {
 
   function handleFormSubmit(event) {
     event.preventDefault()
+    
     fetch("/api-project/submit", {
     method: "POST",
     body: JSON.stringify(formData),
@@ -35,13 +38,11 @@ export default function ApiProject() {
     })
       .then(response => response.json())
       .then(data => {
-        // Handle the response data
-        console.log(data);
+        setBooksDisplayed(data.items.map(book => <h1>{book.volumeInfo.title}</h1>))
       })
       .catch(error => {
-        // Handle errors
         console.error('Error:', error);
-      });
+      })
   }
 
   const bookSubjectsHtmlElements = Object.keys(bookSubjectsInsideForm).map(subject => (
@@ -111,6 +112,8 @@ export default function ApiProject() {
 
       <button className="w-52 h-12 self-center rounded-xl bg-blue-500 text-xl text-white">Recommend Books</button>
     </form>
+
+    {booksDisplayed}
   </>
   )
 }

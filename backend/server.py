@@ -34,7 +34,8 @@ def fetch_books_from_google_api():
         else:
             title_keywords += "+"
 
-    returned_fields = "&fields=items(volumeInfo/title, volumeInfo/subtitle, volumeInfo/authors, volumeInfo/description, volumeInfo/imageLinks/thumbnail, volumeInfo/ratingsCount, volumeInfo/averageRating, volumeInfo/previewLink)"
+    returned_fields = "&fields=items(id, volumeInfo/title, volumeInfo/subtitle, volumeInfo/authors, volumeInfo/description, \
+                    volumeInfo/imageLinks/thumbnail, volumeInfo/ratingsCount, volumeInfo/averageRating, accessInfo/viewability, volumeInfo/previewLink)"
     google_api_url = f"https://www.googleapis.com/books/v1/volumes?q={title_keywords}{author_keywords}{subjects}{preview_filter}{returned_fields}"
 
     gzip_headers = {

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import star from "../assets/images/star.png"
 import half_star from "../assets/images/half-star.png"
 
@@ -11,12 +11,16 @@ export default function ApiProject() {
     "social": false
   }
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState(sessionStorage.getItem("formData") !== null ? JSON.parse(sessionStorage.getItem("formData")) : {
     titleKeywords: "",
     authorKeywords: "",
     previewFilter: "none",
     ...bookSubjectsInsideForm
   })
+
+  useEffect(() => {
+    sessionStorage.setItem("formData", JSON.stringify(formData))
+  }, [formData])
     
   const bookSubjectsHtmlElements = Object.keys(bookSubjectsInsideForm).map(subject => (
     <div className="flex items-center" key={subject}>

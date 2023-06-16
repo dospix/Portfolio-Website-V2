@@ -11,9 +11,10 @@ app = Flask(__name__, static_folder="../frontend/dist", static_url_path="")
 CORS(app)
 
 
-@app.route("/")
+@app.route("/", defaults={"path": ""})
+@app.route("/<path>")
 @cross_origin()
-def serve_react():
+def serve_react(path):
     return send_from_directory(app.static_folder, "index.html")
 
 @app.route("/api-project/submit", methods=["POST"])

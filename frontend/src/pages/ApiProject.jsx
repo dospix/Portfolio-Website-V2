@@ -138,7 +138,7 @@ export default function ApiProject() {
         }
     })
       .then(response => response.json())  
-      .then(data => setBooksDisplayed(data ? data.map(book => convertBookObjectToHtml(book)) 
+      .then(data => setBooksDisplayed(data.length ? data.map(book => convertBookObjectToHtml(book)) 
                                       : <h1 className="w-fit mx-auto mb-40 text-3xl font-Montserrat text-red-400 select-none">No books found! Try to remove some keywords/subjects.</h1>))
       .catch(error => {
         console.error('Error:', error);

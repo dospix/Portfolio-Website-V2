@@ -1,14 +1,20 @@
 import { useState, useEffect } from "react"
 import star from "../assets/images/star.png"
 import half_star from "../assets/images/half-star.png"
+import no_cover_image from "../assets/images/no-cover-image.png"
 
 export default function ApiProject() {
   const bookSubjectsInsideForm = {
+    "literature": false,
+    "science fiction": false,
+    "adventure": false,
     "history": false,
-    "math": false,
     "science": false,
     "self-help": false,
-    "social": false
+    "business": false,
+    "health": false,
+    "education": false,
+    "children's literature": false
   }
 
   const [formData, setFormData] = useState(sessionStorage.getItem("formData") !== null ? JSON.parse(sessionStorage.getItem("formData")) : {
@@ -23,7 +29,7 @@ export default function ApiProject() {
   }, [formData])
     
   const bookSubjectsHtmlElements = Object.keys(bookSubjectsInsideForm).map(subject => (
-    <div className="flex items-center" key={subject}>
+    <div className="mt-6 flex items-center" key={subject}>
       <input
         type="checkbox"
         className="w-4 h-4"
@@ -32,7 +38,7 @@ export default function ApiProject() {
         checked={formData.subject}
         onChange={handleFormChange}
       />
-      <label className="pb-2 pl-4 select-none text-3xl" htmlFor={subject}>{subject}</label>
+      <label className="pb-1 pl-3 select-none text-2xl" htmlFor={subject}>{subject}</label>
     </div>
   ))
 
@@ -56,7 +62,7 @@ export default function ApiProject() {
         bookData.description = bookData.description.slice(0, whiteSpaceIndex) + "..."
     }
 
-    bookData.authors = bookData.authors.slice(0, 2).join(", ")
+    bookData.authors = bookData.authors ? bookData.authors.slice(0, 2).join(", ") : "authors not found"
 
     const stars = []
     if(bookData.averageRating){
@@ -89,7 +95,7 @@ export default function ApiProject() {
     
     return (
         <div className="mx-48 my-10 flex" key={book.id}>
-            <img className="w-1/6" src={bookData.imageLinks.thumbnail} alt="book cover" />
+            <img className="w-1/6" src={bookData.imageLinks ? bookData.imageLinks.thumbnail : no_cover_image} alt="book cover" />
             <div className="w-full px-5">
                 <h1 className="mb-4 text-2xl">{bookData.title}</h1>
                 <h2 className="mb-4 text-xl">{bookData.subtitle}</h2>
@@ -117,8 +123,9 @@ export default function ApiProject() {
         "Content-type": "application/json; charset=UTF-8"
         }
     })
-      .then(response => response.json())
-      .then(data => setBooksDisplayed(data.items.map(book => convertBookObjectToHtml(book))))
+      .then(response => response.json())  
+      .then(data => setBooksDisplayed(data.items ? data.items.map(book => convertBookObjectToHtml(book)) 
+                                      : <h1 className="w-fit mx-auto mb-40 text-3xl font-Montserrat text-red-400 select-none">No books found! Try to remove some keywords/subjects.</h1>))
       .catch(error => {
         console.error('Error:', error);
       })
@@ -134,7 +141,7 @@ export default function ApiProject() {
         <h1 className="text-3xl font-Montserrat">What type of book would you like us to recommend?</h1>
     </div>
 
-    <form onSubmit={handleFormSubmit} className="mx-auto mt-10 mb-32 w-2/5 flex justify-center flex-col font-Open_Sans">
+    <form onSubmit={handleFormSubmit} className="mx-auto mt-10 mb-32 w-1/2 flex justify-center flex-col font-Open_Sans">
       <label className="p-2 text-2xl" htmlFor="titleKeywords">Title keywords:</label>
       <input 
         type="text"
@@ -171,11 +178,11 @@ export default function ApiProject() {
       </select>
 
       <h1 className="ml-2 text-2xl">Book subjects:</h1>
-      <div className="ml-2 mb-6 h-56 grid grid-cols-3">
+      <div className="h-fit ml-2 mb-6 grid grid-cols-3">
         {bookSubjectsHtmlElements}
       </div>
 
-      <button className="w-52 h-12 self-center rounded-xl bg-blue-500 text-xl text-white">Recommend Books</button>
+      <button className="w-52 h-12 mt-5 self-center rounded-xl bg-blue-500 text-xl text-white">Recommend Books</button>
     </form>
 
     {booksDisplayed}

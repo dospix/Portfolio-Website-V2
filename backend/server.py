@@ -37,7 +37,7 @@ def fetch_books_from_google_api():
 
     returned_fields = "&fields=items(id, volumeInfo/title, volumeInfo/subtitle, volumeInfo/authors, volumeInfo/description, \
                     volumeInfo/imageLinks/thumbnail, volumeInfo/ratingsCount, volumeInfo/averageRating, accessInfo/viewability, volumeInfo/previewLink)"
-    google_api_url = f"https://www.googleapis.com/books/v1/volumes?q={title_keywords}{author_keywords}{subjects}{preview_filter}{returned_fields}"
+    google_api_url = f"https://www.googleapis.com/books/v1/volumes?q={title_keywords}{author_keywords}{subjects}{preview_filter}{returned_fields}&maxResults=40"
 
     gzip_headers = {
         "Accept-Encoding": "gzip",
@@ -48,4 +48,4 @@ def fetch_books_from_google_api():
     return response
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

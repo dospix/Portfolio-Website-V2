@@ -44,7 +44,10 @@ def fetch_books_from_google_api():
         "User-Agent": "FlaskApp (gzip)"
     }
     response = requests.get(google_api_url, headers=gzip_headers).json().get("items")
-    response = sorted(response, key= lambda book: book.get("volumeInfo").get("ratingsCount", 0), reverse= True)
+    if response:
+        response = sorted(response, key= lambda book: book.get("volumeInfo").get("ratingsCount", 0), reverse= True)
+    else:
+        response = []
 
     return response
 

@@ -21,7 +21,7 @@ def serve_react(path):
 
 # The Google API won't allow a value bigger than 40
 MAX_BOOKS_FETCHED = 40
-@app.route("/api-project/submit", methods=["POST"])
+@app.route("/google-api-project/submit", methods=["POST"])
 @cross_origin()
 def fetch_books_from_google_api():
     form_response_json = request.get_json()

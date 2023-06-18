@@ -1,4 +1,4 @@
-import ApiProject from "./pages/ApiProject"
+import GoogleApiProject from "./pages/GoogleApiProject"
 
 const projects = [
     {
@@ -7,15 +7,15 @@ const projects = [
         description: "This is a machine learning project using pandas, scikit-learn and PyTorch",
         image: "images/machine-learning.jpg",
         path: "/machine-learning-project",
-        page: <ApiProject />
+        page: <GoogleApiProject />
     },
     {
         key: 1,
-        name: "API project",
-        description: "This is a project that uses an API for functionality",
-        image: "images/api.jpg",
-        path: "/api-project",
-        page: <ApiProject />
+        name: "Google Books API project",
+        description: "This project uses Google Books' API to recommend books on various topics.",
+        image: "images/google-books-api.jpg",
+        path: "/google-api-project",
+        page: <GoogleApiProject />
     },
     {
         key: 2,
@@ -23,7 +23,7 @@ const projects = [
         description: "This is a frontend project using React and MySQL",
         image: "images/database.jpg",
         path: "/sql-project",
-        page: <ApiProject />
+        page: <GoogleApiProject />
     }
 ]
 

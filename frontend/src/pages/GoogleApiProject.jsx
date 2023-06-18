@@ -3,7 +3,7 @@ import star from "../assets/images/star.png"
 import half_star from "../assets/images/half-star.png"
 import no_cover_image from "../assets/images/no-cover-image.png"
 
-const BOOK_SUBJECTS_INSIDE_FORM = ["literature", "science fiction", "adventure", "history", "science", "self-help", "business", "health", "education", "children's literature"]
+const BOOK_SUBJECTS_INSIDE_FORM = ["literature", "science fiction", "adventure", "history", "science", "self-help", "business", "health", "education"]
 
 // Returns an object with all of the subjects and whether they are checked or not, and the HTML for the checkboxes with the subjects that will be displayed on the page
 function handleBookSubjects(formData, handleFormChange){
@@ -130,7 +130,7 @@ export default function ApiProject() {
   function handleFormSubmit(event) {
     event.preventDefault()
     
-    fetch("/api-project/submit", {
+   fetch("/google-api-project/submit", {
         method: "POST",
         body: JSON.stringify(formData),
         headers: {

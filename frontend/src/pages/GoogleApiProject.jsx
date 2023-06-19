@@ -5,7 +5,7 @@ import no_cover_image from "../assets/images/no-cover-image.png"
 import open_book from "../assets/images/open-book.png"
 import open_book_white from "../assets/images/open-book-white.png"
 
-const BOOK_SUBJECTS_INSIDE_FORM = ["literature", "science fiction", "adventure", "history", "science", "self-help", "business", "health", "education"]
+const BOOK_SUBJECTS_INSIDE_FORM = ["literature", "adventure", "history", "science", "self-help", "business", "health", "education"]
 
 // Returns an object with all of the subjects and whether they are checked or not, and the HTML for the checkboxes with the subjects that will be displayed on the page
 function handleBookSubjects(formData, handleFormChange){
@@ -134,6 +134,7 @@ export default function ApiProject(props) {
     event.preventDefault()
 
     setIsLoading(true)
+    setBooksDisplayed([])
     
     fetch("/google-api-project/submit", {
       method: "POST",
@@ -142,7 +143,7 @@ export default function ApiProject(props) {
         "Content-type": "application/json; charset=UTF-8"
       }
     })
-      .then(response => response.json())  
+      .then(response => response.json())
       .then(data => setBooksDisplayed(data.length ? data.map(book => convertBookObjectToHtml(book)) 
                                       : <h1 className="w-fit mx-auto mb-40 text-3xl font-Montserrat text-red-400 select-none">No books found! Try to remove some keywords/subjects.</h1>))
       .then(() => setIsLoading(false))
@@ -154,11 +155,17 @@ export default function ApiProject(props) {
   return (
   <>
     <div className='mt-24 text-center'>
-        <h1 className='text-3xl font-semibold font-Montserrat'>Book recommendation using Google Books API</h1>
+      <h1 className='text-3xl font-semibold font-Montserrat'>Book recommendation using Google Books API</h1>
     </div>
 
-    <div className='2xl:mt-16 lg:mt-8 sm:mt-6 mt-8 flex items-center justify-center'>
-        <h1 className="text-3xl font-Montserrat">What type of book would you like us to recommend?</h1>
+    <div className='mt-20 flex items-center justify-center'>
+      <h1 className="mx-72 text-2xl font-Open_Sans">The data from the form below is sent to the Flask server, which makes the request to the Google Books API. 
+      A random sample of books is taken from the results, which is ordered by the number of ratings and then returned to the client side for rendering. 
+      To prevent form values from being accidentally erased they are saved in sessionStorage as they are inputed.</h1>
+    </div>
+
+    <div className='2xl:mt-28 lg:mt-8 sm:mt-6 mt-8 flex items-center justify-center'>
+      <h1 className="text-3xl font-Montserrat">What type of book would you like us to recommend?</h1>
     </div>
 
     <form onSubmit={handleFormSubmit} className="mx-auto mt-10 mb-32 w-1/2 flex justify-center flex-col font-Open_Sans">
@@ -171,6 +178,7 @@ export default function ApiProject(props) {
         name="titleKeywords"
         value={formData.titleKeywords}
         onChange={handleFormChange}
+        maxlength="100"
       />
 
       <label className="p-2 text-2xl" htmlFor="authorKeywords">Author keywords:</label>
@@ -182,6 +190,7 @@ export default function ApiProject(props) {
         name="authorKeywords"
         value={formData.authorKeywords}
         onChange={handleFormChange}
+        maxlength="100"
       />
 
       <label className="p-2 text-2xl" htmlFor="previewFilter">Preview filter:</label>
@@ -202,7 +211,7 @@ export default function ApiProject(props) {
         {bookSubjectsHtmlElements}
       </div>
 
-      <button className="w-52 h-12 mt-5 self-center rounded-xl bg-blue-500 text-xl text-white">Recommend Books</button>
+      <button className="w-52 h-12 mt-7 self-center rounded-xl bg-blue-500 text-xl text-white">Recommend Books</button>
     </form>
     
     <div className={`${isLoading ? "" : "hidden"} mb-32 flex items-center justify-center`}>

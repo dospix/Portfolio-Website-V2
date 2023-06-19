@@ -72,6 +72,9 @@ def return_index_for_random_batch(total_items, items_per_batch):
 
     if batch_index > (total_items - items_per_batch) + 1:
         batch_index = (total_items - items_per_batch) + 1
+
+        if batch_index < 0:
+            batch_index = 0
     
     return batch_index
 

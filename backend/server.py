@@ -46,7 +46,7 @@ def fetch_books_from_google_api():
     }
     # Make one request to see how many books there are that fit our search criteria, then another request that will use that number to get a random group of books
     number_of_results = requests.get(f"{google_api_url_start}{title_keywords}{author_keywords}{subjects}{preview_filter}&fields=totalItems", headers=gzip_headers).json().get("totalItems")
-    if number_of_results <= 0:
+    if (not number_of_results) or number_of_results <= 0:
         return []
     random_index =  return_index_for_random_batch(number_of_results, MAX_BOOKS_FETCHED)
 

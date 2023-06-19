@@ -2,6 +2,8 @@ import { useState, useEffect } from "react"
 import star from "../assets/images/star.png"
 import half_star from "../assets/images/half-star.png"
 import no_cover_image from "../assets/images/no-cover-image.png"
+import open_book from "../assets/images/open-book.png"
+import open_book_white from "../assets/images/open-book-white.png"
 
 const BOOK_SUBJECTS_INSIDE_FORM = ["literature", "science fiction", "adventure", "history", "science", "self-help", "business", "health", "education"]
 
@@ -97,7 +99,7 @@ function convertBookObjectToHtml(book){
   )
 }
 
-export default function ApiProject() {
+export default function ApiProject(props) {
   const initialBookSubjects = {}
   BOOK_SUBJECTS_INSIDE_FORM.forEach(subject => initialBookSubjects[subject] = false)
   const [formData, setFormData] = useState(sessionStorage.getItem("formData") !== null ? JSON.parse(sessionStorage.getItem("formData")) : {
@@ -126,20 +128,24 @@ export default function ApiProject() {
   }, [])
 
   const [booksDisplayed, setBooksDisplayed] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   function handleFormSubmit(event) {
     event.preventDefault()
+
+    setIsLoading(true)
     
-   fetch("/google-api-project/submit", {
-        method: "POST",
-        body: JSON.stringify(formData),
-        headers: {
+    fetch("/google-api-project/submit", {
+      method: "POST",
+      body: JSON.stringify(formData),
+      headers: {
         "Content-type": "application/json; charset=UTF-8"
-        }
+      }
     })
       .then(response => response.json())  
       .then(data => setBooksDisplayed(data.length ? data.map(book => convertBookObjectToHtml(book)) 
                                       : <h1 className="w-fit mx-auto mb-40 text-3xl font-Montserrat text-red-400 select-none">No books found! Try to remove some keywords/subjects.</h1>))
+      .then(() => setIsLoading(false))
       .catch(error => {
         console.error('Error:', error);
       })
@@ -151,7 +157,7 @@ export default function ApiProject() {
         <h1 className='text-3xl font-semibold font-Montserrat'>Book recommendation using Google Books API</h1>
     </div>
 
-    <div className='2xl:mt-16 lg:mt-8 sm:mt-6 mt-8 flex flex-col items-center justify-center'>
+    <div className='2xl:mt-16 lg:mt-8 sm:mt-6 mt-8 flex items-center justify-center'>
         <h1 className="text-3xl font-Montserrat">What type of book would you like us to recommend?</h1>
     </div>
 
@@ -198,6 +204,12 @@ export default function ApiProject() {
 
       <button className="w-52 h-12 mt-5 self-center rounded-xl bg-blue-500 text-xl text-white">Recommend Books</button>
     </form>
+    
+    <div className={`${isLoading ? "" : "hidden"} mb-32 flex items-center justify-center`}>
+        <h1 className="text-3xl font-Montserrat">Loading books...</h1>
+        <img className="w-5 ml-6 animate-spin" src={props.isDarkMode ? open_book_white : open_book} alt="loading books" />
+    </div>
+    
 
     {booksDisplayed}
   </>

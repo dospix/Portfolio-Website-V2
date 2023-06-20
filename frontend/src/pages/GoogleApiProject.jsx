@@ -25,7 +25,7 @@ function handleBookSubjects(formData, handleFormChange){
         checked={formData[subject]}
         onChange={handleFormChange}
       />
-      <label className="pb-1 pl-3 select-none text-2xl" htmlFor={subject}>{subject}</label>
+      <label className="pb-1 pl-3 select-none md:text-3xl text-2xl" htmlFor={subject}>{subject}</label>
     </div>
   ))
 
@@ -80,7 +80,7 @@ function convertBookObjectToHtml(book){
   }
   
   return (
-      <div className="mx-48 my-10 flex" key={book.id}>
+      <div className="lg:mx-48 sm:mx-20 mx-10 my-10 flex" key={book.id}>
           <img className="w-1/6" src={bookData.imageLinks ? bookData.imageLinks.thumbnail : no_cover_image} alt="book cover" />
           <div className="w-full px-5">
               <h1 className="mb-4 text-2xl">{bookData.title}</h1>
@@ -154,68 +154,68 @@ export default function ApiProject(props) {
     
   return (
   <>
-    <div className='mt-24 text-center'>
-      <h1 className='text-3xl font-semibold font-Montserrat'>Book recommendation using Google Books API</h1>
+    <div className='lg:mt-20 md:mt-16 sm:mt-14 mt-12 mx-2 text-center'>
+      <h1 className='md:text-3xl text-2xl font-semibold font-Montserrat'>Book recommendation using Google Books API</h1>
     </div>
 
-    <div className='mt-20 flex items-center justify-center'>
-      <h1 className="mx-72 text-2xl font-Open_Sans">The data from the form below is sent to the Flask server, which makes the request to the Google Books API. 
-      A random sample of books is taken from the results, which is ordered by the number of ratings and then returned to the client side for rendering. 
-      To prevent form values from being accidentally erased they are saved in sessionStorage as they are inputed.</h1>
+    <div className='mt-12 2xl:mx-80 xl:mx-44 lg:mx-16 md:mx-10 mx-5 md:text-2xl sm:text-xl text-lg font-Open_Sans'>
+      <p className="lg:inline">The data from the form below is sent to the Flask server, which makes the request to the Google Books API. </p>
+      <p className="lg:inline lg:mt-1 md:mt-3 mt-5">A random sample of books is taken from the results, which is ordered by the number of ratings and then returned to the client side for rendering. </p>
+      <p className="lg:inline lg:mt-1 md:mt-3 mt-5">To prevent form values from being accidentally erased they are saved in sessionStorage as they are inputed.</p>
     </div>
 
-    <div className='2xl:mt-28 lg:mt-8 sm:mt-6 mt-8 flex items-center justify-center'>
-      <h1 className="text-3xl font-Montserrat">What type of book would you like us to recommend?</h1>
+    <div className='lg:mt-20 md:mt-16 sm:mt-14 mt-10 mx-2 flex items-center justify-center text-center'>
+      <h1 className="md:text-3xl text-2xl font-Montserrat">What type of book would you like us to recommend?</h1>
     </div>
 
-    <form onSubmit={handleFormSubmit} className="mx-auto mt-10 mb-32 w-1/2 flex justify-center flex-col font-Open_Sans">
-      <label className="p-2 text-2xl" htmlFor="titleKeywords">Title keywords:</label>
+    <form onSubmit={handleFormSubmit} className="mx-auto sm:mt-8 mt-10 lg:mb-28 mb-20 xl:w-1/2 lg:w-2/3 w-5/6 flex justify-center flex-col font-Open_Sans">
+      <label className="p-2 md:text-3xl text-2xl" htmlFor="titleKeywords">Title keywords:</label>
       <input 
         type="text"
-        className="ml-2 mb-6 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md text-2xl text-black"
+        className="ml-2 mb-6 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-md text-black"
         placeholder='E.g. Alice Wonderland, can be blank'
         id="titleKeywords"
         name="titleKeywords"
         value={formData.titleKeywords}
         onChange={handleFormChange}
-        maxlength="100"
+        maxLength="100"
       />
 
-      <label className="p-2 text-2xl" htmlFor="authorKeywords">Author keywords:</label>
+      <label className="p-2 md:text-3xl text-2xl" htmlFor="authorKeywords">Author keywords:</label>
       <input 
         type="text"
-        className="ml-2 mb-6 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md text-2xl text-black"
+        className="ml-2 mb-6 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-md text-black"
         placeholder='E.g. Lewis Carroll, can be blank'
         id="authorKeywords"
         name="authorKeywords"
         value={formData.authorKeywords}
         onChange={handleFormChange}
-        maxlength="100"
+        maxLength="100"
       />
 
-      <label className="p-2 text-2xl" htmlFor="previewFilter">Preview filter:</label>
+      <label className="p-2 md:text-3xl text-2xl" htmlFor="previewFilter">Preview filter:</label>
       <select 
-        className="ml-2 mb-10 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md text-2xl text-black"
+        className="ml-2 mb-10 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-lg text-black"
         id="previewFilter"
         name="previewFilter"
         value={formData.previewFilter}
         onChange={handleFormChange}
       >
-        <option className="text-center text-2xl" value="none">no filter</option>
-        <option className="text-center text-2xl" value="partial">part of the book must be previewable</option>
-        <option className="text-center text-2xl" value="full">the entire book must be previewable</option>
+        <option className="text-center md:text-2xl sm:text-xl text-lg" value="none">no filter</option>
+        <option className="text-center md:text-2xl sm:text-xl text-lg" value="partial">part of the book must be previewable</option>
+        <option className="text-center md:text-2xl sm:text-xl text-lg" value="full">the entire book must be previewable</option>
       </select>
 
-      <h1 className="ml-2 text-2xl">Book subjects:</h1>
-      <div className="h-fit ml-2 mb-6 grid grid-cols-3">
+      <h1 className="ml-2 md:text-3xl text-2xl">Book subjects:</h1>
+      <div className="h-fit ml-2 mb-6 grid sm:grid-cols-3 grid-cols-2">
         {bookSubjectsHtmlElements}
       </div>
 
-      <button className="w-52 h-12 mt-7 self-center rounded-xl bg-blue-500 text-xl text-white">Recommend Books</button>
+      <button className="w-52 h-12 sm:mt-8 mt-3 self-center rounded-xl bg-blue-500 text-xl text-white">Recommend Books</button>
     </form>
     
     <div className={`${isLoading ? "" : "hidden"} mb-32 flex items-center justify-center`}>
-        <h1 className="text-3xl font-Montserrat">Loading books...</h1>
+        <h1 className="md:text-3xl text-2xl font-Montserrat">Loading books...</h1>
         <img className="w-5 ml-6 animate-spin" src={props.isDarkMode ? open_book_white : open_book} alt="loading books" />
     </div>
     

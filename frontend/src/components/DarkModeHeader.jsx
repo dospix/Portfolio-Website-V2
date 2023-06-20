@@ -26,15 +26,15 @@ export default function DarkModeHeader(props){
     return (
         <div className="flex items-center 2xl:mt-12 sm:mt-6 mt-6">
             {/*Hide the back arrow on the homepage*/}
-            <div className={`2xl:ml-40 lg:ml-20 sm:ml-5 ml-3 ${window.location.pathname == "/" ? "hidden" : ""}`}>
-                <Link to=".."><img src={backArrowImage} onMouseOver={() => HandleBackArrowImage(true)} onMouseLeave={() => HandleBackArrowImage(false)} className="sm:h-12 h-14 sm:w-12 w-14" /></Link>
+            <div className={`2xl:ml-40 lg:ml-16 md:ml-7 sm:ml-5 ml-3  ${window.location.pathname == "/" ? "hidden" : ""}`}>
+                <Link to=".."><img src={backArrowImage} onMouseOver={() => HandleBackArrowImage(true)} onMouseLeave={() => HandleBackArrowImage(false)} className="h-11 w-11" /></Link>
             </div>
             <div className="flex ml-auto 2xl:mr-40 lg:mr-20 sm:mr-5 mr-3 sm:w-40 w-fit">
-                <img src={props.isDarkMode ? sun_gray : sun_blue} className="sm:h-8 h-6 sm:w-8 w-6" alt="sun" />
-                <div onClick={props.onDarkMode} className="my-auto mx-2 sm:w-16 w-10 sm:h-5 h-4 bg-gray-400 rounded-3xl hover:cursor-pointer">
+                <img src={props.isDarkMode ? sun_gray : sun_blue} className="sm:h-8 h-7 sm:w-8 w-7" alt="sun" />
+                <div onClick={props.onDarkMode} className="my-auto mx-2 sm:w-16 w-11 sm:h-5 h-4 bg-gray-400 rounded-3xl hover:cursor-pointer">
                     <div className={`sm:h-5 h-4 sm:w-5 w-4 bg-gray-700 rounded-full ${props.isDarkMode ? "ml-auto" : ""}`}></div>
                 </div>
-                <img src={props.isDarkMode ? moon_blue : moon_gray} className="sm:h-8 h-6 sm:w-8 w-6" alt="moon" />
+                <img src={props.isDarkMode ? moon_blue : moon_gray} className="sm:h-8 h-7 sm:w-8 w-7" alt="moon" />
             </div>
         </div>
     )

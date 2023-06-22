@@ -34,7 +34,7 @@ function handleBookSubjects(formData, handleFormChange){
 
 function shortenStringWithoutCuttingWords(string, preferredSize){
   if(string && string.length > preferredSize){
-    let whiteSpaceIndex = 300
+    let whiteSpaceIndex = preferredSize
     while(string[whiteSpaceIndex].trim() != "")
         whiteSpaceIndex -= 1
     string = string.slice(0, whiteSpaceIndex) + "..."
@@ -46,7 +46,7 @@ function shortenStringWithoutCuttingWords(string, preferredSize){
 function convertBookObjectToHtml(book){
   let bookData = book.volumeInfo
 
-  bookData.description = shortenStringWithoutCuttingWords(bookData.description, 300)
+  bookData.description = shortenStringWithoutCuttingWords(bookData.description, 250)
 
   bookData.authors = bookData.authors ? bookData.authors.slice(0, 2).join(", ") : "authors not found"
 
@@ -59,36 +59,36 @@ function convertBookObjectToHtml(book){
       let starCount = Math.floor(bookData.averageRating)
       
       while(starCount){
-          stars.push(<img key={starCount} className="mb-3 mr-2 w-6 h-6" src={star} />)
+          stars.push(<img key={starCount} className="mb-3 mr-1 sm:w-6 w-4 sm:h-6 h-4" src={star} />)
           starCount -= 1
       }
       if(needsHalfStar)
-          stars.push(<img key={0.5} className="mb-3 w-4 h-6" src={half_star} />)
+          stars.push(<img key={0.5} className="mb-3 sm:w-4 w-2 sm:h-6 h-4" src={half_star} />)
   }
 
   let previewButton = null
   switch(book.accessInfo.viewability){
       case "ALL_PAGES":
-          previewButton = <a className="w-28 py-1 mx-auto block rounded-2xl bg-blue-500 text-white" href={bookData.previewLink} target="_blank">View Book</a>
+          previewButton = <a className="sm:w-28 w-20 py-1 mx-auto block rounded-2xl bg-blue-500 sm:text-base text-sm text-white" href={bookData.previewLink} target="_blank">View Book</a>
           break
       case "PARTIAL":
-          previewButton = <a className="w-32 py-1 mx-auto block rounded-2xl bg-blue-500 text-white" href={bookData.previewLink} target="_blank">View Preview</a>
+          previewButton = <a className="sm:w-32 w-24 py-1 mx-auto block rounded-2xl bg-blue-500 sm:text-base text-sm text-white" href={bookData.previewLink} target="_blank">View Preview</a>
           break
       // The remaining value shold be "NO_PAGES"
       default:
-          previewButton = <div className="w-28 py-1 mx-auto block rounded-2xl bg-slate-400 text-white">No Preview available</div>
+          previewButton = <div className="sm:w-28 w-20 py-1 mx-auto block rounded-2xl bg-slate-400 sm:text-base text-sm text-white">No Preview available</div>
   }
   
   return (
-      <div className="lg:mx-48 sm:mx-20 mx-10 my-10 flex" key={book.id}>
-          <img className="w-1/6" src={bookData.imageLinks ? bookData.imageLinks.thumbnail : no_cover_image} alt="book cover" />
+      <div className="lg:mx-48 sm:mx-20 mx-2 my-10 flex" key={book.id}>
+          <img className="sm:w-1/6 w-1/4 sm:h-auto h-1/3 self-center" src={bookData.imageLinks ? bookData.imageLinks.thumbnail.replace("http", "https") : no_cover_image} alt="book cover" />
           <div className="w-full px-5">
-              <h1 className="mb-4 text-2xl">{bookData.title}</h1>
-              <h2 className="mb-4 text-xl">{bookData.subtitle}</h2>
-              <p className="font-Open_Sans">{bookData.description}</p>
+              <h1 className="mb-4 sm:text-2xl text-xl">{bookData.title}</h1>
+              <h2 className="mb-4 sm:text-xl text-lg">{bookData.subtitle}</h2>
+              <p className="font-Open_Sans sm:text-base text-sm">{bookData.description}</p>
           </div>
-          <div className="w-1/5 text-center">
-              <h1 className="mb-3 text-xl">{bookData.authors}</h1>
+          <div className="sm:w-1/5 w-1/3 self-center text-center">
+              <h1 className="mb-3 sm:text-xl text-lg">{bookData.authors}</h1>
               <div className="flex justify-center">
                   {stars}
               </div>

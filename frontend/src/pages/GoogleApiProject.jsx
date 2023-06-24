@@ -99,7 +99,7 @@ function convertBookObjectToHtml(book){
   )
 }
 
-export default function ApiProject(props) {
+export default function GoogleApiProject(props) {
   const initialBookSubjects = {}
   BOOK_SUBJECTS_INSIDE_FORM.forEach(subject => initialBookSubjects[subject] = false)
   const [formData, setFormData] = useState(sessionStorage.getItem("formData") !== null ? JSON.parse(sessionStorage.getItem("formData")) : {

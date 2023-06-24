@@ -1,13 +1,14 @@
+import AirbnbMachineLearningProject from "./pages/AirbnbMachineLearningProject"
 import GoogleApiProject from "./pages/GoogleApiProject"
 
 const projects = [
     {
         key: 0,
-        name: "Machine learning project",
+        name: "Airbnb machine learning project",
         description: "This is a machine learning project using pandas, scikit-learn and PyTorch",
         image: "images/machine-learning.jpg",
-        path: "/machine-learning-project",
-        page: <GoogleApiProject />
+        path: "/airbnb-machine-learning-project",
+        page: <AirbnbMachineLearningProject />
     },
     {
         key: 1,

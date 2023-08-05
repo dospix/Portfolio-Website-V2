@@ -92,6 +92,25 @@ export default function UsedCarsMachineLearningProject() {
         <div className='lg:mt-20 md:mt-16 sm:mt-14 mt-10 mx-2 flex items-center justify-center text-center'>
             <h1 className="md:text-3xl text-2xl font-Montserrat">Model creation process</h1>
         </div>
+
+        <div className='lg:mt-20 md:mt-16 sm:mt-14 mt-10 mx-2 flex items-center justify-center text-center'>
+            <h1 className="md:text-3xl text-2xl font-Montserrat">Model description:</h1>
+            
+        </div>
+        
+        First removed irrelevant columns and columns with low correlation
+        We dealt with missing values
+        Label encoded where it made sense
+        Removed outliers
+        Erased infrequent models #1
+        removed price outliers for each models
+        Removed better cars that were cheaper
+        Erased infrequent models #2
+        Correlation
+        One hot encoded
+        Machine learning: 3 phases
+        Neural network
+        Export neural network
     </>
     )
 }

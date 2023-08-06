@@ -55,7 +55,7 @@ function convertBookObjectToHtml(book){
       // round to nearest multiple of 0.5
       bookData.averageRating = Math.round(bookData.averageRating * 2) / 2
 
-      let needsHalfStar = bookData.averageRating % 1 == 0.5 ? true : false
+      let needsHalfStar = bookData.averageRating % 1 == 0.5
       let starCount = Math.floor(bookData.averageRating)
       
       while(starCount){

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 
 export default function UsedCarsMachineLearningProject() {
     const [formData, setFormData] = useState({
@@ -48,7 +48,7 @@ export default function UsedCarsMachineLearningProject() {
             <h1 className="md:text-3xl text-2xl font-Montserrat">Enter some information about the car whose price you would like to predict</h1>
         </div>
 
-        <form onSubmit={handleFormSubmit} className="mx-auto sm:mt-8 mt-10 lg:mb-28 mb-20 xl:w-1/2 lg:w-2/3 w-5/6 flex justify-center flex-col font-Open_Sans">
+        <form onSubmit={handleFormSubmit} className="mx-auto sm:mt-8 mt-10 xl:w-1/2 lg:w-2/3 w-5/6 flex justify-center flex-col font-Open_Sans">
             <label className="p-2 md:text-3xl text-2xl" htmlFor="titleKeywords">Title keywords:</label>
             <input 
                 type="text"
@@ -89,28 +89,146 @@ export default function UsedCarsMachineLearningProject() {
             <button className="w-52 h-12 sm:mt-8 mt-3 self-center rounded-xl bg-blue-500 text-xl text-white">Predict car price</button>
         </form>
 
-        <div className='lg:mt-20 md:mt-16 sm:mt-14 mt-10 mx-2 flex items-center justify-center text-center'>
-            <h1 className="md:text-3xl text-2xl font-Montserrat">Model creation process</h1>
+        <div className='flex items-center justify-center text-center'>
+            <h1 className="text-2xl font-Montserrat">Model creation process</h1>
         </div>
 
-        <div className='lg:mt-20 md:mt-16 sm:mt-14 mt-10 mx-2 flex items-center justify-center text-center'>
-            <h1 className="md:text-3xl text-2xl font-Montserrat">Model description:</h1>
-            
+        <div className='flex flex-col'>
+            <h1 className="self-center text-2xl font-Montserrat">Model performance</h1>
+
+            <p>
+                The model used to predict car prices is a neural network, with an R^2 score of 0.907. 
+                It uses a bath size of 128, 183 epochs, the MSELoss loss function, 0.0048 learning rate and the RMSprop optimizer. 
+                It has the following layers:
+            </p>
+            <ul>
+                <li>nn.Linear(2114, 235),</li>
+                <li>nn.ReLU(),</li>
+                <li>nn.Dropout(0.306),</li>
+                <li>nn.Linear(235, 324),</li>
+                <li>nn.ReLU(),</li>
+                <li>nn.Dropout(0.265),</li>
+                <li>nn.Linear(324, 1)</li>
+            </ul>
+
+            <p>
+                The residuals for this neural network are presented below:
+            </p>
+
+            <p>
+                Out of the 23,092 values tested, 98.5% are within 10,000$ of the correct value, 91.6% are within 5,000$ of the correct value, 
+                73.8% are within 2,500$ of the correct value, 39.7% are within 1,000$ of the correct value and 20.8% are within 500$ of the correct value.
+            </p>
+            <p>
+                These are great scores considering the dataset that was used to train the model required heavy cleaning, 
+                resulting in some inconsistent entries that could only be removed manually still being present, 
+                and that the model can predict the price of over 2000 car models.
+            </p>
         </div>
+
+        <div className='flex flex-col'>
+            <h1 className="self-center text-2xl font-Montserrat">Preparing the dataset</h1>
         
-        First removed irrelevant columns and columns with low correlation
-        We dealt with missing values
-        Label encoded where it made sense
-        Removed outliers
-        Erased infrequent models #1
-        removed price outliers for each models
-        Removed better cars that were cheaper
-        Erased infrequent models #2
-        Correlation
-        One hot encoded
-        Machine learning: 3 phases
-        Neural network
-        Export neural network
+            <h1 className="text-xl font-Montserrat">Cleaning the data</h1>
+
+            <p>
+                All irrelevant columns were removed. Irrelevant columns are either the ones that can’t be tied to the price (such as id columns) 
+                or the ones that are found to have no correlation using a correlation heatmap.
+            </p>
+            <p>
+                Once irrelevant columns were removed, so were any duplicate rows, resulting in the number of samples being reduced from 426k down to 247k.
+            </p>
+
+            <p>
+                Missing values were replaced wherever possible, however there were some instances in which they had to be removed, 
+                resulting in a small reduction from 247k down to 241k. 
+            </p>
+            <p>
+                Afterwards string columns were label encoded where it made sense (car condition, number of cylinders, vehicle size).
+            </p>
+
+            <h1 className="text-xl font-Montserrat">Removing outliers</h1>
+
+            <p>
+                The dataset had a lot of outliers/inconsistent data, thus removing outliers was done in multiple stages.
+            </p>
+            <p>
+                The first stage was only keeping entries within 3 standard deviations for price, entry_year and odometer.
+            </p>
+            <p>
+                In the second stage for each car model, only entries that had a price within 2 standard deviations for that particular car model were kept.
+            </p>
+            <p>
+                Other ways of removing outliers were tested, however this wielded the best results. 
+                After all stages the number of samples dropped from 241k down to 200k.
+            </p>
+
+            <h1 className="text-xl font-Montserrat">Further cleaning the data</h1>
+
+            <p>
+                Removing outliers didn’t eliminate all inconsistent data from the dataset, 
+                which is why all cars objectively better than another car but with lower price were removed.
+            </p>
+            <p>
+                A car is defined as objectively better than another if for each of its quantifiable columns it has a better value (lower odometer, better condition etc.) 
+                and if all its non-quantifiable columns are the same (same model, same transmission etc.). 
+            </p>
+            <p>
+                There are some edge cases that can bypass this filter, however these cases can only be removed manually. 
+                After removing objectively better but cheaper cars, the number of samples dropped to 158k.
+            </p>
+
+            <p>
+                Since the car model is the most important feature when it comes to predicting a car’s price, all car models with a frequency less than 10 were removed, 
+                resulting in a steep drop from 158k down to 115k.
+            </p>
+ 
+            <h1 className="text-xl font-Montserrat">Last steps in data preparation</h1>
+
+            <p>
+                A correlation heatmap was created, which is used in the beginning to eliminate irrelevant columns. 
+                The number of cylinders has the lowest correlation to price within the kept features, 
+                however after testing I determined that it was able to make a difference in the price prediction models.
+            </p>
+
+            <p>Finally, the remaining string columns are one-hot encoded.</p>
+        </div>
+
+        <div className='flex flex-col'>
+            <h1 className="self-center text-2xl font-Montserrat">Picking the most optimal model</h1>
+
+            <h1 className="text-xl font-Montserrat">Hyperparameter tuning in phases</h1>
+
+            <p>
+                Because it was too time intensive to pick hyperparameters using a complete grid search, picking hyperparameters was done in 3 phases.
+            </p>
+            <p>
+                The first phase was testing 1,000 samples with different hyperparameter configurations of linear regression, K neighbors regression, 
+                Support vector regression, Random forest regression and Gradient boosting regression. The top 100 configurations advanced to the next phase.
+            </p>
+            <p>
+                The second phase took the winning configurations from the previous phase and used 10,000 samples to test them. 
+                The top 5 configurations entered the last phase.
+            </p>
+            <p>
+                In the last phase the remaining configurations were tested on all 115,000 samples, and the best configuration was picked.
+            </p>
+            <p>
+                The winner was the Gradient boosting regressor with (learning_rate=0.1, max_depth=None, max_features="sqrt", 
+                min_samples_leaf=2, min_samples_split=10, n_estimators=500). The R^2 score of this model is 0.902.
+            </p>
+
+            <h1 className="text-xl font-Montserrat">Tuning hyperparameters for a neural network</h1>
+
+            <p>
+                The scikit learn model that won the previous stages was compared with a pytorch neural network optimized for this dataset. 
+                To tune the hyperparameters of the neural network the library optuna was used. 
+            </p>
+            <p>
+                The winning neural network is the one described in the “Model performance” section, which had a better R^2 score than the scikit learn model, 
+                which is why it is used as the final model for predicting used car prices.
+            </p>
+        </div>
     </>
     )
 }

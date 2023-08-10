@@ -1,6 +1,8 @@
 import { useState } from "react"
+import residuals_plot_black from "../assets/images/residuals-black.png"
+import residuals_plot_white from "../assets/images/residuals-white.png"
 
-export default function UsedCarsMachineLearningProject() {
+export default function UsedCarsMachineLearningProject(props) {
     const [formData, setFormData] = useState({
         titleKeywords: "",
         authorKeywords: "",
@@ -114,6 +116,8 @@ export default function UsedCarsMachineLearningProject() {
             <p className="mt-10 mx-10 text-xl font-Open_Sans">
                 The residuals for this neural network are presented below:
             </p>
+
+            <img className="w-1/2 mt-10 mx-32" src={props.isDarkMode ? residuals_plot_white : residuals_plot_black} alt="residuals plot" />
 
             <p className="mt-10 mx-10 text-xl font-Open_Sans">
                 Out of the 23,092 values tested, 98.5% are within 10,000$ of the correct value, 91.6% are within 5,000$ of the correct value, 

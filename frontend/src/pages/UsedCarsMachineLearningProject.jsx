@@ -1,6 +1,12 @@
 import { useState } from "react"
 import residuals_plot_black from "../assets/images/residuals-black.png"
 import residuals_plot_white from "../assets/images/residuals-white.png"
+import outliers_before_plot_black from "../assets/images/outliers-before-black.png"
+import outliers_before_plot_white from "../assets/images/outliers-before-white.png"
+import outliers_after_plot_black from "../assets/images/outliers-after-black.png"
+import outliers_after_plot_white from "../assets/images/outliers-after-white.png"
+import correlation_heatmap_black from "../assets/images/correlation-heatmap-black.png"
+import correlation_heatmap_white from "../assets/images/correlation-heatmap-white.png"
 
 export default function UsedCarsMachineLearningProject(props) {
     const [formData, setFormData] = useState({
@@ -156,6 +162,7 @@ export default function UsedCarsMachineLearningProject(props) {
             <p className="mt-4 mx-10 text-xl font-Open_Sans">
                 The dataset had a lot of outliers/inconsistent data, thus removing outliers was done in multiple stages.
             </p>
+            <img className="w-7/12 mt-10 mx-32" src={props.isDarkMode ? outliers_before_plot_white : outliers_before_plot_black} alt="outliers before plot" />
             <p className="mt-2 mx-10 text-xl font-Open_Sans">
                 The first stage was only keeping entries within 3 standard deviations for price, entry_year and odometer.
             </p>
@@ -166,6 +173,7 @@ export default function UsedCarsMachineLearningProject(props) {
                 Other ways of removing outliers were tested, however this wielded the best results. 
                 After all stages the number of samples dropped from 241k down to 200k.
             </p>
+            <img className="w-7/12 mt-10 mx-32" src={props.isDarkMode ? outliers_after_plot_white : outliers_after_plot_black} alt="outliers after plot" />
 
             <h1 className="mt-10 mx-10 text-2xl font-medium font-Montserrat">Further cleaning the data</h1>
 
@@ -194,6 +202,7 @@ export default function UsedCarsMachineLearningProject(props) {
                 The number of cylinders has the lowest correlation to price within the kept features, 
                 however after testing I determined that it was able to make a difference in the price prediction models.
             </p>
+            <img className="w-7/12 mt-10 mx-32" src={props.isDarkMode ? correlation_heatmap_white : correlation_heatmap_black} alt="correlation heatmap" />
 
             <p className="mt-10 mx-10 text-xl font-Open_Sans">Finally, the remaining string columns are one-hot encoded.</p>
         </div>

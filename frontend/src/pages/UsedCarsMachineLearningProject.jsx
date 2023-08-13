@@ -1,4 +1,5 @@
 import { useState } from "react"
+import carManufacturerToModelMap from "../CarManufacturerToModel.json"
 import residuals_plot_black from "../assets/images/residuals-black.png"
 import residuals_plot_white from "../assets/images/residuals-white.png"
 import outliers_before_plot_black from "../assets/images/outliers-before-black.png"
@@ -12,7 +13,7 @@ export default function UsedCarsMachineLearningProject(props) {
     const [formData, setFormData] = useState({
         titleKeywords: "",
         authorKeywords: "",
-        previewFilter: "none"
+        manufacturer: Object.keys(carManufacturerToModelMap)[0]
     })
 
     function handleFormChange(event) {
@@ -56,45 +57,216 @@ export default function UsedCarsMachineLearningProject(props) {
             <h1 className="md:text-3xl text-2xl font-Montserrat">Enter some information about the car whose price you would like to predict</h1>
         </div>
 
-        <form onSubmit={handleFormSubmit} className="mx-auto sm:mt-8 mt-10 xl:w-1/2 lg:w-2/3 w-5/6 flex justify-center flex-col font-Open_Sans">
-            <label className="p-2 md:text-3xl text-2xl" htmlFor="titleKeywords">Title keywords:</label>
-            <input 
-                type="text"
-                className="ml-2 mb-6 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-md text-black"
-                placeholder='E.g. Alice Wonderland, can be blank'
-                id="titleKeywords"
-                name="titleKeywords"
-                value={formData.titleKeywords}
-                onChange={handleFormChange}
-                maxLength="100"
-            />
+        <form onSubmit={handleFormSubmit} className="mx-auto sm:mt-8 mt-10 w-2/3 grid grid-cols-2 gap-4 font-Open_Sans">
+            <div className="flex flex-col">
+                <label className="p-2 md:text-3xl text-2xl" htmlFor="manufacturer">Car manufacturer:</label>
+                <select 
+                    className="ml-2 mb-10 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-lg text-black"
+                    id="manufacturer"
+                    name="manufacturer"
+                    value={formData.manufacturer}
+                    onChange={handleFormChange}
+                >
+                    {Object.keys(carManufacturerToModelMap).map(manufacturer => (
+                        <option className="text-center md:text-2xl sm:text-xl text-lg" key={manufacturer} value={manufacturer}>{manufacturer}</option>
+                    ))}
+                </select>
+            </div>
 
-            <label className="p-2 md:text-3xl text-2xl" htmlFor="authorKeywords">Author keywords:</label>
-            <input 
-                type="text"
-                className="ml-2 mb-6 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-md text-black"
-                placeholder='E.g. Lewis Carroll, can be blank'
-                id="authorKeywords"
-                name="authorKeywords"
-                value={formData.authorKeywords}
-                onChange={handleFormChange}
-                maxLength="100"
-            />
+            <div className="flex flex-col">
+                <label className="p-2 md:text-3xl text-2xl" htmlFor="modelText">Car model:</label>
+                <input 
+                    className="ml-2 mb-6 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-md text-black" 
+                    id="modelText" 
+                    type="text" 
+                    list="model" 
+                    onChange={handleFormChange} 
+                />
+                <datalist id="model">
+                    {carManufacturerToModelMap[formData.manufacturer].map(model => (
+                        <option className="text-center md:text-2xl sm:text-xl text-lg" key={model} value={model}>{model}</option>
+                    ))}
+                </datalist>
+            </div>
 
-            <label className="p-2 md:text-3xl text-2xl" htmlFor="previewFilter">Preview filter:</label>
-            <select 
-                className="ml-2 mb-10 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-lg text-black"
-                id="previewFilter"
-                name="previewFilter"
-                value={formData.previewFilter}
-                onChange={handleFormChange}
-            >
-                <option className="text-center md:text-2xl sm:text-xl text-lg" value="none">no filter</option>
-                <option className="text-center md:text-2xl sm:text-xl text-lg" value="partial">part of the book must be previewable</option>
-                <option className="text-center md:text-2xl sm:text-xl text-lg" value="full">the entire book must be previewable</option>
-            </select>
+            <div className="flex flex-col">
+                <label className="p-2 md:text-3xl text-2xl" htmlFor="type">Vehicle type:</label>
+                <select 
+                    className="ml-2 mb-10 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-lg text-black"
+                    id="type"
+                    name="type"
+                    value={formData.type}
+                    onChange={handleFormChange}
+                >
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="unknown">unknown</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="convertible">convertible</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="coupe">coupe</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="sedan">sedan</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="truck">truck</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="pickup">pickup</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="offroad">offroad</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="SUV">SUV</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="van">van</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="mini-van">mini-van</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="hatchback">hatchback</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="wagon">wagon</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="bus">bus</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="other">other</option>
+                </select>
+            </div>
+            
+            <div className="flex flex-col">
+                <label className="p-2 md:text-3xl text-2xl" htmlFor="size">Vehicle size:</label>
+                <select 
+                    className="ml-2 mb-10 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-lg text-black"
+                    id="size"
+                    name="size"
+                    value={formData.size}
+                    onChange={handleFormChange}
+                >
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="-1">unknown</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="0">sub-compact</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="1">compact</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="2">mid-size</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="3">full-size</option>
+                </select>
+            </div>
+            
+            <div className="flex flex-col">
+                <label className="p-2 md:text-3xl text-2xl" htmlFor="condition">Car condition:</label>
+                <select 
+                    className="ml-2 mb-10 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-lg text-black"
+                    id="condition"
+                    name="condition"
+                    value={formData.condition}
+                    onChange={handleFormChange}
+                >
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="-1">unknown</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="0">salvage</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="1">fair</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="2">good</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="3">excellent</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="4">like new</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="5">new</option>
+                </select>
+            </div>
 
-            <button className="w-52 h-12 sm:mt-8 mt-3 self-center rounded-xl bg-blue-500 text-xl text-white">Predict car price</button>
+            <div className="flex flex-col">
+                <label className="p-2 md:text-3xl text-2xl" htmlFor="status">Vehicle status:</label>
+                <select 
+                    className="ml-2 mb-10 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-lg text-black"
+                    id="status"
+                    name="status"
+                    value={formData.status}
+                    onChange={handleFormChange}
+                >
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="clean">clean</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="salvage">salvage</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="rebuilt">rebuilt</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="missing">missing</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="lien">lien</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="parts only">parts only</option>
+                </select>
+            </div>
+
+            <div className="flex flex-col">
+                <label className="p-2 md:text-3xl text-2xl" htmlFor="manufacturingYear">Manufacturing year:</label>
+                <input 
+                    type="number"
+                    className="ml-2 mb-6 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-md text-black"
+                    id="manufacturingYear"
+                    name="manufacturingYear"
+                    value={formData.manufacturingYear}
+                    onChange={handleFormChange}
+                    min="1950"
+                    max="2024"
+                />
+            </div>
+
+            <div className="flex flex-col">
+                <label className="p-2 md:text-3xl text-2xl" htmlFor="odometer">Odometer:</label>
+                <input 
+                    type="number"
+                    className="ml-2 mb-6 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-md text-black"
+                    id="odometer"
+                    name="odometer"
+                    value={formData.odometer}
+                    onChange={handleFormChange}
+                    min="0"
+                    max="1000000"
+                />
+            </div>
+
+            <div className="flex flex-col">
+                <label className="p-2 md:text-3xl text-2xl" htmlFor="drive">Drive:</label>
+                <select 
+                    className="ml-2 mb-10 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-lg text-black"
+                    id="drive"
+                    name="drive"
+                    value={formData.drive}
+                    onChange={handleFormChange}
+                >
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="unknown">unknown</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="4wd">4wd</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="fwd">fwd</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="rwd">rwd</option>
+                </select>
+            </div>
+
+            <div className="flex flex-col">
+                <label className="p-2 md:text-3xl text-2xl" htmlFor="transmission">Transmission type:</label>
+                <select 
+                    className="ml-2 mb-10 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-lg text-black"
+                    id="transmission"
+                    name="transmission"
+                    value={formData.transmission}
+                    onChange={handleFormChange}
+                >
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="manual">manual</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="automatic">automatic</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="other">other</option>
+                </select>
+            </div>
+
+            <div className="flex flex-col">
+                <label className="p-2 md:text-3xl text-2xl" htmlFor="cylinders">Number of cylinders:</label>
+                <select 
+                    className="ml-2 mb-10 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-lg text-black"
+                    id="cylinders"
+                    name="cylinders"
+                    value={formData.cylinders}
+                    onChange={handleFormChange}
+                >
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="-1">unknown</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="3">3 cylinders</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="4">4 cylinders</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="5">5 cylinders</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="6">6 cylinders</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="8">8 cylinders</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="10">10 cylinders</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="12">12 cylinders</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="0">other</option>
+                </select>
+            </div>
+
+            <div className="flex flex-col">
+                <label className="p-2 md:text-3xl text-2xl" htmlFor="fuel">Fuel type:</label>
+                <select 
+                    className="ml-2 mb-10 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-lg text-black"
+                    id="fuel"
+                    name="fuel"
+                    value={formData.fuel}
+                    onChange={handleFormChange}
+                >
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="gas">gas</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="diesel">diesel</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="hybrid">hybrid</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="electric">electric</option>
+                    <option className="text-center md:text-2xl sm:text-xl text-lg" value="other">other</option>
+                </select>
+            </div>
+
+            <button className="w-52 h-12 sm:mt-8 mt-3 mx-auto col-span-full rounded-xl bg-blue-500 text-xl text-white">Predict car price</button>
         </form>
 
         <div className='mt-20 flex flex-col'>

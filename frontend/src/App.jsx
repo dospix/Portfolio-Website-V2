@@ -6,7 +6,7 @@ import DarkModeHeader from './components/DarkModeHeader'
 import Footer from './components/Footer'
 
 function App() {
-  const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true" ? true : false)
+  const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true")
 
   function handleDarkMode(){
     setDarkMode((prevState) => !prevState)

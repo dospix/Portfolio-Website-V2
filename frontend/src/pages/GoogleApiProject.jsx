@@ -10,8 +10,8 @@ const BOOK_SUBJECTS_INSIDE_FORM = ["literature", "adventure", "history", "scienc
 // Returns an object with all of the subjects and whether they are checked or not, and the HTML for the checkboxes with the subjects that will be displayed on the page
 function handleBookSubjects(formData, handleFormChange){
   let bookSubjectsObject = {}
-  if(sessionStorage.getItem("formData") !== null)
-    bookSubjectsObject = JSON.parse(sessionStorage.getItem("formData")).subjects
+  if(sessionStorage.getItem("bookProjectFormData") !== null)
+    bookSubjectsObject = JSON.parse(sessionStorage.getItem("bookProjectFormData")).subjects
   else
     BOOK_SUBJECTS_INSIDE_FORM.forEach(subject => bookSubjectsObject[subject] = false)
   
@@ -102,7 +102,7 @@ function convertBookObjectToHtml(book){
 export default function GoogleApiProject(props) {
   const initialBookSubjects = {}
   BOOK_SUBJECTS_INSIDE_FORM.forEach(subject => initialBookSubjects[subject] = false)
-  const [formData, setFormData] = useState(sessionStorage.getItem("formData") !== null ? JSON.parse(sessionStorage.getItem("formData")) : {
+  const [formData, setFormData] = useState(sessionStorage.getItem("bookProjectFormData") !== null ? JSON.parse(sessionStorage.getItem("bookProjectFormData")) : {
     titleKeywords: "",
     authorKeywords: "",
     previewFilter: "none",
@@ -119,7 +119,7 @@ export default function GoogleApiProject(props) {
   }
 
   useEffect(() => {
-    sessionStorage.setItem("formData", JSON.stringify(formData))
+    sessionStorage.setItem("bookProjectFormData", JSON.stringify(formData))
   }, [formData])
   
   const [bookSubjectsObject, bookSubjectsHtmlElements] = handleBookSubjects(formData, handleFormChange)

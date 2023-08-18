@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import carManufacturerToModelMap from "../CarManufacturerToModel.json"
 import residuals_plot_black from "../assets/images/residuals-black.png"
 import residuals_plot_white from "../assets/images/residuals-white.png"
@@ -24,7 +24,7 @@ export default function UsedCarsMachineLearningProject(props) {
     }
 
     const initialManufacturer = Object.keys(carManufacturerToModelMap)[0]
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState(sessionStorage.getItem("carProjectFormData") !== null ? JSON.parse(sessionStorage.getItem("carProjectFormData")) : {
         manufacturer: initialManufacturer,
         carModel: "",
         type: "unknown",
@@ -38,6 +38,10 @@ export default function UsedCarsMachineLearningProject(props) {
         cylinders: "-1",
         fuel: "gas"
     })
+
+    useEffect(() => {
+      sessionStorage.setItem("carProjectFormData", JSON.stringify(formData))
+    }, [formData])
 
     function handleFormChange(event) {
         let {name, value, type, checked} = event.target

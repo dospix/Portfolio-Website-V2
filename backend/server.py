@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask.helpers import send_from_directory
 from flask_cors import CORS, cross_origin
+from flask_sqlalchemy import SQLAlchemy
 import mimetypes
 import requests
 import math
@@ -16,6 +17,16 @@ mimetypes.add_type("text/css", ".css")
 
 app = Flask(__name__, static_folder="../frontend/dist", static_url_path="")
 CORS(app)
+
+SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
+    username="Dospix",
+    password="MySQLprojectpassword123",
+    hostname="Dospix.mysql.pythonanywhere-services.com",
+    databasename="Dospix$default",
+)
+app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
+app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 
 @app.route("/", defaults={"path": ""})
@@ -157,4 +168,5 @@ def convert_form_response_to_valid_neural_network_input(intial_response):
     return {"price": f"{float(prediction):,.2f}"}
 
 if __name__ == "__main__":
+    db = SQLAlchemy(app)
     app.run()

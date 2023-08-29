@@ -167,6 +167,17 @@ def convert_form_response_to_valid_neural_network_input(intial_response):
 
     return {"price": f"{float(prediction):,.2f}"}
 
+@app.route("/mysql-project/submit", methods=["POST"])
+@cross_origin()
+def change_mysql_project_user():
+    form_response_json = request.get_json()
+
+    new_user = {
+        "newUser": form_response_json
+    }
+
+    return new_user
+
 if __name__ == "__main__":
     db = SQLAlchemy(app)
     app.run()

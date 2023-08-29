@@ -9,6 +9,14 @@ export default function MySQLProject(props){
 
     const [formUsername, setFormUsername] = useState("")
     const [currUser, setCurrUser] = useState("")
+    const [howManyTimesRegistered, setHowManyTimesRegistered] = useState(0)
+    const registrationLimit = 1
+    
+    const [currDay, setCurrDay] = useState(1)
+    const [tasks, setTasks] = useState([])
+    const [habits, setHabits] = useState([])
+    const [nextDayExists, setNextDayExists] = useState(false)
+
 
     function handleFormChange(event){
         const { value } = event.target
@@ -18,6 +26,22 @@ export default function MySQLProject(props){
 
     function handleFormSubmit(event){
         event.preventDefault()
+
+        if(howManyTimesRegistered == registrationLimit)
+            return
+
+        fetch("/mysql-project/submit", {
+            method: "POST",
+            body: JSON.stringify(formUsername),
+            headers: {
+            "Content-type": "application/json; charset=UTF-8"
+            }
+        })
+        .then(response => response.json())
+        .then(data => setCurrUser(data["newUser"]))
+        .catch(error => {
+            console.error('Error:', error);
+        })
     }
 
     return (
@@ -39,8 +63,16 @@ export default function MySQLProject(props){
                     maxLength="64"
                 />
 
-            <button className="w-64 h-12 mt-10 self-center rounded-xl bg-blue-500 text-xl text-white">Login/Register</button>
+            <button className="w-56 h-12 mt-10 self-center rounded-xl bg-blue-500 text-xl text-white">Login/Register</button>
             </form>
+
+            <div className={howManyTimesRegistered == registrationLimit ? "mt-16 mx-4 text-red-600 text-center" : "hidden"}>
+                <h1 className='text-3xl font-semibold font-Montserrat'>You have registered {howManyTimesRegistered} times. <br /> You can't register any new accounts.</h1>
+            </div>
+
+            <div className='mt-20 mx-4 text-center'>
+                <h1 className='text-3xl font-semibold font-Montserrat'>You are logged in as <span className="text-blue-500">{currUser}</span></h1>
+            </div>
         </>
     )
 }

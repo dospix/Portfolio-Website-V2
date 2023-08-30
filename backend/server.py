@@ -18,15 +18,46 @@ mimetypes.add_type("text/css", ".css")
 app = Flask(__name__, static_folder="../frontend/dist", static_url_path="")
 CORS(app)
 
-SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
-    username="Dospix",
-    password="MySQLprojectpassword123",
-    hostname="Dospix.mysql.pythonanywhere-services.com",
-    databasename="Dospix$default",
-)
-app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
-app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
+# SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
+#     username="Dospix",
+#     password="MySQLprojectpassword123",
+#     hostname="Dospix.mysql.pythonanywhere-services.com",
+#     databasename="Dospix$default",
+# )
+# app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
+# app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
+# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db = SQLAlchemy(app)
+
+class Users(db.Model):
+    Username = db.Column(db.String(64), primary_key=True)
+    Days = db.relationship("Days", backref="users")
+    Tasks = db.relationship("Tasks", backref="users")
+    Habits = db.relationship("Habits", backref="users")
+
+class Days(db.Model):
+    Username = db.Column(db.String(64), db.ForeignKey('users.Username'), primary_key=True)
+    DayIndex = db.Column(db.Integer, primary_key=True)
+    Tasks = db.relationship("Tasks", backref="days")
+    Habits = db.relationship("Habits", backref="days")
+
+class Tasks(db.Model):
+    Username = db.Column(db.String(64), db.ForeignKey('users.Username'), primary_key=True)
+    DayIndex = db.Column(db.Integer, db.ForeignKey('days.DayIndex'), primary_key=True)
+    TaskIndex = db.Column(db.Integer, primary_key=True)
+    Text = db.Column(db.String(128))
+    Completed = db.Column(db.Boolean)
+
+class Habits(db.Model):
+    Username = db.Column(db.String(64), db.ForeignKey('users.Username'), primary_key=True)
+    DayIndex = db.Column(db.Integer, db.ForeignKey('days.DayIndex'), primary_key=True)
+    HabitIndex = db.Column(db.Integer, primary_key=True)
+    Text = db.Column(db.String(128))
+    Completed = db.Column(db.Boolean)
 
 
 @app.route("/", defaults={"path": ""})
@@ -179,5 +210,13 @@ def change_mysql_project_user():
     return new_user
 
 if __name__ == "__main__":
-    db = SQLAlchemy(app)
+    with app.app_context():
+        db.create_all()
+
+        print("Hai")
+
+        # user = Users(Username="James")
+        # db.session.add(user)
+        # db.session.commit()
+    
     app.run()

@@ -26,19 +26,25 @@ export default function MySQLProject(props){
 
     function handleFormSubmit(event){
         event.preventDefault()
-
-        if(howManyTimesRegistered == registrationLimit)
+        if(formUsername == "")
             return
 
         fetch("/mysql-project/submit", {
             method: "POST",
-            body: JSON.stringify(formUsername),
+            body: JSON.stringify({
+                "formUsername": formUsername,
+                "reachedRegistrationLimit": howManyTimesRegistered >= registrationLimit
+            }),
             headers: {
-            "Content-type": "application/json; charset=UTF-8"
+                "Content-type": "application/json; charset=UTF-8",
             }
         })
         .then(response => response.json())
-        .then(data => setCurrUser(data["newUser"]))
+        .then(data => {
+            setCurrUser(data["currUser"])
+            if(data["hasRegistered"])
+                setHowManyTimesRegistered(prevState => prevState + 1)
+        })
         .catch(error => {
             console.error('Error:', error);
         })
@@ -55,7 +61,7 @@ export default function MySQLProject(props){
                 <input 
                     type="text"
                     className="mx-32 mt-6 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-md text-black"
-                    placeholder='user123'
+                    placeholder=""
                     id="formUsername"
                     name="formUsername"
                     value={formUsername}

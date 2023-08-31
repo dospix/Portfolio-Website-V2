@@ -35,27 +35,30 @@ db = SQLAlchemy(app)
 
 class Users(db.Model):
     Username = db.Column(db.String(64), primary_key=True)
-    Days = db.relationship("Days", backref="users")
-    Tasks = db.relationship("Tasks", backref="users")
-    Habits = db.relationship("Habits", backref="users")
+    Days = db.relationship("Days", backref="users", cascade="all, delete-orphan")
+    Tasks = db.relationship("Tasks", backref="users", cascade="all, delete-orphan")
+    Habits = db.relationship("Habits", backref="users", cascade="all, delete-orphan")
 
 class Days(db.Model):
-    Username = db.Column(db.String(64), db.ForeignKey('users.Username'), primary_key=True)
-    DayIndex = db.Column(db.Integer, primary_key=True)
-    Tasks = db.relationship("Tasks", backref="days")
-    Habits = db.relationship("Habits", backref="days")
+    DayId = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    Username = db.Column(db.String(64), db.ForeignKey('users.Username'))
+    DayIndex = db.Column(db.Integer)
+    Tasks = db.relationship("Tasks", backref="days", cascade="all, delete-orphan")
+    Habits = db.relationship("Habits", backref="days", cascade="all, delete-orphan")
 
 class Tasks(db.Model):
-    Username = db.Column(db.String(64), db.ForeignKey('users.Username'), primary_key=True)
-    DayIndex = db.Column(db.Integer, db.ForeignKey('days.DayIndex'), primary_key=True)
-    TaskIndex = db.Column(db.Integer, primary_key=True)
+    TaskId = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    Username = db.Column(db.String(64), db.ForeignKey('users.Username'))
+    DayIndex = db.Column(db.Integer, db.ForeignKey('days.DayIndex'))
+    TaskIndex = db.Column(db.Integer)
     Text = db.Column(db.String(128))
     Completed = db.Column(db.Boolean)
 
 class Habits(db.Model):
-    Username = db.Column(db.String(64), db.ForeignKey('users.Username'), primary_key=True)
-    DayIndex = db.Column(db.Integer, db.ForeignKey('days.DayIndex'), primary_key=True)
-    HabitIndex = db.Column(db.Integer, primary_key=True)
+    HabitId = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    Username = db.Column(db.String(64), db.ForeignKey('users.Username'))
+    DayIndex = db.Column(db.Integer, db.ForeignKey('days.DayIndex'))
+    HabitIndex = db.Column(db.Integer)
     Text = db.Column(db.String(128))
     Completed = db.Column(db.Boolean)
 
@@ -202,21 +205,28 @@ def convert_form_response_to_valid_neural_network_input(intial_response):
 @cross_origin()
 def change_mysql_project_user():
     form_response_json = request.get_json()
+    username = form_response_json["formUsername"]
+    reached_registration_limit = form_response_json["reachedRegistrationLimit"]
 
-    new_user = {
-        "newUser": form_response_json
+    has_registered = False
+    if Users.query.filter_by(Username=username).count() == 0 and reached_registration_limit:
+        return {
+            "currUser": "",
+            "hasRegistered": False
+        }
+    elif Users.query.filter_by(Username=username).count() == 0:
+        user = Users(Username=username)
+        db.session.add(user)
+        db.session.commit()
+        has_registered = True
+    
+    return {
+        "currUser": username,
+        "hasRegistered": has_registered
     }
-
-    return new_user
 
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-
-        print("Hai")
-
-        # user = Users(Username="James")
-        # db.session.add(user)
-        # db.session.commit()
     
     app.run()

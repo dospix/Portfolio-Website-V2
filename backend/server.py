@@ -2,6 +2,7 @@ from flask import Flask, request
 from flask.helpers import send_from_directory
 from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import and_
 import mimetypes
 import requests
 import math
@@ -11,6 +12,7 @@ import joblib
 import pandas as pd
 import torch
 import torch.nn as nn
+from socket import gethostname
 
 mimetypes.add_type("application/javascript", ".js")
 mimetypes.add_type("text/css", ".css")
@@ -18,18 +20,22 @@ mimetypes.add_type("text/css", ".css")
 app = Flask(__name__, static_folder="../frontend/dist", static_url_path="")
 CORS(app)
 
-# SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
-#     username="Dospix",
-#     password="MySQLprojectpassword123",
-#     hostname="Dospix.mysql.pythonanywhere-services.com",
-#     databasename="Dospix$default",
-# )
-# app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
-# app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
-# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+# Use on pythonanywhere
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
+SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
+    username="Dospix",
+    password="MySQLprojectpassword123",
+    hostname="Dospix.mysql.pythonanywhere-services.com",
+    databasename="Dospix$default",
+)
+app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
+app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+# Use locally
+
+# app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
+# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
@@ -228,5 +234,40 @@ def change_mysql_project_user():
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
+
+        # user = Users(Username="Ana")
+        # db.session.add(user)
+        # db.session.commit()
+        # day = Days(Username="Ana", DayIndex=1)
+        # db.session.add(day)
+        # db.session.commit()
+        # task = Tasks(Username="Ana", DayIndex=1, TaskIndex=1, Text="hello", Completed=False)
+        # db.session.add(task)
+        # db.session.commit()
+        # task = Tasks(Username="Ana", DayIndex=1, TaskIndex=2, Text="hello", Completed=False)
+        # db.session.add(task)
+        # db.session.commit()
+        # day = Days(Username="Ana", DayIndex=2)
+        # db.session.add(day)
+        # db.session.commit()
+        # habit = Habits(Username="Ana", DayIndex=2, HabitIndex=1, Text="hello", Completed=False)
+        # db.session.add(habit)
+        # db.session.commit()
+        # habit = Habits(Username="Ana", DayIndex=2, HabitIndex=2, Text="hello", Completed=False)
+        # db.session.add(habit)
+        # db.session.commit()
+        # db.session.query(Users).filter(Users.Username == "Marco").delete()
+        # db.session.query(Days).filter(Days.Username == "Ana").filter(Days.DayIndex == 1).delete()
+        # db.session.commit()
+
+        # task_rows = db.session.query(Users, Days, Tasks).join(Days, Users.Username == Days.Username).join(Tasks, and_(Users.Username == Tasks.Username, \
+        #     Days.DayIndex == Tasks.DayIndex)).all()
+        # habit_rows = db.session.query(Users, Days, Habits).join(Days, Users.Username == Days.Username).join(Habits, and_(Users.Username == Habits.Username, \
+        #     Days.DayIndex == Habits.DayIndex)).all()
+        # for user, day, task in task_rows:
+        #     print(user.Username, day.DayIndex, task.TaskIndex)
+        # for user, day, habit in habit_rows:
+        #     print(user.Username, day.DayIndex, habit.HabitIndex)
     
-    app.run()
+    if "liveconsole" not in gethostname():
+        app.run()

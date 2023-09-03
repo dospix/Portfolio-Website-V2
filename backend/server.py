@@ -22,20 +22,20 @@ CORS(app)
 
 # Use on pythonanywhere
 
-SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
-    username="Dospix",
-    password="MySQLprojectpassword123",
-    hostname="Dospix.mysql.pythonanywhere-services.com",
-    databasename="Dospix$default",
-)
-app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
-app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+# SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
+#     username="Dospix",
+#     password="MySQLprojectpassword123",
+#     hostname="Dospix.mysql.pythonanywhere-services.com",
+#     databasename="Dospix$default",
+# )
+# app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
+# app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
+# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Use locally
 
-# app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
-# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
@@ -46,25 +46,23 @@ class Users(db.Model):
     Habits = db.relationship("Habits", backref="users", cascade="all, delete-orphan")
 
 class Days(db.Model):
-    DayId = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    Username = db.Column(db.String(64), db.ForeignKey('users.Username'))
-    DayIndex = db.Column(db.Integer)
+    Username = db.Column(db.String(64), db.ForeignKey('users.Username'), primary_key=True)
+    DayIndex = db.Column(db.Integer, primary_key=True)
     Tasks = db.relationship("Tasks", backref="days", cascade="all, delete-orphan")
     Habits = db.relationship("Habits", backref="days", cascade="all, delete-orphan")
+    __table_args__ = (db.Index('index_name', 'DayIndex'),)
 
 class Tasks(db.Model):
-    TaskId = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    Username = db.Column(db.String(64), db.ForeignKey('users.Username'))
-    DayIndex = db.Column(db.Integer, db.ForeignKey('days.DayIndex'))
-    TaskIndex = db.Column(db.Integer)
+    Username = db.Column(db.String(64), db.ForeignKey('users.Username'), primary_key=True)
+    DayIndex = db.Column(db.Integer, db.ForeignKey('days.DayIndex'), primary_key=True)
+    TaskIndex = db.Column(db.Integer, primary_key=True)
     Text = db.Column(db.String(128))
     Completed = db.Column(db.Boolean)
 
 class Habits(db.Model):
-    HabitId = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    Username = db.Column(db.String(64), db.ForeignKey('users.Username'))
-    DayIndex = db.Column(db.Integer, db.ForeignKey('days.DayIndex'))
-    HabitIndex = db.Column(db.Integer)
+    Username = db.Column(db.String(64), db.ForeignKey('users.Username'), primary_key=True)
+    DayIndex = db.Column(db.Integer, db.ForeignKey('days.DayIndex'), primary_key=True)
+    HabitIndex = db.Column(db.Integer, primary_key=True)
     Text = db.Column(db.String(128))
     Completed = db.Column(db.Boolean)
 
@@ -231,43 +229,7 @@ def change_mysql_project_user():
         "hasRegistered": has_registered
     }
 
+with app.app_context():
+    db.create_all()
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-
-        # user = Users(Username="Ana")
-        # db.session.add(user)
-        # db.session.commit()
-        # day = Days(Username="Ana", DayIndex=1)
-        # db.session.add(day)
-        # db.session.commit()
-        # task = Tasks(Username="Ana", DayIndex=1, TaskIndex=1, Text="hello", Completed=False)
-        # db.session.add(task)
-        # db.session.commit()
-        # task = Tasks(Username="Ana", DayIndex=1, TaskIndex=2, Text="hello", Completed=False)
-        # db.session.add(task)
-        # db.session.commit()
-        # day = Days(Username="Ana", DayIndex=2)
-        # db.session.add(day)
-        # db.session.commit()
-        # habit = Habits(Username="Ana", DayIndex=2, HabitIndex=1, Text="hello", Completed=False)
-        # db.session.add(habit)
-        # db.session.commit()
-        # habit = Habits(Username="Ana", DayIndex=2, HabitIndex=2, Text="hello", Completed=False)
-        # db.session.add(habit)
-        # db.session.commit()
-        # db.session.query(Users).filter(Users.Username == "Marco").delete()
-        # db.session.query(Days).filter(Days.Username == "Ana").filter(Days.DayIndex == 1).delete()
-        # db.session.commit()
-
-        # task_rows = db.session.query(Users, Days, Tasks).join(Days, Users.Username == Days.Username).join(Tasks, and_(Users.Username == Tasks.Username, \
-        #     Days.DayIndex == Tasks.DayIndex)).all()
-        # habit_rows = db.session.query(Users, Days, Habits).join(Days, Users.Username == Days.Username).join(Habits, and_(Users.Username == Habits.Username, \
-        #     Days.DayIndex == Habits.DayIndex)).all()
-        # for user, day, task in task_rows:
-        #     print(user.Username, day.DayIndex, task.TaskIndex)
-        # for user, day, habit in habit_rows:
-        #     print(user.Username, day.DayIndex, habit.HabitIndex)
-    
-    if "liveconsole" not in gethostname():
-        app.run()
+    app.run()

@@ -40,30 +40,30 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 class Users(db.Model):
-    Username = db.Column(db.String(64), primary_key=True)
+    Username = db.Column(db.String(32), primary_key=True)
     Days = db.relationship("Days", backref="users", cascade="all, delete-orphan")
     Tasks = db.relationship("Tasks", backref="users", cascade="all, delete-orphan")
     Habits = db.relationship("Habits", backref="users", cascade="all, delete-orphan")
 
 class Days(db.Model):
-    Username = db.Column(db.String(64), db.ForeignKey('users.Username'), primary_key=True)
+    Username = db.Column(db.String(32), db.ForeignKey('users.Username'), primary_key=True)
     DayIndex = db.Column(db.Integer, primary_key=True)
     Tasks = db.relationship("Tasks", backref="days", cascade="all, delete-orphan")
     Habits = db.relationship("Habits", backref="days", cascade="all, delete-orphan")
     __table_args__ = (db.Index('index_name', 'DayIndex'),)
 
 class Tasks(db.Model):
-    Username = db.Column(db.String(64), db.ForeignKey('users.Username'), primary_key=True)
+    Username = db.Column(db.String(32), db.ForeignKey('users.Username'), primary_key=True)
     DayIndex = db.Column(db.Integer, db.ForeignKey('days.DayIndex'), primary_key=True)
     TaskIndex = db.Column(db.Integer, primary_key=True)
-    Text = db.Column(db.String(128))
+    Text = db.Column(db.String(32))
     Completed = db.Column(db.Boolean)
 
 class Habits(db.Model):
-    Username = db.Column(db.String(64), db.ForeignKey('users.Username'), primary_key=True)
+    Username = db.Column(db.String(32), db.ForeignKey('users.Username'), primary_key=True)
     DayIndex = db.Column(db.Integer, db.ForeignKey('days.DayIndex'), primary_key=True)
     HabitIndex = db.Column(db.Integer, primary_key=True)
-    Text = db.Column(db.String(128))
+    Text = db.Column(db.String(32))
     Completed = db.Column(db.Boolean)
 
 

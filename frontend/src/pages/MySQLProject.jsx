@@ -20,22 +20,19 @@ export default function MySQLProject(props){
     const [howManyTimesRegistered, setHowManyTimesRegistered] = useState(0)
     const registrationLimit = 1
     
-    const [currDay, setCurrDay] = useState(1)
+    const [currDay, setCurrDay] = useState(2)
     const [tasks, setTasks] = useState([{text: "hello", completed: true}, {text: "bye", completed: false}])
+    const [formTaskToBeAdded, setFormTaskToBeAdded] = useState("")
     const [habits, setHabits] = useState([{text: "habit1", completed: true}, {text: "habit2", completed: true}, {text: "hardhabit:(", completed: false}])
+    const [formHabitToBeAdded, setFormHabitToBeAdded] = useState("")
     const [nextDayExists, setNextDayExists] = useState(false)
 
-
-    function handleFormChange(event){
-        const { value } = event.target
-
-        setFormUsername(value)
-    }
-
-    function handleFormSubmit(event){
+    function registerAndChangeUser(event){
         event.preventDefault()
         if(formUsername == "")
             return
+
+        setCurrDay(1)
 
         fetch("/mysql-project/submit", {
             method: "POST",
@@ -58,11 +55,15 @@ export default function MySQLProject(props){
         })
     }
 
+    function createNewTask(){
+        return
+    }
+
     return (
         <>
             <h1 className='mt-12 mx-4 text-3xl text-center font-semibold font-Montserrat'>Using MySQL to store your tasks/habits.</h1>
 
-            <form onSubmit={handleFormSubmit} className="mx-auto mt-16 w-1/2 flex justify-center flex-col font-Open_Sans">
+            <form onSubmit={registerAndChangeUser} className="mx-auto mt-16 w-1/2 flex justify-center flex-col font-Open_Sans">
                 <label className="text-3xl text-center font-Montserrat" htmlFor="titleKeywords">Please provide a username</label>
                 <input 
                     type="text"
@@ -71,11 +72,11 @@ export default function MySQLProject(props){
                     id="formUsername"
                     name="formUsername"
                     value={formUsername}
-                    onChange={handleFormChange}
-                    maxLength="64"
+                    onChange={event => setFormUsername(event.target.value)}
+                    maxLength="32"
                 />
 
-            <button className="w-56 h-12 mt-10 self-center rounded-xl bg-blue-500 text-xl text-white">Login/Register</button>
+                <button className="w-56 h-12 mt-10 self-center rounded-xl bg-blue-500 text-xl text-white">Login/Register</button>
             </form>
 
             <div className={howManyTimesRegistered == registrationLimit ? "" : "hidden"}>
@@ -87,7 +88,7 @@ export default function MySQLProject(props){
             <div>
                 <h1 className='mt-12 mx-4 text-3xl text-center font-Montserrat'>Day {currDay}</h1>
 
-                <div className="mt-10 mx-auto w-1/2 flex flex-wrap">
+                <div className="mt-10 mx-auto w-3/5 flex flex-wrap">
                     <div className="w-1/2">
                         <h1 className='mb-8 text-3xl text-center font-medium font-Montserrat'>Tasks</h1>
                         {tasks.map(task => (
@@ -97,9 +98,18 @@ export default function MySQLProject(props){
                                 <img className="mr-16 mt-0.5 h-3/4" src={task.completed ? checkbox_checked : checkbox_empty} alt="checkbox" />
                             </div>
                         ))}
-                        <div className="mt-6 h-10 flex">
-                            <p className="ml-16 w-full text-2xl text-center"> Add new task</p>
-                            <img className="mr-16 mt-0.5 h-3/4" src={plus} alt="add task" />
+                        <div className="mt-10 h-10 flex">
+                            <input 
+                                type="text"
+                                className="ml-16 p-2 w-full border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-md text-black"
+                                placeholder="Add a new task"
+                                id="formTaskToBeAdded"
+                                name="formTaskToBeAdded"
+                                value={formTaskToBeAdded}
+                                onChange={event => setFormTaskToBeAdded(event.target.value)}
+                                maxLength="32"
+                            />
+                            <img className="ml-6 mr-16 mt-0.5 h-3/4" src={plus} alt="add task" />
                         </div>
                     </div>
                     <div className="w-1/2">
@@ -111,9 +121,18 @@ export default function MySQLProject(props){
                                 <img className="mr-16 mt-0.5 h-3/4" src={habit.completed ? checkbox_checked : checkbox_empty} alt="checkbox" />
                             </div>
                         ))}
-                        <div className="mt-6 h-10 flex">
-                            <p className="ml-16 w-full text-2xl text-center"> Add new habit</p>
-                            <img className="mr-16 mt-0.5 h-3/4" src={plus} alt="add habit" />
+                        <div className="mt-10 h-10 flex">
+                            <input 
+                                type="text"
+                                className="ml-16 p-2 w-full border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-md text-black"
+                                placeholder="Add a new habit"
+                                id="formHabitToBeAdded"
+                                name="formHabitToBeAdded"
+                                value={formHabitToBeAdded}
+                                onChange={event => setFormHabitToBeAdded(event.target.value)}
+                                maxLength="32"
+                            />
+                            <img className="ml-6 mr-16 mt-0.5 h-3/4" src={plus} alt="add habit" />
                         </div>
                     </div>
                     <div className="mt-12 w-full flex">

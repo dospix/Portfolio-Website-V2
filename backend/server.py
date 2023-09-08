@@ -205,7 +205,7 @@ def convert_form_response_to_valid_neural_network_input(intial_response):
 
     return {"price": f"{float(prediction):,.2f}"}
 
-@app.route("/mysql-project/submit", methods=["POST"])
+@app.route("/mysql-project/register-user", methods=["POST"])
 @cross_origin()
 def change_mysql_project_user():
     form_response_json = request.get_json()
@@ -228,6 +228,70 @@ def change_mysql_project_user():
         "currUser": username,
         "hasRegistered": has_registered
     }
+
+@app.route("/mysql-project/refresh-tasks", methods=["POST"])
+@cross_origin()
+def refresh_mysql_project_tasks():
+    form_response_json = request.get_json()
+    curr_user = form_response_json["currUser"]
+    curr_day = form_response_json["currDay"]
+
+    tasks_curr_user_curr_day = map(lambda task: {
+                                "username": task.Username,
+                                "dayIndex": task.DayIndex,
+                                "taskIndex": task.TaskIndex,
+                                "text": task.Text,
+                                "completed": task.Completed
+                            }, db.session.query(Tasks).filter(Tasks.Username == curr_user).filter(Tasks.DayIndex == curr_day).all())
+    
+    return list(tasks_curr_user_curr_day)
+
+@app.route("/mysql-project/add-new-task", methods=["POST"])
+@cross_origin()
+def add_mysql_project_task():
+    form_response_json = request.get_json()
+    curr_user = form_response_json["currUser"]
+    curr_day = form_response_json["currDay"]
+    task_to_be_added_index = form_response_json["taskIndex"]
+    task_to_be_added_text = form_response_json["formTaskToBeAdded"]
+
+    task = Tasks(Username=curr_user, DayIndex=curr_day, TaskIndex=task_to_be_added_index, Text=task_to_be_added_text, Completed=False)
+    db.session.add(task)
+    db.session.commit()
+
+    return {}
+
+@app.route("/mysql-project/refresh-habits", methods=["POST"])
+@cross_origin()
+def refresh_mysql_project_habits():
+    form_response_json = request.get_json()
+    curr_user = form_response_json["currUser"]
+    curr_day = form_response_json["currDay"]
+
+    habits_curr_user_curr_day = map(lambda habit: {
+                                "username": habit.Username,
+                                "dayIndex": habit.DayIndex,
+                                "habitIndex": habit.HabitIndex,
+                                "text": habit.Text,
+                                "completed": habit.Completed
+                            }, db.session.query(Habits).filter(Habits.Username == curr_user).filter(Habits.DayIndex == curr_day).all())
+    
+    return list(habits_curr_user_curr_day)
+
+@app.route("/mysql-project/add-new-habit", methods=["POST"])
+@cross_origin()
+def add_mysql_project_habit():
+    form_response_json = request.get_json()
+    curr_user = form_response_json["currUser"]
+    curr_day = form_response_json["currDay"]
+    habit_to_be_added_index = form_response_json["habitIndex"]
+    habit_to_be_added_text = form_response_json["formHabitToBeAdded"]
+
+    habit = Habits(Username=curr_user, DayIndex=curr_day, HabitIndex=habit_to_be_added_index, Text=habit_to_be_added_text, Completed=False)
+    db.session.add(habit)
+    db.session.commit()
+
+    return {}
 
 with app.app_context():
     db.create_all()

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import delete_x from "../assets/images/delete-x.png"
 import checkbox_empty from "../assets/images/checkbox-empty.png"
 import checkbox_checked from "../assets/images/checkbox-checked.png"
@@ -20,10 +20,10 @@ export default function MySQLProject(props){
     const [howManyTimesRegistered, setHowManyTimesRegistered] = useState(0)
     const registrationLimit = 1
     
-    const [currDay, setCurrDay] = useState(2)
-    const [tasks, setTasks] = useState([{text: "hello", completed: true}, {text: "bye", completed: false}])
+    const [currDay, setCurrDay] = useState(1)
+    const [tasks, setTasks] = useState([])
     const [formTaskToBeAdded, setFormTaskToBeAdded] = useState("")
-    const [habits, setHabits] = useState([{text: "habit1", completed: true}, {text: "habit2", completed: true}, {text: "hardhabit:(", completed: false}])
+    const [habits, setHabits] = useState([])
     const [formHabitToBeAdded, setFormHabitToBeAdded] = useState("")
     const [nextDayExists, setNextDayExists] = useState(false)
 
@@ -34,7 +34,7 @@ export default function MySQLProject(props){
 
         setCurrDay(1)
 
-        fetch("/mysql-project/submit", {
+        fetch("/mysql-project/register-user", {
             method: "POST",
             body: JSON.stringify({
                 "formUsername": formUsername,
@@ -50,13 +50,82 @@ export default function MySQLProject(props){
             if(data["hasRegistered"])
                 setHowManyTimesRegistered(prevState => prevState + 1)
         })
-        .catch(error => {
-            console.error('Error:', error);
-        })
+        .catch(error => console.error('Error:', error))
     }
 
-    function createNewTask(){
-        return
+    useEffect(() => {
+        refreshTasks()
+        refreshHabits()
+    }, [currUser, currDay])
+
+    function refreshTasks(){
+        fetch("/mysql-project/refresh-tasks", {
+            method: "POST",
+            body: JSON.stringify({
+                "currUser": currUser,
+                "currDay": currDay
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+            }
+        })
+        .then(response => response.json())
+        .then(tasks => {setTasks(tasks)})
+        .catch(error => console.error('Error:', error))
+    }
+
+    function addNewTask(){
+        if(formTaskToBeAdded == "")
+            return
+
+        fetch("/mysql-project/add-new-task", {
+            method: "POST",
+            body: JSON.stringify({
+                "currUser": currUser,
+                "currDay": currDay,
+                "taskIndex": tasks.length == 0 ? 0 : tasks[tasks.length - 1].taskIndex + 1,
+                "formTaskToBeAdded": formTaskToBeAdded
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+            }
+        })
+        .then(() => refreshTasks())
+    }
+
+    function refreshHabits(){
+        fetch("/mysql-project/refresh-habits", {
+            method: "POST",
+            body: JSON.stringify({
+                "currUser": currUser,
+                "currDay": currDay
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+            }
+        })
+        .then(response => response.json())
+        .then(habits => {setHabits(habits)})
+        .catch(error => console.error('Error:', error))
+    }
+
+    function addNewHabit(){
+        if(formHabitToBeAdded == "")
+            return
+
+        fetch("/mysql-project/add-new-habit", {
+            method: "POST",
+            body: JSON.stringify({
+                "currUser": currUser,
+                "currDay": currDay,
+                "habitIndex": habits.length == 0 ? 0 : habits[habits.length - 1].habitIndex + 1,
+                "formHabitToBeAdded": formHabitToBeAdded
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+            }
+        })
+        .then(() => refreshHabits())
     }
 
     return (
@@ -80,19 +149,19 @@ export default function MySQLProject(props){
             </form>
 
             <div className={howManyTimesRegistered == registrationLimit ? "" : "hidden"}>
-                <h1 className='mt-16 mx-4 text-3xl text-red-600 text-center font-semibold font-Montserrat'>You have registered {howManyTimesRegistered} times. <br /> You can't register any new accounts.</h1>
+                <h1 className="mt-16 mx-4 text-3xl text-red-600 text-center font-semibold font-Montserrat">You have registered {howManyTimesRegistered} times. <br /> You can't register any new accounts.</h1>
             </div>
 
-            <h1 className='mt-20 mx-4 text-3xl text-center font-semibold font-Montserrat'>You are logged in as <span className="text-blue-500">{currUser}</span></h1>
+            <h1 className="mt-20 mx-4 text-3xl text-center font-semibold font-Montserrat">You are logged in as <span className="text-blue-500">{currUser}</span></h1>
             
             <div>
                 <h1 className='mt-12 mx-4 text-3xl text-center font-Montserrat'>Day {currDay}</h1>
 
                 <div className="mt-10 mx-auto w-3/5 flex flex-wrap">
                     <div className="w-1/2">
-                        <h1 className='mb-8 text-3xl text-center font-medium font-Montserrat'>Tasks</h1>
+                        <h1 className="mb-8 text-3xl text-center font-medium font-Montserrat">Tasks</h1>
                         {tasks.map(task => (
-                            <div className="mt-4 h-10 flex">
+                            <div key={`${task.username} - ${task.dayIndex} - ${task.taskIndex}`} className="mt-4 h-10 flex">
                                 <img className="ml-16 mt-1 h-8" src={delete_x} alt="delete" />
                                 <p className="w-full text-2xl text-center">{task.text}</p>
                                 <img className="mr-16 mt-0.5 h-3/4" src={task.completed ? checkbox_checked : checkbox_empty} alt="checkbox" />
@@ -109,13 +178,13 @@ export default function MySQLProject(props){
                                 onChange={event => setFormTaskToBeAdded(event.target.value)}
                                 maxLength="32"
                             />
-                            <img className="ml-6 mr-16 mt-0.5 h-3/4" src={plus} alt="add task" />
+                            <img className="ml-6 mr-16 mt-0.5 h-3/4 hover:cursor-pointer" src={plus} alt="add task" onClick={addNewTask}/>
                         </div>
                     </div>
                     <div className="w-1/2">
                         <h1 className='mb-8 text-3xl text-center font-medium font-Montserrat'>Habits</h1>
                         {habits.map(habit => (
-                            <div className="mt-4 h-10 flex">
+                            <div key={`${habit.username} - ${habit.dayIndex} - ${habit.habitIndex}`} className="mt-4 h-10 flex">
                                 <img className="ml-16 mt-1 h-8" src={delete_x} alt="delete" />
                                 <p className="w-full text-2xl text-center">{habit.text}</p>
                                 <img className="mr-16 mt-0.5 h-3/4" src={habit.completed ? checkbox_checked : checkbox_empty} alt="checkbox" />
@@ -132,7 +201,7 @@ export default function MySQLProject(props){
                                 onChange={event => setFormHabitToBeAdded(event.target.value)}
                                 maxLength="32"
                             />
-                            <img className="ml-6 mr-16 mt-0.5 h-3/4" src={plus} alt="add habit" />
+                            <img className="ml-6 mr-16 mt-0.5 h-3/4 hover:cursor-pointer" src={plus} alt="add habit" onClick={addNewHabit}/>
                         </div>
                     </div>
                     <div className="mt-12 w-full flex">

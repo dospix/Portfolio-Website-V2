@@ -54,9 +54,26 @@ export default function MySQLProject(props){
     }
 
     useEffect(() => {
+        refreshNextDayExists()
         refreshTasks()
         refreshHabits()
     }, [currUser, currDay])
+
+    function refreshNextDayExists(){
+        fetch("/mysql-project/refresh-nextDayExists", {
+            method: "POST",
+            body: JSON.stringify({
+                "currUser": currUser,
+                "currDay": currDay
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+            }
+        })
+        .then(response => response.json())
+        .then(data => {setNextDayExists(data.next_day_exists)})
+        .catch(error => console.error('Error:', error))
+    }
 
     function refreshTasks(){
         fetch("/mysql-project/refresh-tasks", {
@@ -275,8 +292,8 @@ export default function MySQLProject(props){
                         </div>
                     </div>
                     <div className="mt-12 w-full flex">
-                        <img className={`ml-auto w-14 ${currDay == 1 ? "invisible" : ""}`} src={props.isDarkMode ? arrow_left_white : arrow_left} alt="previous day" />
-                        <img className="mr-auto ml-60 w-14" src={props.isDarkMode ? arrow_right_white : arrow_right} alt="next day" />
+                        <img className={`ml-auto w-14 ${currDay == 1 ? "invisible" : "hover:cursor-pointer"}`} src={props.isDarkMode ? arrow_left_white : arrow_left} alt="previous day" />
+                        <img className="mr-auto ml-60 w-14 hover:cursor-pointer" src={nextDayExists ? (props.isDarkMode ? arrow_right_white : arrow_right) : plus} alt="next day" />
                     </div>
                 </div>
                 

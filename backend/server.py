@@ -228,6 +228,22 @@ def change_mysql_project_user():
         "hasRegistered": has_registered
     }
 
+@app.route("/mysql-project/refresh-nextDayExists", methods=["POST"])
+@cross_origin()
+def refresh_mysql_project_next_day_exists():
+    """
+    nextDayExists is used when the user clicks the arrow to switch to the next day.
+    If the next day doesn't already exist in the database then it has to be added.
+    """
+    form_response_json = request.get_json()
+    curr_user = form_response_json["currUser"]
+    curr_day = form_response_json["currDay"]
+
+    next_day = db.session.query(Days).filter(Days.Username == curr_user).filter(Days.DayIndex == curr_day + 1).first()
+    next_day_exists = next_day is not None
+
+    return {"next_day_exists": next_day_exists}
+
 @app.route("/mysql-project/refresh-tasks", methods=["POST"])
 @cross_origin()
 def refresh_mysql_project_tasks():

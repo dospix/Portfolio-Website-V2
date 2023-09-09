@@ -12,7 +12,6 @@ import joblib
 import pandas as pd
 import torch
 import torch.nn as nn
-from socket import gethostname
 
 mimetypes.add_type("application/javascript", ".js")
 mimetypes.add_type("text/css", ".css")
@@ -261,6 +260,33 @@ def add_mysql_project_task():
 
     return {}
 
+@app.route("/mysql-project/delete-task", methods=["POST"])
+@cross_origin()
+def delete_mysql_project_task():
+    form_response_json = request.get_json()
+    curr_user = form_response_json["currUser"]
+    curr_day = form_response_json["currDay"]
+    task_index = form_response_json["taskIndex"]
+
+    db.session.query(Tasks).filter(Tasks.Username == curr_user).filter(Tasks.DayIndex == curr_day).filter(Tasks.TaskIndex == task_index).delete()
+    db.session.commit()
+
+    return {}
+
+@app.route("/mysql-project/toggle-checkbox-task", methods=["POST"])
+@cross_origin()
+def toggle_checkbox_mysql_project_task():
+    form_response_json = request.get_json()
+    curr_user = form_response_json["currUser"]
+    curr_day = form_response_json["currDay"]
+    task_index = form_response_json["taskIndex"]
+
+    completed_task = db.session.query(Tasks).filter(Tasks.Username == curr_user).filter(Tasks.DayIndex == curr_day).filter(Tasks.TaskIndex == task_index).first()
+    completed_task.Completed = not completed_task.Completed
+    db.session.commit()
+
+    return {}
+
 @app.route("/mysql-project/refresh-habits", methods=["POST"])
 @cross_origin()
 def refresh_mysql_project_habits():
@@ -289,6 +315,33 @@ def add_mysql_project_habit():
 
     habit = Habits(Username=curr_user, DayIndex=curr_day, HabitIndex=habit_to_be_added_index, Text=habit_to_be_added_text, Completed=False)
     db.session.add(habit)
+    db.session.commit()
+
+    return {}
+
+@app.route("/mysql-project/delete-habit", methods=["POST"])
+@cross_origin()
+def delete_mysql_project_habit():
+    form_response_json = request.get_json()
+    curr_user = form_response_json["currUser"]
+    curr_day = form_response_json["currDay"]
+    habit_index = form_response_json["habitIndex"]
+
+    db.session.query(Habits).filter(Habits.Username == curr_user).filter(Habits.DayIndex == curr_day).filter(Habits.HabitIndex == habit_index).delete()
+    db.session.commit()
+
+    return {}
+
+@app.route("/mysql-project/toggle-checkbox-habit", methods=["POST"])
+@cross_origin()
+def toggle_checkbox_mysql_project_habit():
+    form_response_json = request.get_json()
+    curr_user = form_response_json["currUser"]
+    curr_day = form_response_json["currDay"]
+    habit_index = form_response_json["habitIndex"]
+
+    completed_habit = db.session.query(Habits).filter(Habits.Username == curr_user).filter(Habits.DayIndex == curr_day).filter(Habits.HabitIndex == habit_index).first()
+    completed_habit.Completed = not completed_habit.Completed
     db.session.commit()
 
     return {}

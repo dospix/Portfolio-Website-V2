@@ -90,7 +90,37 @@ export default function MySQLProject(props){
                 "Content-type": "application/json; charset=UTF-8",
             }
         })
-        .then(() => refreshTasks())
+        .then(refreshTasks)
+    }
+
+    function deleteTask(username, dayIndex, taskIndex){
+        fetch("/mysql-project/delete-task", {
+            method: "POST",
+            body: JSON.stringify({
+                "currUser": username,
+                "currDay": dayIndex,
+                "taskIndex": taskIndex
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+            }
+        })
+        .then(refreshTasks)
+    }
+
+    function toggleCheckboxTask(username, dayIndex, taskIndex){
+        fetch("/mysql-project/toggle-checkbox-task", {
+            method: "POST",
+            body: JSON.stringify({
+                "currUser": username,
+                "currDay": dayIndex,
+                "taskIndex": taskIndex
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+            }
+        })
+        .then(refreshTasks)
     }
 
     function refreshHabits(){
@@ -125,7 +155,37 @@ export default function MySQLProject(props){
                 "Content-type": "application/json; charset=UTF-8",
             }
         })
-        .then(() => refreshHabits())
+        .then(refreshHabits)
+    }
+
+    function deleteHabit(username, dayIndex, habitIndex){
+        fetch("/mysql-project/delete-habit", {
+            method: "POST",
+            body: JSON.stringify({
+                "currUser": username,
+                "currDay": dayIndex,
+                "habitIndex": habitIndex
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+            }
+        })
+        .then(refreshHabits)
+    }
+
+    function toggleCheckboxHabit(username, dayIndex, habitIndex){
+        fetch("/mysql-project/toggle-checkbox-habit", {
+            method: "POST",
+            body: JSON.stringify({
+                "currUser": username,
+                "currDay": dayIndex,
+                "habitIndex": habitIndex
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+            }
+        })
+        .then(refreshHabits)
     }
 
     return (
@@ -162,9 +222,14 @@ export default function MySQLProject(props){
                         <h1 className="mb-8 text-3xl text-center font-medium font-Montserrat">Tasks</h1>
                         {tasks.map(task => (
                             <div key={`${task.username} - ${task.dayIndex} - ${task.taskIndex}`} className="mt-4 h-10 flex">
-                                <img className="ml-16 mt-1 h-8" src={delete_x} alt="delete" />
+                                <img className="ml-16 mt-1 h-8 hover:cursor-pointer" src={delete_x} alt="delete task" onClick={() => deleteTask(task.username, task.dayIndex, task.taskIndex)} />
                                 <p className="w-full text-2xl text-center">{task.text}</p>
-                                <img className="mr-16 mt-0.5 h-3/4" src={task.completed ? checkbox_checked : checkbox_empty} alt="checkbox" />
+                                <img 
+                                    className="mr-16 mt-0.5 h-3/4 hover:cursor-pointer" 
+                                    src={task.completed ? checkbox_checked : checkbox_empty} 
+                                    alt="task checkbox" 
+                                    onClick={() => toggleCheckboxTask(task.username, task.dayIndex, task.taskIndex)} 
+                                />
                             </div>
                         ))}
                         <div className="mt-10 h-10 flex">
@@ -185,9 +250,14 @@ export default function MySQLProject(props){
                         <h1 className='mb-8 text-3xl text-center font-medium font-Montserrat'>Habits</h1>
                         {habits.map(habit => (
                             <div key={`${habit.username} - ${habit.dayIndex} - ${habit.habitIndex}`} className="mt-4 h-10 flex">
-                                <img className="ml-16 mt-1 h-8" src={delete_x} alt="delete" />
+                                <img className="ml-16 mt-1 h-8 hover:cursor-pointer" src={delete_x} alt="delete habit" onClick={() => deleteHabit(habit.username, habit.dayIndex, habit.habitIndex)} />
                                 <p className="w-full text-2xl text-center">{habit.text}</p>
-                                <img className="mr-16 mt-0.5 h-3/4" src={habit.completed ? checkbox_checked : checkbox_empty} alt="checkbox" />
+                                <img 
+                                    className="mr-16 mt-0.5 h-3/4 hover:cursor-pointer" 
+                                    src={habit.completed ? checkbox_checked : checkbox_empty} 
+                                    alt="habit checkbox" 
+                                    onClick={() => toggleCheckboxHabit(habit.username, habit.dayIndex, habit.habitIndex)} 
+                                />
                             </div>
                         ))}
                         <div className="mt-10 h-10 flex">

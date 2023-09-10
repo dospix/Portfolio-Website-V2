@@ -362,6 +362,25 @@ def toggle_checkbox_mysql_project_habit():
 
     return {}
 
+@app.route("/mysql-project/add-next-day", methods=["POST"])
+@cross_origin()
+def add_next_mysql_project_day():
+    form_response_json = request.get_json()
+    curr_user = form_response_json["currUser"]
+    day_index = form_response_json["dayIndex"]
+
+    day = Days(Username=curr_user, DayIndex=day_index)
+    db.session.add(day)
+    db.session.commit()
+
+    # Add the habits from the current day to the newly created day
+    for habit in db.session.query(Habits).filter(Habits.Username == curr_user).filter(Habits.DayIndex == day_index - 1).all():
+        coppied_habit = Habits(Username=curr_user, DayIndex=day_index, HabitIndex=habit.HabitIndex, Text=habit.Text, Completed=habit.Completed)
+        db.session.add(coppied_habit)
+        db.session.commit()
+
+    return {}
+
 with app.app_context():
     db.create_all()
 if __name__ == "__main__":

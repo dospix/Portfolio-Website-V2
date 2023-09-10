@@ -205,6 +205,19 @@ export default function MySQLProject(props){
         .then(refreshHabits)
     }
 
+    function addNextDay(){
+        fetch("/mysql-project/add-next-day", {
+            method: "POST",
+            body: JSON.stringify({
+                "currUser": currUser,
+                "dayIndex": currDay + 1
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+            }
+        })
+    }
+
     return (
         <>
             <h1 className='mt-12 mx-4 text-3xl text-center font-semibold font-Montserrat'>Using MySQL to store your tasks/habits.</h1>
@@ -292,8 +305,24 @@ export default function MySQLProject(props){
                         </div>
                     </div>
                     <div className="mt-12 w-full flex">
-                        <img className={`ml-auto w-14 ${currDay == 1 ? "invisible" : "hover:cursor-pointer"}`} src={props.isDarkMode ? arrow_left_white : arrow_left} alt="previous day" />
-                        <img className="mr-auto ml-60 w-14 hover:cursor-pointer" src={nextDayExists ? (props.isDarkMode ? arrow_right_white : arrow_right) : plus} alt="next day" />
+                        <img 
+                            className={`ml-auto w-14 ${currDay == 1 ? "invisible" : "hover:cursor-pointer"}`} 
+                            src={props.isDarkMode ? arrow_left_white : arrow_left} 
+                            alt="previous day arrow"
+                            onClick={currDay > 1 ? () => setCurrDay(prevState => prevState - 1) : ""}
+                        />
+                        <img 
+                            className="mr-auto ml-60 w-14 hover:cursor-pointer" 
+                            src={nextDayExists ? (props.isDarkMode ? arrow_right_white : arrow_right) : plus} 
+                            alt="next day arrow" 
+                            onClick={() => {
+                                if(!nextDayExists){
+                                    addNextDay();
+                                }
+                                
+                                setCurrDay(prevState => prevState + 1);
+                            }}
+                        />
                     </div>
                 </div>
                 

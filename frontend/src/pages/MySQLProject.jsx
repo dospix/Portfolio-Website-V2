@@ -11,6 +11,7 @@ import plus from "../assets/images/plus.png"
 export default function MySQLProject(props){
     const [totalUserTasks, setTotalUserTasks] = useState(0)
     const [totalUserTasksCompleted, setTotalUserTasksCompleted] = useState(0)
+    const [longestUserTaskStreak, setlongestUserTaskStreak] = useState(0)
     const [totalUserHabits, setTotalUserHabits] = useState(0)
     const [totalUserHabitsCompleted, settotalUserHabitsCompleted] = useState(0)
     const [longestUserHabitStreak, setlongestUserHabitStreak] = useState(0)
@@ -57,6 +58,7 @@ export default function MySQLProject(props){
         refreshNextDayExists()
         refreshTasks()
         refreshHabits()
+        updateUserStatistics()
     }, [currUser, currDay])
 
     function refreshNextDayExists(){
@@ -108,6 +110,8 @@ export default function MySQLProject(props){
             }
         })
         .then(refreshTasks)
+        .then(updateUserStatistics)
+        .catch(error => console.error('Error:', error))
     }
 
     function deleteTask(username, dayIndex, taskIndex){
@@ -123,6 +127,8 @@ export default function MySQLProject(props){
             }
         })
         .then(refreshTasks)
+        .then(updateUserStatistics)
+        .catch(error => console.error('Error:', error))
     }
 
     function toggleCheckboxTask(username, dayIndex, taskIndex){
@@ -138,6 +144,8 @@ export default function MySQLProject(props){
             }
         })
         .then(refreshTasks)
+        .then(updateUserStatistics)
+        .catch(error => console.error('Error:', error))
     }
 
     function refreshHabits(){
@@ -173,6 +181,8 @@ export default function MySQLProject(props){
             }
         })
         .then(refreshHabits)
+        .then(updateUserStatistics)
+        .catch(error => console.error('Error:', error))
     }
 
     function deleteHabit(username, dayIndex, habitIndex){
@@ -188,6 +198,8 @@ export default function MySQLProject(props){
             }
         })
         .then(refreshHabits)
+        .then(updateUserStatistics)
+        .catch(error => console.error('Error:', error))
     }
 
     function toggleCheckboxHabit(username, dayIndex, habitIndex){
@@ -203,6 +215,8 @@ export default function MySQLProject(props){
             }
         })
         .then(refreshHabits)
+        .then(updateUserStatistics)
+        .catch(error => console.error('Error:', error))
     }
 
     function addNextDay(){
@@ -216,6 +230,30 @@ export default function MySQLProject(props){
                 "Content-type": "application/json; charset=UTF-8",
             }
         })
+        .then(() => setCurrDay(prevState => prevState + 1))
+        .catch(error => console.error('Error:', error))
+    }
+
+    function updateUserStatistics(){
+        fetch("/mysql-project/update-user-statistics", {
+            method: "POST",
+            body: JSON.stringify({
+                "currUser": currUser
+            }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8",
+            }
+        })
+        .then(response => response.json())
+        .then(statistics => {
+            setTotalUserTasks(statistics.total_user_tasks)
+            setTotalUserTasksCompleted(statistics.total_user_tasks_completed)
+            setlongestUserTaskStreak(statistics.longest_user_task_streak)
+            setTotalUserHabits(statistics.total_user_habits)
+            settotalUserHabitsCompleted(statistics.total_user_habits_completed)
+            setlongestUserHabitStreak(statistics.longest_user_habit_streak)
+        })
+        .catch(error => console.error('Error:', error))
     }
 
     return (
@@ -319,15 +357,17 @@ export default function MySQLProject(props){
                                 if(!nextDayExists){
                                     addNextDay();
                                 }
-                                
-                                setCurrDay(prevState => prevState + 1);
+                                else{
+                                    setCurrDay(prevState => prevState + 1);
+                                }
                             }}
                         />
                     </div>
                 </div>
                 
                 <div className="mt-28">
-                    <h1 className='mx-4 text-3xl text-center font-Montserrat'>You have completed {totalUserTasksCompleted}/{totalUserTasks} tasks</h1>
+                    <h1 className='mx-4 text-3xl text-center font-Montserrat'>You completed {totalUserTasksCompleted}/{totalUserTasks} tasks</h1>
+                    <h1 className='mt-6 mx-4 text-3xl text-center font-Montserrat'>Your longest task streak lasted {longestUserTaskStreak} days</h1>
                     <h1 className='mt-6 mx-4 text-3xl text-center font-Montserrat'>You engaged in your habits {totalUserHabitsCompleted}/{totalUserHabits} times</h1>
                     <h1 className='mt-6 mx-4 text-3xl text-center font-Montserrat'>Your longest habit streak lasted {longestUserHabitStreak} days</h1>
                 </div>

@@ -222,6 +222,9 @@ def change_mysql_project_user():
         db.session.add(user)
         db.session.commit()
         has_registered = True
+        day = Days(Username=username, DayIndex=1)
+        db.session.add(day)
+        db.session.commit()
     
     return {
         "currUser": username,
@@ -380,6 +383,53 @@ def add_next_mysql_project_day():
         db.session.commit()
 
     return {}
+
+@app.route("/mysql-project/update-user-statistics", methods=["POST"])
+@cross_origin()
+def update_mysql_project_user_statistics():
+    form_response_json = request.get_json()
+    curr_user = form_response_json["currUser"]
+
+    total_user_tasks = 0
+    total_user_tasks_completed = 0
+    total_user_habits = 0
+    total_user_habits_completed = 0
+    for day in db.session.query(Days).filter(Days.Username == curr_user).all():
+        total_user_tasks += db.session.query(Tasks).filter(Tasks.Username == curr_user).filter(Tasks.DayIndex == day.DayIndex).count()
+        total_user_tasks_completed += db.session.query(Tasks).filter(Tasks.Username == curr_user).filter(Tasks.DayIndex == day.DayIndex).filter(Tasks.Completed == True).count()
+        total_user_habits += db.session.query(Habits).filter(Habits.Username == curr_user).filter(Habits.DayIndex == day.DayIndex).count()
+        total_user_habits_completed += db.session.query(Habits).filter(Habits.Username == curr_user).filter(Habits.DayIndex == day.DayIndex).filter(Habits.Completed == True).count()
+    
+    longest_user_task_streak = 0
+    longest_user_habit_streak = 0
+    curr_longest_user_task_streak = 0
+    curr_longest_user_habit_streak = 0
+    for day in db.session.query(Days).filter(Days.Username == curr_user).all():
+        if db.session.query(Tasks).filter(Tasks.Username == curr_user).filter(Tasks.DayIndex == day.DayIndex).filter(Tasks.Completed == False).count() > 0:
+            if curr_longest_user_task_streak > longest_user_task_streak:
+                longest_user_task_streak = curr_longest_user_task_streak
+            curr_longest_user_task_streak = 0
+        else:
+            curr_longest_user_task_streak += 1
+        if db.session.query(Habits).filter(Habits.Username == curr_user).filter(Habits.DayIndex == day.DayIndex).filter(Habits.Completed == False).count() > 0:
+            if curr_longest_user_habit_streak > longest_user_habit_streak:
+                longest_user_habit_streak = curr_longest_user_habit_streak
+            curr_longest_user_habit_streak = 0
+        else:
+            curr_longest_user_habit_streak += 1
+    if curr_longest_user_task_streak > longest_user_task_streak:
+        longest_user_task_streak = curr_longest_user_task_streak
+    if curr_longest_user_habit_streak > longest_user_habit_streak:
+        longest_user_habit_streak = curr_longest_user_habit_streak
+
+    return {
+        "total_user_tasks": total_user_tasks,
+        "total_user_tasks_completed": total_user_tasks_completed,
+        "longest_user_task_streak": longest_user_task_streak,
+        "total_user_habits": total_user_habits,
+        "total_user_habits_completed": total_user_habits_completed,
+        "longest_user_habit_streak": longest_user_habit_streak
+    }
 
 with app.app_context():
     db.create_all()

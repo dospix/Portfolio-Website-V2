@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState, useEffect } from "react"
 import delete_x from "../assets/images/delete-x.png"
 import checkbox_empty from "../assets/images/checkbox-empty.png"
 import checkbox_checked from "../assets/images/checkbox-checked.png"
@@ -258,13 +258,13 @@ export default function MySQLProject(props){
 
     return (
         <>
-            <h1 className='mt-12 mx-4 text-3xl text-center font-semibold font-Montserrat'>Using MySQL to store your tasks/habits.</h1>
+            <h1 className='mt-12 mx-1 sm:mx-4 text-lg md:text-2xl lg:text-3xl text-center font-semibold font-Montserrat'>Using MySQL to store your tasks/habits.</h1>
 
-            <form onSubmit={registerAndChangeUser} className="mx-auto mt-16 w-1/2 flex justify-center flex-col font-Open_Sans">
-                <label className="text-3xl text-center font-Montserrat" htmlFor="titleKeywords">Please provide a username</label>
+            <form onSubmit={registerAndChangeUser} className="mx-auto mt-16 w-11/12 sm:w-1/2 flex justify-center flex-col font-Open_Sans">
+                <label className="text-lg md:text-2xl lg:text-3xl text-center font-Montserrat" htmlFor="titleKeywords">Please provide a username</label>
                 <input 
                     type="text"
-                    className="mx-32 mt-6 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-md text-black"
+                    className="mx-1 sm:mx-10 lg:mx-32 mt-3 md:mt-6 p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-md text-black"
                     placeholder=""
                     id="formUsername"
                     name="formUsername"
@@ -273,27 +273,27 @@ export default function MySQLProject(props){
                     maxLength="32"
                 />
 
-                <button className="w-56 h-12 mt-10 self-center rounded-xl bg-blue-500 text-xl text-white">Login/Register</button>
+                <button className="w-56 h-12 mt-10 self-center rounded-xl bg-blue-500 text-base md:text-lg lg:text-xl text-white">Login/Register</button>
             </form>
 
             <div className={howManyTimesRegistered == registrationLimit ? "" : "hidden"}>
-                <h1 className="mt-16 mx-4 text-3xl text-red-600 text-center font-semibold font-Montserrat">You have registered {howManyTimesRegistered} times. <br /> You can't register any new accounts.</h1>
+                <h1 className="mt-16 mx-4 text-lg md:text-2xl lg:text-3xl text-red-600 text-center font-semibold font-Montserrat">You have registered {howManyTimesRegistered} times. <br /> You can't register any new accounts.</h1>
             </div>
 
-            <h1 className="mt-20 mx-4 text-3xl text-center font-semibold font-Montserrat">You are logged in as <span className="text-blue-500">{currUser}</span></h1>
+            <h1 className="mt-20 mx-4 text-lg md:text-2xl lg:text-3xl text-center font-semibold font-Montserrat">You are logged in as <span className="text-blue-500">{currUser}</span></h1>
             
             <div>
-                <h1 className='mt-12 mx-4 text-3xl text-center font-Montserrat'>Day {currDay}</h1>
+                <h1 className='mt-12 mx-4 text-lg md:text-2xl lg:text-3xl text-center font-Montserrat'>Day {currDay}</h1>
 
-                <div className="mt-10 mx-auto w-3/5 flex flex-wrap">
+                <div className="mt-10 mx-auto w-full sm:w-11/12 xl:w-3/5 flex flex-wrap">
                     <div className="w-1/2">
-                        <h1 className="mb-8 text-3xl text-center font-medium font-Montserrat">Tasks</h1>
+                        <h1 className="mb-8 text-lg md:text-2xl lg:text-3xl text-center font-medium font-Montserrat">Tasks</h1>
                         {tasks.map(task => (
                             <div key={`${task.username} - ${task.dayIndex} - ${task.taskIndex}`} className="mt-4 h-10 flex">
-                                <img className="ml-16 mt-1 h-8 hover:cursor-pointer" src={delete_x} alt="delete task" onClick={() => deleteTask(task.username, task.dayIndex, task.taskIndex)} />
-                                <p className="w-full text-2xl text-center">{task.text}</p>
+                                <img className="ml-2 md:ml-16 mt-1 h-4 sm:h-8 hover:cursor-pointer" src={delete_x} alt="delete task" onClick={() => deleteTask(task.username, task.dayIndex, task.taskIndex)} />
+                                <p className="w-full md:text-2xl sm:text-xl text-md text-center">{task.text}</p>
                                 <img 
-                                    className="mr-16 mt-0.5 h-3/4 hover:cursor-pointer" 
+                                    className="mr-2 md:mr-16 mt-1 h-4 sm:h-8 hover:cursor-pointer" 
                                     src={task.completed ? checkbox_checked : checkbox_empty} 
                                     alt="task checkbox" 
                                     onClick={() => toggleCheckboxTask(task.username, task.dayIndex, task.taskIndex)} 
@@ -303,7 +303,7 @@ export default function MySQLProject(props){
                         <div className="mt-10 h-10 flex">
                             <input 
                                 type="text"
-                                className="ml-16 p-2 w-full border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-md text-black"
+                                className="ml-2 md:ml-16 p-2 w-full border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-sm text-black"
                                 placeholder="Add a new task"
                                 id="formTaskToBeAdded"
                                 name="formTaskToBeAdded"
@@ -311,17 +311,17 @@ export default function MySQLProject(props){
                                 onChange={event => setFormTaskToBeAdded(event.target.value)}
                                 maxLength="32"
                             />
-                            <img className="ml-6 mr-16 mt-0.5 h-3/4 hover:cursor-pointer" src={plus} alt="add task" onClick={addNewTask}/>
+                            <img className="ml-2 md:ml-6 mr-2 md:mr-16 mt-2 sm:mt-0.5 h-1/2 sm:h-3/4 hover:cursor-pointer" src={plus} alt="add task" onClick={addNewTask}/>
                         </div>
                     </div>
                     <div className="w-1/2">
-                        <h1 className='mb-8 text-3xl text-center font-medium font-Montserrat'>Habits</h1>
+                        <h1 className='mb-8 text-lg md:text-2xl lg:text-3xl text-center font-medium font-Montserrat'>Habits</h1>
                         {habits.map(habit => (
                             <div key={`${habit.username} - ${habit.dayIndex} - ${habit.habitIndex}`} className="mt-4 h-10 flex">
-                                <img className="ml-16 mt-1 h-8 hover:cursor-pointer" src={delete_x} alt="delete habit" onClick={() => deleteHabit(habit.username, habit.dayIndex, habit.habitIndex)} />
-                                <p className="w-full text-2xl text-center">{habit.text}</p>
+                                <img className="ml-2 md:ml-16 mt-1 h-4 sm:h-8 hover:cursor-pointer" src={delete_x} alt="delete habit" onClick={() => deleteHabit(habit.username, habit.dayIndex, habit.habitIndex)} />
+                                <p className="w-full md:text-2xl sm:text-xl text-md text-center">{habit.text}</p>
                                 <img 
-                                    className="mr-16 mt-0.5 h-3/4 hover:cursor-pointer" 
+                                    className="mr-2 md:mr-16 mt-1 h-4 sm:h-8 hover:cursor-pointer" 
                                     src={habit.completed ? checkbox_checked : checkbox_empty} 
                                     alt="habit checkbox" 
                                     onClick={() => toggleCheckboxHabit(habit.username, habit.dayIndex, habit.habitIndex)} 
@@ -331,7 +331,7 @@ export default function MySQLProject(props){
                         <div className="mt-10 h-10 flex">
                             <input 
                                 type="text"
-                                className="ml-16 p-2 w-full border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-md text-black"
+                                className="ml-2 md:ml-16 p-2 w-full border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md md:text-2xl sm:text-xl text-sm text-black"
                                 placeholder="Add a new habit"
                                 id="formHabitToBeAdded"
                                 name="formHabitToBeAdded"
@@ -339,18 +339,18 @@ export default function MySQLProject(props){
                                 onChange={event => setFormHabitToBeAdded(event.target.value)}
                                 maxLength="32"
                             />
-                            <img className="ml-6 mr-16 mt-0.5 h-3/4 hover:cursor-pointer" src={plus} alt="add habit" onClick={addNewHabit}/>
+                            <img className="ml-2 md:ml-6 mr-2 md:mr-16 mt-2 sm:mt-0.5 h-1/2 sm:h-3/4 hover:cursor-pointer" src={plus} alt="add habit" onClick={addNewHabit}/>
                         </div>
                     </div>
                     <div className="mt-12 w-full flex">
                         <img 
-                            className={`ml-auto w-14 ${currDay == 1 ? "invisible" : "hover:cursor-pointer"}`} 
+                            className={`ml-auto w-7 sm:w-14 ${currDay == 1 ? "ainvisible" : "hover:cursor-pointer"}`} 
                             src={props.isDarkMode ? arrow_left_white : arrow_left} 
                             alt="previous day arrow"
-                            onClick={currDay > 1 ? () => setCurrDay(prevState => prevState - 1) : ""}
+                            onClick={currDay > 1 ? () => setCurrDay(prevState => prevState - 1) : () => {}}
                         />
                         <img 
-                            className="mr-auto ml-60 w-14 hover:cursor-pointer" 
+                            className="mr-auto ml-32 sm:ml-48 md:ml-96 w-7 sm:w-14 hover:cursor-pointer" 
                             src={nextDayExists ? (props.isDarkMode ? arrow_right_white : arrow_right) : plus} 
                             alt="next day arrow" 
                             onClick={() => {
@@ -365,11 +365,11 @@ export default function MySQLProject(props){
                     </div>
                 </div>
                 
-                <div className="mt-28">
-                    <h1 className='mx-4 text-3xl text-center font-Montserrat'>You completed {totalUserTasksCompleted}/{totalUserTasks} tasks</h1>
-                    <h1 className='mt-6 mx-4 text-3xl text-center font-Montserrat'>Your longest task streak lasted {longestUserTaskStreak} days</h1>
-                    <h1 className='mt-6 mx-4 text-3xl text-center font-Montserrat'>You engaged in your habits {totalUserHabitsCompleted}/{totalUserHabits} times</h1>
-                    <h1 className='mt-6 mx-4 text-3xl text-center font-Montserrat'>Your longest habit streak lasted {longestUserHabitStreak} days</h1>
+                <div className="my-28">
+                    <h1 className='mx-4 text-lg md:text-2xl lg:text-3xl text-center font-Montserrat'>You completed {totalUserTasksCompleted}/{totalUserTasks} tasks</h1>
+                    <h1 className='mt-6 mx-4 text-lg md:text-2xl lg:text-3xl text-center font-Montserrat'>Your longest task streak lasted {longestUserTaskStreak} days</h1>
+                    <h1 className='mt-6 mx-4 text-lg md:text-2xl lg:text-3xl text-center font-Montserrat'>You engaged in your habits {totalUserHabitsCompleted}/{totalUserHabits} times</h1>
+                    <h1 className='mt-6 mx-4 text-lg md:text-2xl lg:text-3xl text-center font-Montserrat'>Your longest habit streak lasted {longestUserHabitStreak} days</h1>
                 </div>
             </div>
             

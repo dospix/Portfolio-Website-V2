@@ -21,20 +21,20 @@ CORS(app)
 
 # Use on pythonanywhere
 
-# SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
-#     username="Dospix",
-#     password="MySQLprojectpassword123",
-#     hostname="Dospix.mysql.pythonanywhere-services.com",
-#     databasename="Dospix$default",
-# )
-# app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
-# app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
-# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
+    username="Dospix",
+    password="MySQLprojectpassword123",
+    hostname="Dospix.mysql.pythonanywhere-services.com",
+    databasename="Dospix$default",
+)
+app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
+app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Use locally
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+# app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
+# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 

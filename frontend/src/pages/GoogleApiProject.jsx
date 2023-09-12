@@ -155,7 +155,7 @@ export default function GoogleApiProject(props) {
   return (
   <>
     <div className='lg:mt-20 md:mt-16 sm:mt-14 mt-12 mx-2 text-center'>
-      <h1 className='md:text-3xl text-2xl font-semibold font-Montserrat'>Book recommendation using Google Books API</h1>
+      <h1 className='md:text-3xl text-2xl font-semibold font-Montserrat'>Book recommendations using Google Books API</h1>
     </div>
 
     <div className='mt-12 2xl:mx-80 xl:mx-44 lg:mx-16 md:mx-10 mx-5 md:text-2xl sm:text-xl text-lg font-Open_Sans'>

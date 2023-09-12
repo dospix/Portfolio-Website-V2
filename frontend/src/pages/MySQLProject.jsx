@@ -18,8 +18,12 @@ export default function MySQLProject(props){
 
     const [formUsername, setFormUsername] = useState("")
     const [currUser, setCurrUser] = useState("")
-    const [howManyTimesRegistered, setHowManyTimesRegistered] = useState(0)
-    const registrationLimit = 1
+    const [howManyTimesRegistered, setHowManyTimesRegistered] = useState(localStorage.getItem("howManyTimesRegistered") !== null ? Number(localStorage.getItem("howManyTimesRegistered")) : 0)
+    const registrationLimit = 10
+
+    useEffect(() => {
+        localStorage.setItem("howManyTimesRegistered", howManyTimesRegistered)
+      }, [howManyTimesRegistered])
     
     const [currDay, setCurrDay] = useState(1)
     const [tasks, setTasks] = useState([])
@@ -94,7 +98,7 @@ export default function MySQLProject(props){
     }
 
     function addNewTask(){
-        if(formTaskToBeAdded == "")
+        if(formTaskToBeAdded == "" || tasks.length == 15)
             return
 
         fetch("/mysql-project/add-new-task", {
@@ -165,7 +169,7 @@ export default function MySQLProject(props){
     }
 
     function addNewHabit(){
-        if(formHabitToBeAdded == "")
+        if(formHabitToBeAdded == "" || habits.length == 15)
             return
 
         fetch("/mysql-project/add-new-habit", {
@@ -220,6 +224,9 @@ export default function MySQLProject(props){
     }
 
     function addNextDay(){
+        if(currDay == 50)
+            return
+
         fetch("/mysql-project/add-next-day", {
             method: "POST",
             body: JSON.stringify({
@@ -282,7 +289,7 @@ export default function MySQLProject(props){
 
             <h1 className="mt-20 mx-4 text-lg md:text-2xl lg:text-3xl text-center font-semibold font-Montserrat">You are logged in as <span className="text-blue-500">{currUser}</span></h1>
             
-            <div>
+            <div className={currUser == "" ? "hidden" : ""}>
                 <h1 className='mt-12 mx-4 text-lg md:text-2xl lg:text-3xl text-center font-Montserrat'>Day {currDay}</h1>
 
                 <div className="mt-10 mx-auto w-full sm:w-11/12 xl:w-3/5 flex flex-wrap">
@@ -344,7 +351,7 @@ export default function MySQLProject(props){
                     </div>
                     <div className="mt-12 w-full flex">
                         <img 
-                            className={`ml-auto w-7 sm:w-14 ${currDay == 1 ? "ainvisible" : "hover:cursor-pointer"}`} 
+                            className={`ml-auto w-7 sm:w-14 ${currDay == 1 ? "invisible" : "hover:cursor-pointer"}`} 
                             src={props.isDarkMode ? arrow_left_white : arrow_left} 
                             alt="previous day arrow"
                             onClick={currDay > 1 ? () => setCurrDay(prevState => prevState - 1) : () => {}}

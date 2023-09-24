@@ -267,6 +267,11 @@ export default function MySQLProject(props){
         <>
             <h1 className='mt-12 mx-1 sm:mx-4 text-lg md:text-2xl lg:text-3xl text-center font-semibold font-Montserrat'>Using MySQL to store your tasks/habits.</h1>
 
+            <div className='mt-24 2xl:mx-80 xl:mx-44 lg:mx-16 md:mx-10 mx-5 md:text-2xl sm:text-xl text-lg font-Open_Sans'>
+                <p className="lg:inline">Once you register/log in you will be able to interact with the project. </p>
+                <p className="lg:inline lg:mt-1 md:mt-3 mt-5">Your username, along with your tasks and habits will be stored in a MySQL database, which is used when updating the states on the page.</p>
+            </div>
+
             <form onSubmit={registerAndChangeUser} className="mx-auto mt-16 w-11/12 sm:w-1/2 flex justify-center flex-col font-Open_Sans">
                 <label className="text-lg md:text-2xl lg:text-3xl text-center font-Montserrat" htmlFor="titleKeywords">Please provide a username</label>
                 <input 
@@ -280,7 +285,7 @@ export default function MySQLProject(props){
                     maxLength="32"
                 />
 
-                <button className="w-56 h-12 mt-10 self-center rounded-xl bg-blue-500 text-base md:text-lg lg:text-xl text-white">Login/Register</button>
+                <button className="w-56 h-12 mt-10 self-center rounded-xl bg-blue-500 text-base md:text-lg lg:text-xl text-white">Log in/Register</button>
             </form>
 
             <div className={howManyTimesRegistered == registrationLimit ? "" : "hidden"}>
@@ -288,6 +293,8 @@ export default function MySQLProject(props){
             </div>
 
             <h1 className="mt-20 mx-4 text-lg md:text-2xl lg:text-3xl text-center font-semibold font-Montserrat">You are logged in as <span className="text-blue-500">{currUser}</span></h1>
+
+            <div className={currUser == "" ? "my-52" : ""}></div>
             
             <div className={currUser == "" ? "hidden" : ""}>
                 <h1 className='mt-12 mx-4 text-lg md:text-2xl lg:text-3xl text-center font-Montserrat'>Day {currDay}</h1>

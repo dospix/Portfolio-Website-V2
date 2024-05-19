@@ -1,3 +1,4 @@
+from dotenv import dotenv_values
 from flask import Flask, request
 from flask.helpers import send_from_directory
 from flask_cors import CORS, cross_origin
@@ -21,12 +22,8 @@ CORS(app)
 
 # Use on pythonanywhere
 
-SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
-    username="Dospix",
-    password="MySQLprojectpassword123",
-    hostname="Dospix.mysql.pythonanywhere-services.com",
-    databasename="Dospix$default",
-)
+dotenv_dict = dotenv_values(".env")
+SQLALCHEMY_DATABASE_URI = f"mysql+mysqlconnector://{dotenv_dict["USERNAME"]}:{dotenv_dict["PASSWORD"]}@{dotenv_dict["HOSTNAME"]}/{dotenv_dict["DATABASENAME"]}"
 app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
 app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False

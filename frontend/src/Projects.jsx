@@ -1,10 +1,19 @@
 import UsedCarsMachineLearningProject from "./pages/UsedCarsMachineLearningProject"
 import GoogleApiProject from "./pages/GoogleApiProject"
 import MySQLProject from "./pages/MySQLProject"
+import AWSMacronutrientProject from "./pages/AWSMacronutrientProject"
 
 const projects = [
     {
         key: 0,
+        name: "AWS macronutrient breakdown project",
+        description: "Using AWS modules to show the macronutrient amount in different kinds of food.",
+        image: "images/planning.jpg",
+        path: "/asw-macronutrient-project",
+        page: <AWSMacronutrientProject />
+    },
+    {
+        key: 1,
         name: "Used cars machine learning project",
         description: "Predicting used car prices using pandas, matplotlib, scikit-learn and PyTorch.",
         image: "images/used-car.jpg",
@@ -12,7 +21,7 @@ const projects = [
         page: <UsedCarsMachineLearningProject />
     },
     {
-        key: 1,
+        key: 2,
         name: "Task/Habit management MySQL project",
         description: "This project uses MySQL to store your tasks and habits.",
         image: "images/planning.jpg",
@@ -20,7 +29,7 @@ const projects = [
         page: <MySQLProject />
     },
     {
-        key: 2,
+        key: 3,
         name: "Google Books API project",
         description: "This project uses the Google Books API to recommend books on various topics.",
         image: "images/google-books-api.jpg",

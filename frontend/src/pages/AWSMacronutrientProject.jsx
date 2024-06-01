@@ -41,15 +41,47 @@ export default function MySQLProject(props){
                     ))}
                 </datalist>
 
-                <label className="p-1 md:p-2 md:text-3xl text-lg" htmlFor="currAmount">Select amount:</label>
-                    <input 
-                        type="number"
-                        className="ml-2 mb-10 p-1 md:p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md text-center md:text-3xl text-md text-black"
-                        id="currAmount"
-                        name="currAmount"
-                        value={currAmount}
-                        onChange={handleFormChange}
-                    />
+                <label className="mt-6 p-1 md:p-2 md:text-3xl text-lg" htmlFor="currAmount">Select amount:</label>
+                <input 
+                    type="number"
+                    className="ml-2 mb-10 p-1 md:p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md text-center md:text-3xl text-md text-black"
+                    id="currAmount"
+                    name="currAmount"
+                    value={currAmount}
+                    onChange={handleFormChange}
+                />
+            </div>
+
+            <div className="mx-auto w-3/4 flex">
+                <div className="w-1/3">
+                    <h1>Helloooookjdasifa</h1>
+                </div>
+                <div className="w-2/3">
+                <table className="border-separate border-spacing-0">
+                    <tr>
+                        <td className="py-2 px-4 text-center border-black border-t-2 border-l-2 rounded-tl-xl">Calories: 267 kcal</td>
+                        <td className="py-2 px-4 text-center border-black border-t-2 border-x-2 rounded-tr-xl"></td>
+                    </tr>
+                    <tr>
+                        <td rowspan="3" className="py-2 px-4 text-center border-black border-t-2 border-l-2">Carbohydrates: 49.2 g</td>
+                        <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Sugars: 5.34 g</td>
+                    </tr>
+                    <tr>
+                        <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Fiber: 2.3 g</td>
+                    </tr>
+                    <tr>
+                        <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Starch: 37.2 g</td>
+                    </tr>
+                    <tr>
+                        <td className="py-2 px-4 text-center border-black border-t-2 border-l-2">Protein: 9.43 g</td>
+                        <td className="py-2 px-4 text-center border-black border-t-2 border-x-2"></td>
+                    </tr>
+                    <tr>
+                        <td className="py-2 px-4 text-center border-black border-y-2 border-l-2 rounded-bl-xl">Fat: 3.59 g</td>
+                        <td className="py-2 px-4 text-center border-black border-2 rounded-br-xl">Saturated fat: 0.82 g</td>
+                    </tr>
+                </table>
+                </div>
             </div>
             
         </>

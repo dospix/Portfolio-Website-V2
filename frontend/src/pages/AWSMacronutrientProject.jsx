@@ -75,12 +75,12 @@ export default function MySQLProject(props){
                 />
             </div>
 
-            <div className="mx-auto w-3/4 flex">
-                <div className="w-1/3">
-                    <h1 className="text-red-600">{isValidCurrFoodItem ? (isValidcurrAmount ? "" : "invalid currAmount") : "invalid currFoodItem"}</h1>
+            <div className="flex mx-auto w-2/3">
+                <div className="flex items-center w-1/2">
+                    <h1 className="mx-auto text-red-600 text-2xl">{isValidCurrFoodItem ? (isValidcurrAmount ? "" : "invalid currAmount") : "invalid currFoodItem"}</h1>
                 </div>
-                <div className="w-2/3">
-                <table className="border-separate border-spacing-0">
+                <div className="w-1/2">
+                <table className="mx-auto border-separate border-spacing-0">
                     <tr>
                         <td className="py-2 px-4 text-center border-black border-t-2 border-l-2 rounded-tl-xl">Calories: 267 kcal</td>
                         <td className="py-2 px-4 text-center border-black border-t-2 border-x-2 rounded-tr-xl"></td>

@@ -1,27 +1,45 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 
 export default function MySQLProject(props){
     const foodItems = new Set(["whole milk", "reduced fat milk", "low fat milk", "fat free milk", "goat milk", "almond milk", "oat milk", "soy milk", "buttermilk", "hot chocolate", "plain nonfat greek yogurt", "plain whole milk greek yogurt", "strawberry nonfat greek yogurt", "plain nonfat yogurt", "plain whole milk yogurt", "vanilla ice cream", "chocolate ice cream", "strawberry ice cream", "heavy cream", "sour cream", "american cheese", "cheddar cheese", "cottage cheese", "feta cheese", "monterey jack cheese", "mozzarella cheese", "parmesan cheese", "provolone cheese", "ricotta cheese", "swiss cheese", "brie cheese", "blue cheese", "cream cheese", "egg", "egg white", "egg yolk", "butter", "almond butter", "peanut butter", "sesame butter", "lard", "margarine", "sunflower oil", "olive oil", "coconut oil", "canola oil", "corn oil", "peanut oil", "soybean oil", "beef", "sirloin steak", "t-bone steak", "filet mignon steak", "chuck roast", "beef brisket", "rump roast", "flank steak", "tenderloin roast", "ribeye steak", "eye of round roast", "porterhouse steak", "beef stew meat", "beef short ribs", "ground beef", "chicken breast", "chicken thighs", "chicken drumsticks", "chicken wings", "ground chicken", "bacon", "pork chops", "pork loin", "pork tenderloin", "pork shoulder", "pork belly", "ground pork", "turkey", "turkey breast", "turkey drumsticks/thighs", "ground turkey", "beef breakfast sausage", "italian pork sausage", "chorizo sausage", "turkey sausage", "frankfurter", "ham", "deli turkey/chicken meat", "clams", "cod", "crab", "fish sticks", "flounder", "haddock", "halibut", "herring", "lobster", "mackerel", "oysters", "salmon"])
     const [currFoodItem, setCurrFoodItem] = useState("")
-    const [isValidCurrFoodItem, setIsValidCurrFoodItem] = useState(false)
     const [currAmount, setCurrAmount] = useState(0)
-    const [isValidcurrAmount, setIsValidcurrAmount] = useState(false)
-    
-    
-    useEffect(() => {
-        if(foodItems.has(currFoodItem))
-            setIsValidCurrFoodItem(true)
-        else setIsValidCurrFoodItem(false)
-      }, [currFoodItem])
 
-      useEffect(() => {
-        console.log(currAmount)
+    function isValidEntry(foodItem, amount){
+        let isValidFoodItem = false
+        if(foodItems.has(foodItem))
+            isValidFoodItem = true
+        
+        let isValidAmount = false
         const lessThanThreeDecimalsRegex = /^\d+(\.\d{1,2})?$/;
-        if(!isNaN(currAmount) && lessThanThreeDecimalsRegex.test(currAmount) && String(currAmount).length < 10)
-            setIsValidcurrAmount(true)
-        else
-            setIsValidcurrAmount(false)
-      }, [currAmount])
+        if(!isNaN(amount) && lessThanThreeDecimalsRegex.test(amount) && String(amount).length < 10)
+            isValidAmount = true
+
+        return isValidFoodItem && isValidAmount
+    }
+
+    // Used for initiating a fetch only if currFoodItem and currAmount did not change in a 5 second timeframe
+    const foodItemInfoFetchCounter = useRef(0);
+    useEffect(() => {
+        foodItemInfoFetchCounter.current += 1
+        let currFoodItemInfoFetchCounter = foodItemInfoFetchCounter.current
+        setTimeout(() => {
+            if(currFoodItemInfoFetchCounter == foodItemInfoFetchCounter.current && isValidEntry(currFoodItem, currAmount))
+                fetch("/asw-macronutrient-project/get-food-item-info", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        "foodItem": currFoodItem,
+                        "currAmount": currAmount
+                    }),
+                    headers: {
+                        "Content-type": "application/json; charset=UTF-8",
+                    }
+                })
+                .then(response => response.json())
+                .then(final_json => console.log(final_json))
+                .catch(error => console.error('Error:', error))
+        }, 5000);
+    }, [currFoodItem, currAmount])
 
     function handleFormChange(event) {
         let {name, value, type, checked} = event.target
@@ -77,7 +95,7 @@ export default function MySQLProject(props){
 
             <div className="flex mx-auto w-2/3">
                 <div className="flex items-center w-1/2">
-                    <h1 className="mx-auto text-red-600 text-2xl">{isValidCurrFoodItem ? (isValidcurrAmount ? "" : "invalid currAmount") : "invalid currFoodItem"}</h1>
+                    <h1 className="mx-auto text-red-600 text-2xl">{isValidEntry(currFoodItem, currAmount) ? "" : "invalid currFoodItem or currAmount"}</h1>
                 </div>
                 <div className="w-1/2">
                 <table className="mx-auto border-separate border-spacing-0">

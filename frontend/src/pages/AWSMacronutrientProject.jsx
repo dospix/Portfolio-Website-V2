@@ -18,7 +18,7 @@ export default function MySQLProject(props){
         return isValidFoodItem && isValidAmount
     }
 
-    // Used for initiating a fetch only if currFoodItem and currAmount did not change in a 5 second timeframe
+    // Used for initiating a fetch only if currFoodItem and currAmount did not change in a 2 second timeframe
     const foodItemInfoFetchCounter = useRef(0);
     useEffect(() => {
         foodItemInfoFetchCounter.current += 1
@@ -38,7 +38,7 @@ export default function MySQLProject(props){
                 .then(response => response.json())
                 .then(final_json => console.log(final_json))
                 .catch(error => console.error('Error:', error))
-        }, 5000);
+        }, 2000);
     }, [currFoodItem, currAmount])
 
     function handleFormChange(event) {

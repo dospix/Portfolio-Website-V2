@@ -13,6 +13,11 @@ import joblib
 import pandas as pd
 import torch
 import torch.nn as nn
+import boto3
+import uuid
+import time
+
+dotenv_dict = dotenv_values(".env")
 
 mimetypes.add_type("application/javascript", ".js")
 mimetypes.add_type("text/css", ".css")
@@ -22,7 +27,6 @@ CORS(app)
 
 # Use on pythonanywhere
 
-dotenv_dict = dotenv_values(".env")
 SQLALCHEMY_DATABASE_URI = f"mysql+mysqlconnector://{dotenv_dict["USERNAME"]}:{dotenv_dict["PASSWORD"]}@{dotenv_dict["HOSTNAME"]}/{dotenv_dict["DATABASENAME"]}"
 app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
 app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
@@ -68,6 +72,48 @@ class Habits(db.Model):
 @cross_origin()
 def serve_react(path):
     return send_from_directory(app.static_folder, "index.html")
+
+
+aws_session_queue = []
+@app.route("/asw-macronutrient-project/get-food-item-info", methods=["POST"])
+@cross_origin()
+def get_food_item_info():
+    # Prevent overusing requests
+    global aws_session_queue
+    if len(aws_session_queue) > 5:
+        return
+    instance_id = uuid.uuid4()
+    aws_session_queue.append(instance_id)
+    while aws_session_queue[0] != instance_id:
+        time.sleep(1)
+    time.sleep(3)
+    item_data = request.get_json()
+    food_item = item_data["foodItem"]
+    food_amount = item_data["currAmount"]
+
+    # # Create a Boto3 session with the specified credentials and region
+    session = boto3.Session(
+        aws_access_key_id=dotenv_dict["AWS_ACCESS_KEY_ID"],
+        aws_secret_access_key=dotenv_dict["AWS_SECRET_ACCESS_KEY"],
+        region_name="us-east-1"
+    )
+
+    dynamodb = session.resource('dynamodb')
+
+    table_name = 'food_macronutrients'
+    table = dynamodb.Table(table_name)
+
+    # Define the primary key of the item you want to retrieve
+    primary_key = {
+        'food_name': food_item
+    }
+
+    response = table.get_item(Key=primary_key)
+
+    response["fetch_count"] = len(aws_session_queue)
+    del aws_session_queue[aws_session_queue.index(instance_id)]
+
+    return response
 
 # The Google API won't allow a value bigger than 40
 MAX_BOOKS_FETCHED = 40

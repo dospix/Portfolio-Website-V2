@@ -16,6 +16,8 @@ import torch.nn as nn
 import boto3
 import uuid
 import time
+import json
+from decimal import Decimal
 
 dotenv_dict = dotenv_values(".env")
 
@@ -87,9 +89,6 @@ def get_food_item_info():
     while aws_session_queue[0] != instance_id:
         time.sleep(1)
     time.sleep(3)
-    item_data = request.get_json()
-    food_item = item_data["foodItem"]
-    food_amount = item_data["currAmount"]
 
     # # Create a Boto3 session with the specified credentials and region
     session = boto3.Session(
@@ -98,19 +97,41 @@ def get_food_item_info():
         region_name="us-east-1"
     )
 
-    dynamodb = session.resource('dynamodb')
-
-    table_name = 'food_macronutrients'
+    dynamodb = session.resource("dynamodb")
+    table_name = "food_macronutrients"
     table = dynamodb.Table(table_name)
 
+    item_data = request.get_json()
     # Define the primary key of the item you want to retrieve
     primary_key = {
-        'food_name': food_item
+        "food_name": item_data["foodItem"]
     }
-
     response = table.get_item(Key=primary_key)
 
-    response["fetch_count"] = len(aws_session_queue)
+    # Decimal types can't be processed by the json.dumps() function
+    for key, value in response["Item"].items():
+        if type(value) == Decimal:
+            response["Item"][key] = float(value)
+
+    # only keep item_data and Item keys, the others are not needed
+    temp_dict = {"item_data": item_data}
+    response = {"Item": response["Item"]}
+    response.update(temp_dict)
+
+    response["Item"]["protein"] = float(response["Item"]["protein"])
+
+    lambda_client = session.client("lambda")
+    params = {
+        "FunctionName": dotenv_dict["AWS_MACRONUTRIENT_CALCULATOR_FUNCTION_ARN"],
+        "InvocationType": "RequestResponse",
+        "Payload": json.dumps(response)
+    }
+
+    response = lambda_client.invoke(**params)
+
+    response = json.loads(response["Payload"].read().decode("utf-8"))
+
+    response["fetch_queue_length"] = len(aws_session_queue)
     del aws_session_queue[aws_session_queue.index(instance_id)]
 
     return response

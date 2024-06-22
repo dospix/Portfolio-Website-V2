@@ -12,7 +12,7 @@ export default function MySQLProject(props){
         
         let isValidAmount = false
         const lessThanThreeDecimalsRegex = /^\d+(\.\d{1,2})?$/;
-        if(!isNaN(amount) && lessThanThreeDecimalsRegex.test(amount) && String(amount).length < 10)
+        if(amount > 0 && lessThanThreeDecimalsRegex.test(amount))
             isValidAmount = true
 
         return isValidFoodItem && isValidAmount
@@ -47,11 +47,11 @@ export default function MySQLProject(props){
         if(name == "currFoodItem")
             setCurrFoodItem(value)
         else if(name == "currAmount")
-            if(value < 0)
+            if(value < 0 || isNaN(value))
                 setCurrAmount(0)
             else if(1000 < value)
                 setCurrAmount(1000)
-            else setCurrAmount(value)
+            else setCurrAmount(parseFloat(value))
     }
 
     return (

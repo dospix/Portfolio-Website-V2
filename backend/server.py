@@ -27,17 +27,18 @@ mimetypes.add_type("text/css", ".css")
 app = Flask(__name__, static_folder="../frontend/dist", static_url_path="")
 CORS(app)
 
-# Use on pythonanywhere
+DEVELOPMENT_MODE = True if dotenv_dict["DEVELOPMENT_MODE"] == "True" else False
 
-SQLALCHEMY_DATABASE_URI = f"mysql+mysqlconnector://{dotenv_dict["USERNAME"]}:{dotenv_dict["PASSWORD"]}@{dotenv_dict["HOSTNAME"]}/{dotenv_dict["DATABASENAME"]}"
-app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
-app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-# Use locally
-
-# app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
-# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+if not DEVELOPMENT_MODE:
+    # pythonanywhere MySQL setup
+    SQLALCHEMY_DATABASE_URI = f"mysql+mysqlconnector://{dotenv_dict["USERNAME"]}:{dotenv_dict["PASSWORD"]}@{dotenv_dict["HOSTNAME"]}/{dotenv_dict["DATABASENAME"]}"
+    app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
+    app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+else:
+    # local database setup
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
@@ -498,4 +499,4 @@ def update_mysql_project_user_statistics():
 with app.app_context():
     db.create_all()
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=DEVELOPMENT_MODE)

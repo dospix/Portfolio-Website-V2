@@ -83,13 +83,25 @@ aws_session_queue = []
 def get_food_item_info():
     # Prevent overusing requests
     global aws_session_queue
-    if len(aws_session_queue) > 5:
-        return
+    if len(aws_session_queue) > 3:
+        return {
+            "calories": 0,
+            "carbohydrates": 0,
+            "fat": 0,
+            "fetch_queue_length": 0,
+            "fiber": 0,
+            "food_name": "too many requests",
+            "measure": "please try again later",
+            "protein": 0,
+            "saturated_fat": 0,
+            "starch": 0,
+            "sugars": 0
+        }
     instance_id = uuid.uuid4()
     aws_session_queue.append(instance_id)
     while aws_session_queue[0] != instance_id:
         time.sleep(1)
-    time.sleep(3)
+    time.sleep(1)
 
     # # Create a Boto3 session with the specified credentials and region
     session = boto3.Session(

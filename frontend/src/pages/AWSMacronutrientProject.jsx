@@ -1,13 +1,26 @@
 import { useState, useEffect, useRef } from "react"
 
 export default function MySQLProject(props){
-    const foodItems = new Set(["whole milk", "reduced fat milk", "low fat milk", "fat free milk", "goat milk", "almond milk", "oat milk", "soy milk", "buttermilk", "hot chocolate", "plain nonfat greek yogurt", "plain whole milk greek yogurt", "strawberry nonfat greek yogurt", "plain nonfat yogurt", "plain whole milk yogurt", "vanilla ice cream", "chocolate ice cream", "strawberry ice cream", "heavy cream", "sour cream", "american cheese", "cheddar cheese", "cottage cheese", "feta cheese", "monterey jack cheese", "mozzarella cheese", "parmesan cheese", "provolone cheese", "ricotta cheese", "swiss cheese", "brie cheese", "blue cheese", "cream cheese", "egg", "egg white", "egg yolk", "butter", "almond butter", "peanut butter", "sesame butter", "lard", "margarine", "sunflower oil", "olive oil", "coconut oil", "canola oil", "corn oil", "peanut oil", "soybean oil", "beef", "sirloin steak", "t-bone steak", "filet mignon steak", "chuck roast", "beef brisket", "rump roast", "flank steak", "tenderloin roast", "ribeye steak", "eye of round roast", "porterhouse steak", "beef stew meat", "beef short ribs", "ground beef", "chicken breast", "chicken thighs", "chicken drumsticks", "chicken wings", "ground chicken", "bacon", "pork chops", "pork loin", "pork tenderloin", "pork shoulder", "pork belly", "ground pork", "turkey", "turkey breast", "turkey drumsticks/thighs", "ground turkey", "beef breakfast sausage", "italian pork sausage", "chorizo sausage", "turkey sausage", "frankfurter", "ham", "deli turkey/chicken meat", "clams", "cod", "crab", "fish sticks", "flounder", "haddock", "halibut", "herring", "lobster", "mackerel", "oysters", "salmon"])
+    const foodItems = new Set(["whole milk|ml", "reduced fat milk|ml", "low fat milk|ml", "fat free milk|ml", "goat milk|ml", "almond milk|ml", "oat milk|ml", 
+        "soy milk|ml", "buttermilk|ml", "hot chocolate|ml", "plain nonfat greek yogurt|g", "plain whole milk greek yogurt|g", "strawberry nonfat greek yogurt|g", 
+        "plain nonfat yogurt|g", "plain whole milk yogurt|g", "vanilla ice cream|g", "chocolate ice cream|g", "strawberry ice cream|g", "heavy cream|g", 
+        "sour cream|g", "american cheese|g", "cheddar cheese|g", "cottage cheese|g", "feta cheese|g", "monterey jack cheese|g", "mozzarella cheese|g", 
+        "parmesan cheese|g", "provolone cheese|g", "ricotta cheese|g", "swiss cheese|g", "brie cheese|g", "blue cheese|g", "cream cheese|g", "egg|g", "egg white|g", 
+        "egg yolk|g", "butter|g", "almond butter|g", "peanut butter|g", "sesame butter|g", "lard|g", "margarine|g", "sunflower oil|ml", "olive oil|ml", 
+        "coconut oil|ml", "canola oil|ml", "corn oil|ml", "peanut oil|ml", "soybean oil|ml", "beef|g", "sirloin steak|g", "t-bone steak|g", "filet mignon steak|g", 
+        "chuck roast|g", "beef brisket|g", "rump roast|g", "flank steak|g", "tenderloin roast|g", "ribeye steak|g", "eye of round roast|g", "porterhouse steak|g", 
+        "beef stew meat|g", "beef short ribs|g", "ground beef|g", "chicken breast|g", "chicken thighs|g", "chicken drumsticks|g", "chicken wings|g", 
+        "ground chicken|g", "bacon|g", "pork chops|g", "pork loin|g", "pork tenderloin|g", "pork shoulder|g", "pork belly|g", "ground pork|g", "turkey|g", 
+        "turkey breast|g", "turkey drumsticks/thighs|g", "ground turkey|g", "beef breakfast sausage|g", "italian pork sausage|g", "chorizo sausage|g", 
+        "turkey sausage|g", "frankfurter|g", "ham|g", "deli turkey/chicken meat|g", "clams|g", "cod|g", "crab|g", "fish sticks|g", "flounder|g", "haddock|g", 
+        "halibut|g", "herring|g", "lobster|g", "mackerel|g", "oysters|g", "salmon|g"])
     const [currFoodItem, setCurrFoodItem] = useState("")
     const [currAmount, setCurrAmount] = useState(0)
+    const [currFoodData, setCurrFoodData] = useState(null)
 
     function isValidEntry(foodItem, amount){
         let isValidFoodItem = false
-        if(foodItems.has(foodItem))
+        if(foodItems.has(foodItem + "|g") || foodItems.has(foodItem + "|ml"))
             isValidFoodItem = true
         
         let isValidAmount = false
@@ -21,6 +34,7 @@ export default function MySQLProject(props){
     // Used for initiating a fetch only if currFoodItem and currAmount did not change in a 2 second timeframe
     const foodItemInfoFetchCounter = useRef(0);
     useEffect(() => {
+        setCurrFoodData(null)
         foodItemInfoFetchCounter.current += 1
         let currFoodItemInfoFetchCounter = foodItemInfoFetchCounter.current
         setTimeout(() => {
@@ -36,13 +50,13 @@ export default function MySQLProject(props){
                     }
                 })
                 .then(response => response.json())
-                .then(final_json => console.log(final_json))
+                .then(responseJson => {console.log(responseJson), setCurrFoodData(responseJson)})
                 .catch(error => console.error('Error:', error))
-        }, 2000);
+        }, 1000);
     }, [currFoodItem, currAmount])
 
     function handleFormChange(event) {
-        let {name, value, type, checked} = event.target
+        let {name, value} = event.target
 
         if(name == "currFoodItem")
             setCurrFoodItem(value)
@@ -78,11 +92,11 @@ export default function MySQLProject(props){
                 />
                 <datalist id="foodItems">
                     {[...foodItems].map(foodItem => (
-                        <option className="text-center md:text-3xl text-md" key={foodItem} value={foodItem}>{foodItem}</option>
+                        <option className="text-center md:text-3xl text-md" key={foodItem.split("|")[0]} value={foodItem.split("|")[0]}>{foodItem.split("|")[0]}</option>
                     ))}
                 </datalist>
 
-                <label className="mt-6 p-1 md:p-2 md:text-3xl text-lg" htmlFor="currAmount">Select amount:</label>
+                <label className="mt-6 p-1 md:p-2 md:text-3xl text-lg" htmlFor="currAmount">Select amount{foodItems.has(currFoodItem + "|g") ? " in grams" : foodItems.has(currFoodItem + "|ml") ? " in milliliters" : ""}:</label>
                 <input 
                     type="number"
                     className="ml-2 mb-10 p-1 md:p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md text-center md:text-3xl text-md text-black"
@@ -95,31 +109,31 @@ export default function MySQLProject(props){
 
             <div className="flex mx-auto w-2/3">
                 <div className="flex items-center w-1/2">
-                    <h1 className="mx-auto text-red-600 text-2xl">{isValidEntry(currFoodItem, currAmount) ? "" : "invalid currFoodItem or currAmount"}</h1>
+                    <h1 className={`mx-auto md:text-3xl text-lg ${isValidEntry(currFoodItem, currAmount) ? "" : "text-red-600"}`}>{isValidEntry(currFoodItem, currAmount) ? currFoodData == null ? "" : currFoodData["food_name"] + " - " + currFoodData["measure"] : "invalid currFoodItem or currAmount"}</h1>
                 </div>
                 <div className="w-1/2">
                 <table className="mx-auto border-separate border-spacing-0">
                     <tr>
-                        <td className="py-2 px-4 text-center border-black border-t-2 border-l-2 rounded-tl-xl">Calories: 267 kcal</td>
+                        <td className="py-2 px-4 text-center border-black border-t-2 border-l-2 rounded-tl-xl">Calories: {currFoodData == null ? "" : currFoodData["calories"] + " kcal"}</td>
                         <td className="py-2 px-4 text-center border-black border-t-2 border-x-2 rounded-tr-xl"></td>
                     </tr>
                     <tr>
-                        <td rowspan="3" className="py-2 px-4 text-center border-black border-t-2 border-l-2">Carbohydrates: 49.2 g</td>
-                        <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Sugars: 5.34 g</td>
+                        <td rowspan="3" className="py-2 px-4 text-center border-black border-t-2 border-l-2">Carbohydrates: {currFoodData == null ? "" : currFoodData["carbohydrates"] + " g"}</td>
+                        <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Sugars: {currFoodData == null ? "" : currFoodData["sugars"] + " g"}</td>
                     </tr>
                     <tr>
-                        <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Fiber: 2.3 g</td>
+                        <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Fiber: {currFoodData == null ? "" : currFoodData["fiber"] + " g"}</td>
                     </tr>
                     <tr>
-                        <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Starch: 37.2 g</td>
+                        <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Starch: {currFoodData == null ? "" : currFoodData["starch"] + " g"}</td>
                     </tr>
                     <tr>
-                        <td className="py-2 px-4 text-center border-black border-t-2 border-l-2">Protein: 9.43 g</td>
+                        <td className="py-2 px-4 text-center border-black border-t-2 border-l-2">Protein: {currFoodData == null ? "" : currFoodData["protein"] + " g"}</td>
                         <td className="py-2 px-4 text-center border-black border-t-2 border-x-2"></td>
                     </tr>
                     <tr>
-                        <td className="py-2 px-4 text-center border-black border-y-2 border-l-2 rounded-bl-xl">Fat: 3.59 g</td>
-                        <td className="py-2 px-4 text-center border-black border-2 rounded-br-xl">Saturated fat: 0.82 g</td>
+                        <td className="py-2 px-4 text-center border-black border-y-2 border-l-2 rounded-bl-xl">Fat: {currFoodData == null ? "" : currFoodData["fat"] + " g"}</td>
+                        <td className="py-2 px-4 text-center border-black border-2 rounded-br-xl">Saturated fat: {currFoodData == null ? "" : currFoodData["saturated_fat"] + " g"}</td>
                     </tr>
                 </table>
                 </div>

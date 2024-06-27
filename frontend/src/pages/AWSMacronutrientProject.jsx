@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react"
+import plus from "../assets/images/plus.png"
 
 export default function MySQLProject(props){
     const foodItems = new Set(["whole milk|ml", "reduced fat milk|ml", "low fat milk|ml", "fat free milk|ml", "goat milk|ml", "almond milk|ml", "oat milk|ml", 
@@ -17,6 +18,23 @@ export default function MySQLProject(props){
     const [currFoodItem, setCurrFoodItem] = useState("")
     const [currAmount, setCurrAmount] = useState(0)
     const [currFoodData, setCurrFoodData] = useState(null)
+    // This is a representation of all food items tracked for the final macronutrient calculation, each array inside represents a row in the table.
+    // Each row will have 5 items, representing the food item served for: breakfast, first snack, lunch, second snack, dinner.
+    // For meals that don't have a food item in a row, the value corresponding to the meal will be null, otherwise it will be an object. Example object: 
+    // {
+    //     "calories": 44.1,
+    //     "carbohydrates": 0.23,
+    //     "fat": 2.98,
+    //     "fetch_queue_length": 1,
+    //     "fiber": 0,
+    //     "food_name": "egg",
+    //     "measure": "30 g",
+    //     "protein": 3.77,
+    //     "saturated_fat": 0.93,
+    //     "starch": 0,
+    //     "sugars": 0.23
+    // }
+    const [ingredientTableRows, setIngredientTableRows] = useState([])
 
     function isValidEntry(foodItem, amount){
         let isValidFoodItem = false
@@ -139,6 +157,22 @@ export default function MySQLProject(props){
                 </div>
             </div>
             
+            <table className="mx-auto mt-36 border-separate border-spacing-0">
+                <tr>
+                    <td className="py-2 px-4 text-center border-black border-t-2 border-l-2 rounded-tl-xl">Breakfast</td>
+                    <td className="py-2 px-4 text-center border-black border-t-2 border-l-2">First snack</td>
+                    <td className="py-2 px-4 text-center border-black border-t-2 border-l-2">Lunch</td>
+                    <td className="py-2 px-4 text-center border-black border-t-2 border-l-2">Second snack</td>
+                    <td className="py-2 px-4 text-center border-black border-t-2 border-x-2 rounded-tr-xl">Dinner</td>
+                </tr>
+                {ingredientTableRows.map((row, index) => (
+                    <tr key={index}>
+                        {row.map((tableItem, index) => (
+                            <td key={index} className={`py-2 px-4 text-center border-black border-t-2 ${index == 4 ? "border-x-2" : "border-l-2"}`}>{tableItem == null ? "" : tableItem["food_name"] + " - " + tableItem["measure"]}</td>
+                        ))}
+                    </tr>
+                ))}
+            </table>
         </>
     )
 }

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 import plus from "../assets/images/plus.png"
 
-export default function MySQLProject(props){
+export default function MySQLProject(){
     const foodItems = new Set(["whole milk|ml", "reduced fat milk|ml", "low fat milk|ml", "fat free milk|ml", "goat milk|ml", "almond milk|ml", "oat milk|ml", 
         "soy milk|ml", "buttermilk|ml", "hot chocolate|ml", "plain nonfat greek yogurt|g", "plain whole milk greek yogurt|g", "strawberry nonfat greek yogurt|g", 
         "plain nonfat yogurt|g", "plain whole milk yogurt|g", "vanilla ice cream|g", "chocolate ice cream|g", "strawberry ice cream|g", "heavy cream|g", 
@@ -34,7 +34,7 @@ export default function MySQLProject(props){
     //     "starch": 0,
     //     "sugars": 0.23
     // }
-    const [ingredientTableRows, setIngredientTableRows] = useState([])
+    const [ingredientTableRows, setIngredientTableRows] = useState([["add_button", "add_button", "add_button", "add_button", "add_button"]])
 
     function isValidEntry(foodItem, amount){
         let isValidFoodItem = false
@@ -86,6 +86,45 @@ export default function MySQLProject(props){
             else setCurrAmount(parseFloat(value))
     }
 
+    function addCurrFoodDataToFinalTable(ingredientMeal) {
+        let columnIndex = null
+        switch (ingredientMeal) {
+            case "breakfast":
+                columnIndex = 0
+                break
+            case "first snack":
+                columnIndex = 1
+                break
+            case "lunch":
+                columnIndex = 2
+                break
+            case "second snack":
+                columnIndex = 3
+                break
+            case "dinner":
+                columnIndex = 4
+                break
+            default:
+                throw new Error("invalid meal");
+        }
+
+        for(let row = 0; row < ingredientTableRows.length; row++)
+            if(ingredientTableRows[row][columnIndex] == "add_button"){
+                setIngredientTableRows(prev => {
+                    const newTableRows = JSON.parse(JSON.stringify(prev))
+                    newTableRows[row][columnIndex] = currFoodData
+                    if(newTableRows.length > row + 1)
+                        newTableRows[row + 1][columnIndex] = "add_button"
+                    else {
+                        newTableRows.push([null, null, null, null, null])
+                        newTableRows[row + 1][columnIndex] = "add_button"
+                    }
+                    return newTableRows
+                })
+                break
+            }
+    }
+
     return (
         <>
             <div className='mt-10 md:mt-16 mx-4 text-center'>
@@ -106,7 +145,7 @@ export default function MySQLProject(props){
                     list="foodItems"
                     value={currFoodItem}
                     onChange={handleFormChange}
-                    maxlength="20"
+                    maxlength="50"
                 />
                 <datalist id="foodItems">
                     {[...foodItems].map(foodItem => (
@@ -165,11 +204,57 @@ export default function MySQLProject(props){
                     <td className="py-2 px-4 text-center border-black border-t-2 border-l-2">Second snack</td>
                     <td className="py-2 px-4 text-center border-black border-t-2 border-x-2 rounded-tr-xl">Dinner</td>
                 </tr>
-                {ingredientTableRows.map((row, index) => (
-                    <tr key={index}>
-                        {row.map((tableItem, index) => (
-                            <td key={index} className={`py-2 px-4 text-center border-black border-t-2 ${index == 4 ? "border-x-2" : "border-l-2"}`}>{tableItem == null ? "" : tableItem["food_name"] + " - " + tableItem["measure"]}</td>
-                        ))}
+                {ingredientTableRows.map((row, rowIndex) => (
+                    <tr key={rowIndex}>
+                        {row.map((tableItem, cellIndex) => {
+                            let borderStyle = "border-black"
+                            const isOnLastRow = rowIndex == ingredientTableRows.length - 1
+                            const isOnLastColumn = cellIndex == 4
+                            const isBottomLeftCorner = isOnLastRow && cellIndex == 0
+                            const isBottomRightCorner = isOnLastRow && isOnLastColumn
+                            borderStyle += isOnLastRow ? " border-y-2" : " border-t-2"
+                            borderStyle += isOnLastColumn ? " border-x-2" : " border-l-2"
+                            borderStyle += isBottomLeftCorner ? " rounded-bl-xl" : ""
+                            borderStyle += isBottomRightCorner ? " rounded-br-xl" : ""
+                            if (tableItem == "add_button") {
+                                return (
+                                    <td key={cellIndex} className={`py-2 px-4 ${borderStyle}`}>
+                                        <img 
+                                            className="m-auto w-8 hover:cursor-pointer"
+                                            src={plus} 
+                                            alt="add food item"
+                                            onClick={() => {
+                                                switch (cellIndex) {
+                                                    case 0:
+                                                        addCurrFoodDataToFinalTable("breakfast");
+                                                        break;
+                                                    case 1:
+                                                        addCurrFoodDataToFinalTable("first snack");
+                                                        break;
+                                                    case 2:
+                                                        addCurrFoodDataToFinalTable("lunch");
+                                                        break;
+                                                    case 3:
+                                                        addCurrFoodDataToFinalTable("second snack");
+                                                        break;
+                                                    case 4:
+                                                        addCurrFoodDataToFinalTable("dinner");
+                                                        break;
+                                                    default:
+                                                        throw new Error("invalid meal");
+                                                }
+                                            }}
+                                        />
+                                    </td>
+                                );
+                            } else {
+                                return (
+                                    <td key={cellIndex} className={`py-2 px-4 text-center ${borderStyle}`}>
+                                        {tableItem == null ? "" : tableItem["food_name"] + " - " + tableItem["measure"]}
+                                    </td>
+                                );
+                            }
+                        })}
                     </tr>
                 ))}
             </table>

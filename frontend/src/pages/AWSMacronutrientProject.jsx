@@ -28,13 +28,46 @@ export default function MySQLProject(){
     //     "fetch_queue_length": 1,
     //     "fiber": 0,
     //     "food_name": "egg",
-    //     "measure": "30 g",
+    //     "measure": "30g",
     //     "protein": 3.77,
     //     "saturated_fat": 0.93,
     //     "starch": 0,
     //     "sugars": 0.23
     // }
     const [ingredientTableRows, setIngredientTableRows] = useState([["add_button", "add_button", "add_button", "add_button", "add_button"]])
+    
+    
+    // Used for initiating a fetch only if currFoodItem and currAmount did not change in a 2 second timeframe
+    const foodItemInfoFetchCounter = useRef(0);
+    function calculateMacronutrients(event){
+        event.preventDefault()
+        setCurrFoodData(null)
+        foodItemInfoFetchCounter.current += 1
+        let currFoodItemInfoFetchCounter = foodItemInfoFetchCounter.current
+        if(!isValidEntry(currFoodItem, currAmount))
+            return
+        setTimeout(() => {
+            if(currFoodItemInfoFetchCounter == foodItemInfoFetchCounter.current)
+                fetch("/asw-macronutrient-project/get-food-item-info", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        "foodItem": currFoodItem,
+                        "currAmount": currAmount
+                    }),
+                    headers: {
+                        "Content-type": "application/json; charset=UTF-8",
+                    }
+                })
+                .then(response => response.json())
+                .then(responseJson => {
+                    if(currFoodItemInfoFetchCounter == foodItemInfoFetchCounter.current){
+                        setCurrFoodData(responseJson)
+                        console.log(responseJson)
+                    }
+                })
+                .catch(error => console.error('Error:', error))
+        }, 1000)
+    }
 
     function isValidEntry(foodItem, amount){
         let isValidFoodItem = false
@@ -48,30 +81,6 @@ export default function MySQLProject(){
 
         return isValidFoodItem && isValidAmount
     }
-
-    // Used for initiating a fetch only if currFoodItem and currAmount did not change in a 2 second timeframe
-    const foodItemInfoFetchCounter = useRef(0);
-    useEffect(() => {
-        setCurrFoodData(null)
-        foodItemInfoFetchCounter.current += 1
-        let currFoodItemInfoFetchCounter = foodItemInfoFetchCounter.current
-        setTimeout(() => {
-            if(currFoodItemInfoFetchCounter == foodItemInfoFetchCounter.current && isValidEntry(currFoodItem, currAmount))
-                fetch("/asw-macronutrient-project/get-food-item-info", {
-                    method: "POST",
-                    body: JSON.stringify({
-                        "foodItem": currFoodItem,
-                        "currAmount": currAmount
-                    }),
-                    headers: {
-                        "Content-type": "application/json; charset=UTF-8",
-                    }
-                })
-                .then(response => response.json())
-                .then(responseJson => {console.log(responseJson), setCurrFoodData(responseJson)})
-                .catch(error => console.error('Error:', error))
-        }, 1000);
-    }, [currFoodItem, currAmount])
 
     function handleFormChange(event) {
         let {name, value} = event.target
@@ -135,8 +144,8 @@ export default function MySQLProject(){
                 <h1 className="text-xl md:text-3xl font-Montserrat">Enter the food item and quantity whose macronutrients you would like to see</h1>
             </div>
 
-            <div className="mx-auto mt-12 w-11/12 sm:w-1/3 flex justify-center flex-col font-Open_Sans">
-                <label className="p-1 md:p-2 md:text-3xl text-lg" htmlFor="carModel">Select food item:</label>
+            <form onSubmit={calculateMacronutrients} className="mx-auto mt-12 w-11/12 sm:w-1/3 flex justify-center flex-col font-Open_Sans">
+                <label className="p-1 md:p-2 md:text-3xl text-lg" htmlFor="currFoodItem">Select food item:</label>
                 <input 
                     className="ml-2 p-1 md:p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md text-center md:text-3xl text-md text-black" 
                     id="currFoodItem"
@@ -162,7 +171,9 @@ export default function MySQLProject(){
                     value={currAmount}
                     onChange={handleFormChange}
                 />
-            </div>
+
+                <button className="w-64 h-12 mt-10 self-center rounded-xl bg-blue-500 text-base md:text-lg lg:text-xl text-white">Calculate macronutrients</button>
+            </form>
 
             <div className="flex mx-auto w-2/3">
                 <div className="flex items-center w-1/2">
@@ -220,7 +231,7 @@ export default function MySQLProject(){
                                 return (
                                     <td key={cellIndex} className={`py-2 px-4 ${borderStyle}`}>
                                         <img 
-                                            className="m-auto w-8 hover:cursor-pointer"
+                                            className={`${currFoodData == null ? "hidden" : ""} m-auto w-8 hover:cursor-pointer`}
                                             src={plus} 
                                             alt="add food item"
                                             onClick={() => {

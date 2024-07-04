@@ -131,8 +131,6 @@ def get_food_item_info():
     response = {"Item": response["Item"]}
     response.update(temp_dict)
 
-    response["Item"]["protein"] = float(response["Item"]["protein"])
-
     lambda_client = session.client("lambda")
     params = {
         "FunctionName": dotenv_dict["AWS_MACRONUTRIENT_CALCULATOR_FUNCTION_ARN"],

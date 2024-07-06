@@ -18,6 +18,7 @@ export default function MySQLProject(){
     const [currFoodItem, setCurrFoodItem] = useState("")
     const [currAmount, setCurrAmount] = useState(0)
     const [currFoodData, setCurrFoodData] = useState(null)
+    const [fetchingFoodData, setFetchingFoodData] = useState(false)
     // This is a representation of all food items tracked for the final macronutrient calculation, each array inside represents a row in the table.
     // Each row will have 5 items, representing the food item served for: breakfast, first snack, lunch, second snack, dinner.
     // For meals that don't have a food item in a row, the value corresponding to the meal will be null, otherwise it will be an object. Example object: 
@@ -36,7 +37,6 @@ export default function MySQLProject(){
     // }
     const [ingredientTableRows, setIngredientTableRows] = useState([["add_button", "add_button", "add_button", "add_button", "add_button"]])
     
-    
     // Used for initiating a fetch only if currFoodItem and currAmount did not change in a 2 second timeframe
     const foodItemInfoFetchCounter = useRef(0);
     function calculateMacronutrients(event){
@@ -44,8 +44,9 @@ export default function MySQLProject(){
         setCurrFoodData(null)
         foodItemInfoFetchCounter.current += 1
         let currFoodItemInfoFetchCounter = foodItemInfoFetchCounter.current
-        if(!isValidEntry(currFoodItem, currAmount))
+        if(!(isValidFoodItem(currFoodItem) && isValidAmount(currAmount)))
             return
+        setFetchingFoodData(true)
         setTimeout(() => {
             if(currFoodItemInfoFetchCounter == foodItemInfoFetchCounter.current)
                 fetch("/asw-macronutrient-project/get-food-item-info", {
@@ -66,20 +67,19 @@ export default function MySQLProject(){
                     }
                 })
                 .catch(error => console.error('Error:', error))
+                .finally(() => {
+                    if(currFoodItemInfoFetchCounter == foodItemInfoFetchCounter.current)
+                        setFetchingFoodData(false)
+                })
         }, 1000)
     }
 
-    function isValidEntry(foodItem, amount){
-        let isValidFoodItem = false
-        if(foodItems.has(foodItem + "|g") || foodItems.has(foodItem + "|ml"))
-            isValidFoodItem = true
-        
-        let isValidAmount = false
-        const lessThanThreeDecimalsRegex = /^\d+(\.\d{1,2})?$/;
-        if(amount > 0 && lessThanThreeDecimalsRegex.test(amount))
-            isValidAmount = true
-
-        return isValidFoodItem && isValidAmount
+    function isValidFoodItem(foodItem){
+        return foodItems.has(foodItem + "|g") || foodItems.has(foodItem + "|ml")
+    }
+    function isValidAmount(amount){
+        const lessThanThreeDecimalsRegex = /^\d+(\.\d{1,2})?$/
+        return amount > 0 && lessThanThreeDecimalsRegex.test(amount)
     }
 
     function handleFormChange(event) {
@@ -165,45 +165,45 @@ export default function MySQLProject(){
                 <label className="mt-6 p-1 md:p-2 md:text-3xl text-lg" htmlFor="currAmount">Select amount{foodItems.has(currFoodItem + "|g") ? " in grams" : foodItems.has(currFoodItem + "|ml") ? " in milliliters" : ""}:</label>
                 <input 
                     type="number"
-                    className="ml-2 mb-10 p-1 md:p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md text-center md:text-3xl text-md text-black"
+                    className="ml-2 p-1 md:p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md text-center md:text-3xl text-md text-black"
                     id="currAmount"
                     name="currAmount"
                     value={currAmount}
                     onChange={handleFormChange}
                 />
 
-                <button className="w-64 h-12 mt-10 self-center rounded-xl bg-blue-500 text-base md:text-lg lg:text-xl text-white">Calculate macronutrients</button>
+                <button className="w-64 h-12 mt-16 self-center rounded-xl bg-blue-500 text-base md:text-lg lg:text-xl text-white">Calculate macronutrients</button>
             </form>
 
-            <div className="flex mx-auto w-2/3">
+            <div className="flex mx-auto mt-16 w-11/12">
                 <div className="flex items-center w-1/2">
-                    <h1 className={`mx-auto md:text-3xl text-lg ${isValidEntry(currFoodItem, currAmount) ? "" : "text-red-600"}`}>{isValidEntry(currFoodItem, currAmount) ? currFoodData == null ? "" : currFoodData["food_name"] + " - " + currFoodData["measure"] : "invalid currFoodItem or currAmount"}</h1>
+                    <h1 className={`ml-auto mr-20 md:text-3xl text-lg ${currFoodData != null ? "" : "text-red-600"}`}>{currFoodData != null ? currFoodData["food_name"] + " - " + currFoodData["measure"] : fetchingFoodData ? "" : !isValidFoodItem(currFoodItem) ? "invalid food item" : !isValidAmount(currAmount) ? "invalid amount" : "Press the button above to calculate macronutrients"}</h1>
                 </div>
                 <div className="w-1/2">
-                <table className="mx-auto border-separate border-spacing-0">
-                    <tr>
-                        <td className="py-2 px-4 text-center border-black border-t-2 border-l-2 rounded-tl-xl">Calories: {currFoodData == null ? "" : currFoodData["calories"] + " kcal"}</td>
-                        <td className="py-2 px-4 text-center border-black border-t-2 border-x-2 rounded-tr-xl"></td>
-                    </tr>
-                    <tr>
-                        <td rowspan="3" className="py-2 px-4 text-center border-black border-t-2 border-l-2">Carbohydrates: {currFoodData == null ? "" : currFoodData["carbohydrates"] + " g"}</td>
-                        <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Sugars: {currFoodData == null ? "" : currFoodData["sugars"] + " g"}</td>
-                    </tr>
-                    <tr>
-                        <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Fiber: {currFoodData == null ? "" : currFoodData["fiber"] + " g"}</td>
-                    </tr>
-                    <tr>
-                        <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Starch: {currFoodData == null ? "" : currFoodData["starch"] + " g"}</td>
-                    </tr>
-                    <tr>
-                        <td className="py-2 px-4 text-center border-black border-t-2 border-l-2">Protein: {currFoodData == null ? "" : currFoodData["protein"] + " g"}</td>
-                        <td className="py-2 px-4 text-center border-black border-t-2 border-x-2"></td>
-                    </tr>
-                    <tr>
-                        <td className="py-2 px-4 text-center border-black border-y-2 border-l-2 rounded-bl-xl">Fat: {currFoodData == null ? "" : currFoodData["fat"] + " g"}</td>
-                        <td className="py-2 px-4 text-center border-black border-2 rounded-br-xl">Saturated fat: {currFoodData == null ? "" : currFoodData["saturated_fat"] + " g"}</td>
-                    </tr>
-                </table>
+                    <table className="mr-auto ml-28 border-separate border-spacing-0">
+                        <tr>
+                            <td className="py-2 px-4 text-center border-black border-t-2 border-l-2 rounded-tl-xl">Calories: {currFoodData == null ? "" : currFoodData["calories"] + " kcal"}</td>
+                            <td className="py-2 px-4 text-center border-black border-t-2 border-x-2 rounded-tr-xl"></td>
+                        </tr>
+                        <tr>
+                            <td rowspan="3" className="py-2 px-4 text-center border-black border-t-2 border-l-2">Carbohydrates: {currFoodData == null ? "" : currFoodData["carbohydrates"] + " g"}</td>
+                            <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Sugars: {currFoodData == null ? "" : currFoodData["sugars"] + " g"}</td>
+                        </tr>
+                        <tr>
+                            <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Fiber: {currFoodData == null ? "" : currFoodData["fiber"] + " g"}</td>
+                        </tr>
+                        <tr>
+                            <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Starch: {currFoodData == null ? "" : currFoodData["starch"] + " g"}</td>
+                        </tr>
+                        <tr>
+                            <td className="py-2 px-4 text-center border-black border-t-2 border-l-2">Protein: {currFoodData == null ? "" : currFoodData["protein"] + " g"}</td>
+                            <td className="py-2 px-4 text-center border-black border-t-2 border-x-2"></td>
+                        </tr>
+                        <tr>
+                            <td className="py-2 px-4 text-center border-black border-y-2 border-l-2 rounded-bl-xl">Fat: {currFoodData == null ? "" : currFoodData["fat"] + " g"}</td>
+                            <td className="py-2 px-4 text-center border-black border-2 rounded-br-xl">Saturated fat: {currFoodData == null ? "" : currFoodData["saturated_fat"] + " g"}</td>
+                        </tr>
+                    </table>
                 </div>
             </div>
             
@@ -229,7 +229,7 @@ export default function MySQLProject(){
                             borderStyle += isBottomRightCorner ? " rounded-br-xl" : ""
                             if (tableItem == "add_button") {
                                 return (
-                                    <td key={cellIndex} className={`py-2 px-4 ${borderStyle}`}>
+                                    <td key={cellIndex} className={`${currFoodData == null ? "py-8 px-8" : "py-2 px-4"} ${borderStyle}`}>
                                         <img 
                                             className={`${currFoodData == null ? "hidden" : ""} m-auto w-8 hover:cursor-pointer`}
                                             src={plus} 

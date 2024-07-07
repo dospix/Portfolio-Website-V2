@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react"
 import plus from "../assets/images/plus.png"
+import avocado_loading from "../assets/images/avocado-loading.png"
 
-export default function MySQLProject(){
+export default function MySQLProject(props){
     const foodItems = new Set(["whole milk|ml", "reduced fat milk|ml", "low fat milk|ml", "fat free milk|ml", "goat milk|ml", "almond milk|ml", "oat milk|ml", 
         "soy milk|ml", "buttermilk|ml", "hot chocolate|ml", "plain nonfat greek yogurt|g", "plain whole milk greek yogurt|g", "strawberry nonfat greek yogurt|g", 
         "plain nonfat yogurt|g", "plain whole milk yogurt|g", "vanilla ice cream|g", "chocolate ice cream|g", "strawberry ice cream|g", "heavy cream|g", 
@@ -41,6 +42,8 @@ export default function MySQLProject(){
     const foodItemInfoFetchCounter = useRef(0);
     function calculateMacronutrients(event){
         event.preventDefault()
+        if(fetchingFoodData)
+            return
         setCurrFoodData(null)
         foodItemInfoFetchCounter.current += 1
         let currFoodItemInfoFetchCounter = foodItemInfoFetchCounter.current
@@ -182,7 +185,7 @@ export default function MySQLProject(){
                 <div className="w-1/2">
                     <table className="mr-auto ml-28 border-separate border-spacing-0">
                         <tr>
-                            <td className="py-2 px-4 text-center border-black border-t-2 border-l-2 rounded-tl-xl">Calories: {currFoodData == null ? "" : currFoodData["calories"] + " kcal"}</td>
+                            <td className="py-2 px-4 text-center border-black border-t-2 border-l-2 rounded-tl-xl">{fetchingFoodData ? <img className="w-5 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : "Calories: " + (currFoodData == null ? "" : currFoodData["calories"] + " kcal")}</td>
                             <td className="py-2 px-4 text-center border-black border-t-2 border-x-2 rounded-tr-xl"></td>
                         </tr>
                         <tr>
@@ -263,7 +266,7 @@ export default function MySQLProject(){
                                     <td key={cellIndex} className={`py-2 px-4 text-center ${borderStyle}`}>
                                         {tableItem == null ? "" : tableItem["food_name"] + " - " + tableItem["measure"]}
                                     </td>
-                                );
+                                )
                             }
                         })}
                     </tr>

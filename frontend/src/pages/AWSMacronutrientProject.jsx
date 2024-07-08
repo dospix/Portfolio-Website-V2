@@ -74,7 +74,7 @@ export default function MySQLProject(props){
                     if(currFoodItemInfoFetchCounter == foodItemInfoFetchCounter.current)
                         setFetchingFoodData(false)
                 })
-        }, 1000)
+        }, 100)
     }
 
     function isValidFoodItem(foodItem){
@@ -185,26 +185,26 @@ export default function MySQLProject(props){
                 <div className="w-1/2">
                     <table className="mr-auto ml-28 border-separate border-spacing-0">
                         <tr>
-                            <td className="py-2 px-4 text-center border-black border-t-2 border-l-2 rounded-tl-xl">{fetchingFoodData ? <img className="w-5 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : "Calories: " + (currFoodData == null ? "" : currFoodData["calories"] + " kcal")}</td>
+                            <td className="py-2 px-4 text-center border-black border-t-2 border-l-2 rounded-tl-xl">Calories: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["calories"] + " kcal"}</td>
                             <td className="py-2 px-4 text-center border-black border-t-2 border-x-2 rounded-tr-xl"></td>
                         </tr>
                         <tr>
-                            <td rowspan="3" className="py-2 px-4 text-center border-black border-t-2 border-l-2">Carbohydrates: {currFoodData == null ? "" : currFoodData["carbohydrates"] + " g"}</td>
-                            <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Sugars: {currFoodData == null ? "" : currFoodData["sugars"] + " g"}</td>
+                            <td rowspan="3" className="py-2 px-4 text-center border-black border-t-2 border-l-2">Carbohydrates: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["carbohydrates"] + " g"}</td>
+                            <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Sugars: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["sugars"] + " g"}</td>
                         </tr>
                         <tr>
-                            <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Fiber: {currFoodData == null ? "" : currFoodData["fiber"] + " g"}</td>
+                            <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Fiber: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["fiber"] + " g"}</td>
                         </tr>
                         <tr>
-                            <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Starch: {currFoodData == null ? "" : currFoodData["starch"] + " g"}</td>
+                            <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Starch: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["starch"] + " g"}</td>
                         </tr>
                         <tr>
-                            <td className="py-2 px-4 text-center border-black border-t-2 border-l-2">Protein: {currFoodData == null ? "" : currFoodData["protein"] + " g"}</td>
+                            <td className="py-2 px-4 text-center border-black border-t-2 border-l-2">Protein: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["protein"] + " g"}</td>
                             <td className="py-2 px-4 text-center border-black border-t-2 border-x-2"></td>
                         </tr>
                         <tr>
-                            <td className="py-2 px-4 text-center border-black border-y-2 border-l-2 rounded-bl-xl">Fat: {currFoodData == null ? "" : currFoodData["fat"] + " g"}</td>
-                            <td className="py-2 px-4 text-center border-black border-2 rounded-br-xl">Saturated fat: {currFoodData == null ? "" : currFoodData["saturated_fat"] + " g"}</td>
+                            <td className="py-2 px-4 text-center border-black border-y-2 border-l-2 rounded-bl-xl">Fat: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["fat"] + " g"}</td>
+                            <td className="py-2 px-4 text-center border-black border-2 rounded-br-xl">Saturated fat: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["saturated_fat"] + " g"}</td>
                         </tr>
                     </table>
                 </div>

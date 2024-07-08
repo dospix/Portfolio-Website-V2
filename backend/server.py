@@ -101,7 +101,6 @@ def get_food_item_info():
     aws_session_queue.append(instance_id)
     while aws_session_queue[0] != instance_id:
         time.sleep(1)
-    time.sleep(1)
 
     # # Create a Boto3 session with the specified credentials and region
     session = boto3.Session(

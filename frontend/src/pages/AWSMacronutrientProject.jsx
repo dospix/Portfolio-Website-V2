@@ -37,6 +37,16 @@ export default function MySQLProject(props){
     //     "sugars": 0.23
     // }
     const [ingredientTableRows, setIngredientTableRows] = useState([["add_button", "add_button", "add_button", "add_button", "add_button"]])
+    const [totalMacronutrients, setTotalMacronutriets] = useState({
+        "calories": 0,
+        "carbohydrates": 0,
+        "fat": 0,
+        "fiber": 0,
+        "protein": 0,
+        "saturated_fat": 0,
+        "starch": 0,
+        "sugars": 0
+    })
     
     // Used for initiating a fetch only if currFoodItem and currAmount did not change in a 2 second timeframe
     const foodItemInfoFetchCounter = useRef(0);
@@ -99,6 +109,20 @@ export default function MySQLProject(props){
     }
 
     function addCurrFoodDataToFinalTable(ingredientMeal) {
+        setTotalMacronutriets(prev => {
+            const newTotalMacronutrients = JSON.parse(JSON.stringify(prev))
+            newTotalMacronutrients["calories"] += currFoodData["calories"]
+            newTotalMacronutrients["carbohydrates"] += currFoodData["carbohydrates"]
+            newTotalMacronutrients["fat"] += currFoodData["fat"]
+            newTotalMacronutrients["fiber"] += currFoodData["fiber"]
+            newTotalMacronutrients["protein"] += currFoodData["protein"]
+            newTotalMacronutrients["saturated_fat"] += currFoodData["saturated_fat"]
+            newTotalMacronutrients["starch"] += currFoodData["starch"]
+            newTotalMacronutrients["sugars"] += currFoodData["sugars"]
+
+            return newTotalMacronutrients
+        })
+
         let columnIndex = null
         switch (ingredientMeal) {
             case "breakfast":
@@ -185,26 +209,26 @@ export default function MySQLProject(props){
                 <div className="w-1/2">
                     <table className="mr-auto ml-28 border-separate border-spacing-0">
                         <tr>
-                            <td className="py-2 px-4 text-center border-black border-t-2 border-l-2 rounded-tl-xl">Calories: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["calories"] + " kcal"}</td>
+                            <td className="py-2 px-4 text-center border-black border-t-2 border-l-2 rounded-tl-xl">Calories: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["calories"].toFixed(2) + " kcal"}</td>
                             <td className="py-2 px-4 text-center border-black border-t-2 border-x-2 rounded-tr-xl"></td>
                         </tr>
                         <tr>
-                            <td rowspan="3" className="py-2 px-4 text-center border-black border-t-2 border-l-2">Carbohydrates: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["carbohydrates"] + " g"}</td>
-                            <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Sugars: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["sugars"] + " g"}</td>
+                            <td rowspan="3" className="py-2 px-4 text-center border-black border-t-2 border-l-2">Carbohydrates: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["carbohydrates"].toFixed(2) + " g"}</td>
+                            <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Sugars: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["sugars"].toFixed(2) + " g"}</td>
                         </tr>
                         <tr>
-                            <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Fiber: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["fiber"] + " g"}</td>
+                            <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Fiber: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["fiber"].toFixed(2) + " g"}</td>
                         </tr>
                         <tr>
-                            <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Starch: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["starch"] + " g"}</td>
+                            <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Starch: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["starch"].toFixed(2) + " g"}</td>
                         </tr>
                         <tr>
-                            <td className="py-2 px-4 text-center border-black border-t-2 border-l-2">Protein: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["protein"] + " g"}</td>
+                            <td className="py-2 px-4 text-center border-black border-t-2 border-l-2">Protein: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["protein"].toFixed(2) + " g"}</td>
                             <td className="py-2 px-4 text-center border-black border-t-2 border-x-2"></td>
                         </tr>
                         <tr>
-                            <td className="py-2 px-4 text-center border-black border-y-2 border-l-2 rounded-bl-xl">Fat: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["fat"] + " g"}</td>
-                            <td className="py-2 px-4 text-center border-black border-2 rounded-br-xl">Saturated fat: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["saturated_fat"] + " g"}</td>
+                            <td className="py-2 px-4 text-center border-black border-y-2 border-l-2 rounded-bl-xl">Fat: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["fat"].toFixed(2) + " g"}</td>
+                            <td className="py-2 px-4 text-center border-black border-2 rounded-br-xl">Saturated fat: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["saturated_fat"].toFixed(2) + " g"}</td>
                         </tr>
                     </table>
                 </div>
@@ -230,7 +254,7 @@ export default function MySQLProject(props){
                             borderStyle += isOnLastColumn ? " border-x-2" : " border-l-2"
                             borderStyle += isBottomLeftCorner ? " rounded-bl-xl" : ""
                             borderStyle += isBottomRightCorner ? " rounded-br-xl" : ""
-                            if (tableItem == "add_button") {
+                            if (tableItem == "add_button")
                                 return (
                                     <td key={cellIndex} className={`${currFoodData == null ? "py-8 px-8" : "py-2 px-4"} ${borderStyle}`}>
                                         <img 
@@ -260,17 +284,40 @@ export default function MySQLProject(props){
                                             }}
                                         />
                                     </td>
-                                );
-                            } else {
-                                return (
+                                )
+                            else return (
                                     <td key={cellIndex} className={`py-2 px-4 text-center ${borderStyle}`}>
                                         {tableItem == null ? "" : tableItem["food_name"] + " - " + tableItem["measure"]}
                                     </td>
                                 )
-                            }
                         })}
                     </tr>
                 ))}
+            </table>
+
+            <table className="mt-56 mx-auto border-separate border-spacing-0">
+                <tr>
+                    <td className="py-2 px-4 text-center border-black border-t-2 border-l-2 rounded-tl-xl">Calories: {totalMacronutrients["calories"].toFixed(2) + " kcal"}</td>
+                    <td className="py-2 px-4 text-center border-black border-t-2 border-x-2 rounded-tr-xl"></td>
+                </tr>
+                <tr>
+                    <td rowspan="3" className="py-2 px-4 text-center border-black border-t-2 border-l-2">Carbohydrates: {totalMacronutrients["carbohydrates"].toFixed(2) + " g"}</td>
+                    <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Sugars: {totalMacronutrients["sugars"].toFixed(2) + " g"}</td>
+                </tr>
+                <tr>
+                    <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Fiber: {totalMacronutrients["fiber"].toFixed(2) + " g"}</td>
+                </tr>
+                <tr>
+                    <td className="py-2 px-4 text-center border-black border-t-2 border-x-2">Starch: {totalMacronutrients["starch"].toFixed(2) + " g"}</td>
+                </tr>
+                <tr>
+                    <td className="py-2 px-4 text-center border-black border-t-2 border-l-2">Protein: {totalMacronutrients["protein"].toFixed(2) + " g"}</td>
+                    <td className="py-2 px-4 text-center border-black border-t-2 border-x-2"></td>
+                </tr>
+                <tr>
+                    <td className="py-2 px-4 text-center border-black border-y-2 border-l-2 rounded-bl-xl">Fat: {totalMacronutrients["fat"].toFixed(2) + " g"}</td>
+                    <td className="py-2 px-4 text-center border-black border-2 rounded-br-xl">Saturated fat: {totalMacronutrients["saturated_fat"].toFixed(2) + " g"}</td>
+                </tr>
             </table>
         </>
     )

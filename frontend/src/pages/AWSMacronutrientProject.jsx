@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 import plus from "../assets/images/plus.png"
 import avocado_loading from "../assets/images/avocado-loading.png"
+import delete_x from "../assets/images/delete-x.png"
 
 export default function MySQLProject(props){
     const foodItems = new Set(["whole milk|ml", "reduced fat milk|ml", "low fat milk|ml", "fat free milk|ml", "goat milk|ml", "almond milk|ml", "oat milk|ml", 
@@ -161,6 +162,42 @@ export default function MySQLProject(props){
             }
     }
 
+    function removeFoodDataFromFinalTable(rowIndex, cellIndex) {
+        setTotalMacronutriets(prev => {
+            const newTotalMacronutrients = JSON.parse(JSON.stringify(prev))
+            newTotalMacronutrients["calories"] = Math.abs(newTotalMacronutrients["calories"] - ingredientTableRows[rowIndex][cellIndex]["calories"])
+            newTotalMacronutrients["carbohydrates"] = Math.abs(newTotalMacronutrients["carbohydrates"] - ingredientTableRows[rowIndex][cellIndex]["carbohydrates"])
+            newTotalMacronutrients["fat"] = Math.abs(newTotalMacronutrients["fat"] - ingredientTableRows[rowIndex][cellIndex]["fat"])
+            newTotalMacronutrients["fiber"] = Math.abs(newTotalMacronutrients["fiber"] - ingredientTableRows[rowIndex][cellIndex]["fiber"])
+            newTotalMacronutrients["protein"] = Math.abs(newTotalMacronutrients["protein"] - ingredientTableRows[rowIndex][cellIndex]["protein"])
+            newTotalMacronutrients["saturated_fat"] = Math.abs(newTotalMacronutrients["saturated_fat"] - ingredientTableRows[rowIndex][cellIndex]["saturated_fat"])
+            newTotalMacronutrients["starch"] = Math.abs(newTotalMacronutrients["starch"] - ingredientTableRows[rowIndex][cellIndex]["starch"])
+            newTotalMacronutrients["sugars"] = Math.abs(newTotalMacronutrients["sugars"] - ingredientTableRows[rowIndex][cellIndex]["sugars"])
+
+            return newTotalMacronutrients
+        })
+
+        setIngredientTableRows(prev => {
+            const newTableRows = JSON.parse(JSON.stringify(prev))
+            let columnMaxIndex = rowIndex
+            for(let row = rowIndex + 1; newTableRows[row - 1][cellIndex] != "add_button"; row++){
+                columnMaxIndex = row
+                newTableRows[row - 1][cellIndex] = newTableRows[row][cellIndex]
+            }
+            newTableRows[columnMaxIndex][cellIndex] = null
+
+            // If the last row is empty after removing an element then delete the row
+            let allColumnsNull = true
+            for(let currColumnIndex = 0; currColumnIndex < newTableRows[columnMaxIndex].length; currColumnIndex++)
+                if(newTableRows[columnMaxIndex][currColumnIndex] != null)
+                    allColumnsNull = false
+            if(allColumnsNull)
+                newTableRows.pop()
+
+            return newTableRows
+        })
+    }
+
     return (
         <>
             <div className='mt-10 md:mt-16 mx-4 text-center'>
@@ -287,7 +324,7 @@ export default function MySQLProject(props){
                                 )
                             else return (
                                     <td key={cellIndex} className={`py-2 px-4 text-center ${borderStyle}`}>
-                                        {tableItem == null ? "" : tableItem["food_name"] + " - " + tableItem["measure"]}
+                                        <p className="flex">{tableItem == null ? <></> : <img className="mt-[1px] mr-1 h-6 hover:cursor-pointer" src={delete_x} onClick={() => removeFoodDataFromFinalTable(rowIndex, cellIndex)} alt="delete ingredient" />} {tableItem == null ? "" : tableItem["food_name"] + " - " + tableItem["measure"]}</p>
                                     </td>
                                 )
                         })}

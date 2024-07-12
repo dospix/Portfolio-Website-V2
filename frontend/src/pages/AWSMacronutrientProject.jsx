@@ -332,7 +332,7 @@ export default function MySQLProject(props){
                 ))}
             </table>
 
-            <table className="mt-56 mx-auto border-separate border-spacing-0">
+            <table className="mt-36 mx-auto border-separate border-spacing-0">
                 <tr>
                     <td className="py-2 px-4 text-center border-black border-t-2 border-l-2 rounded-tl-xl">Calories: {totalMacronutrients["calories"].toFixed(2) + " kcal"}</td>
                     <td className="py-2 px-4 text-center border-black border-t-2 border-x-2 rounded-tr-xl"></td>

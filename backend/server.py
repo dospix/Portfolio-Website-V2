@@ -124,27 +124,18 @@ def get_food_item_info():
     for key, value in response["Item"].items():
         if type(value) == Decimal:
             response["Item"][key] = float(value)
+    
+    for macronutrient_type in response["Item"].keys():
+        if macronutrient_type in ["calories", "carbohydrates", "fat", "fiber", "protein", "saturated_fat", "starch", "sugars"]:
+            response["Item"][macronutrient_type] = round(response["Item"][macronutrient_type] / 100 * item_data["currAmount"], 2)
+    
+    # convert from "100 g/ml" to "currAmount g/ml"
+    response["Item"]["measure"] = str(item_data["currAmount"]) + response["Item"]["measure"].split()[1]
 
-    # only keep item_data and Item keys, the others are not needed
-    temp_dict = {"item_data": item_data}
-    response = {"Item": response["Item"]}
-    response.update(temp_dict)
-
-    lambda_client = session.client("lambda")
-    params = {
-        "FunctionName": dotenv_dict["AWS_MACRONUTRIENT_CALCULATOR_FUNCTION_ARN"],
-        "InvocationType": "RequestResponse",
-        "Payload": json.dumps(response)
-    }
-
-    response = lambda_client.invoke(**params)
-
-    response = json.loads(response["Payload"].read().decode("utf-8"))
-
-    response["fetch_queue_length"] = len(aws_session_queue)
+    response["Item"]["fetch_queue_length"] = len(aws_session_queue)
     del aws_session_queue[aws_session_queue.index(instance_id)]
 
-    return response
+    return response["Item"]
 
 # The Google API won't allow a value bigger than 40
 MAX_BOOKS_FETCHED = 40

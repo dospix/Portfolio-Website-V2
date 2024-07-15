@@ -20,7 +20,8 @@ export default function MySQLProject(props){
     const [currFoodItem, setCurrFoodItem] = useState("")
     const [currAmount, setCurrAmount] = useState(0)
     const [currFoodData, setCurrFoodData] = useState(null)
-    const [fetchingFoodData, setFetchingFoodData] = useState(false)
+    // This is a boolean, but starts as null because there is a useEffect that runs every time it is false
+    const [fetchingFoodData, setFetchingFoodData] = useState(null)
     // This is a representation of all food items tracked for the final macronutrient calculation, each array inside represents a row in the table.
     // Each row will have 5 items, representing the food item served for: breakfast, first snack, lunch, second snack, dinner.
     // For meals that don't have a food item in a row, the value corresponding to the meal will be null, otherwise it will be an object. Example object: 
@@ -48,9 +49,10 @@ export default function MySQLProject(props){
         "starch": 0,
         "sugars": 0
     })
+    const [rememberedIngredients, setRememberedIngredients] = useState({})
     
     // Used for initiating a fetch only if currFoodItem and currAmount did not change in a 2 second timeframe
-    const foodItemInfoFetchCounter = useRef(0);
+    const foodItemInfoFetchCounter = useRef(0)
     function calculateMacronutrients(event){
         event.preventDefault()
         if(fetchingFoodData)
@@ -60,14 +62,15 @@ export default function MySQLProject(props){
         let currFoodItemInfoFetchCounter = foodItemInfoFetchCounter.current
         if(!(isValidFoodItem(currFoodItem) && isValidAmount(currAmount)))
             return
+
         setFetchingFoodData(true)
         setTimeout(() => {
-            if(currFoodItemInfoFetchCounter == foodItemInfoFetchCounter.current)
+            if(!(currFoodItem in rememberedIngredients) && currFoodItemInfoFetchCounter == foodItemInfoFetchCounter.current)
                 fetch("/asw-macronutrient-project/get-food-item-info", {
                     method: "POST",
                     body: JSON.stringify({
                         "foodItem": currFoodItem,
-                        "currAmount": currAmount
+                        "currAmount": 100
                     }),
                     headers: {
                         "Content-type": "application/json; charset=UTF-8",
@@ -76,17 +79,32 @@ export default function MySQLProject(props){
                 .then(response => response.json())
                 .then(responseJson => {
                     if(currFoodItemInfoFetchCounter == foodItemInfoFetchCounter.current){
-                        setCurrFoodData(responseJson)
-                        console.log(responseJson)
+                        setRememberedIngredients(prev => {
+                            let newRememberedIngredients = JSON.parse(JSON.stringify(prev))
+                            newRememberedIngredients[responseJson["food_name"]] = responseJson
+    
+                            return newRememberedIngredients
+                        })
                     }
                 })
                 .catch(error => console.error('Error:', error))
-                .finally(() => {
-                    if(currFoodItemInfoFetchCounter == foodItemInfoFetchCounter.current)
-                        setFetchingFoodData(false)
-                })
+                .finally(() => setFetchingFoodData(false))
+            else setFetchingFoodData(false)
         }, 100)
     }
+    useEffect(() => {
+        if(fetchingFoodData == false){
+            let rememberedIngredient = JSON.parse(JSON.stringify(rememberedIngredients[currFoodItem]))
+            for(const macronutrient_type in rememberedIngredient)
+                if(["calories", "carbohydrates", "fat", "fiber", "protein", "saturated_fat", "starch", "sugars"].includes(macronutrient_type))
+                    rememberedIngredient[macronutrient_type] = Number((rememberedIngredient[macronutrient_type] / 100 * currAmount).toFixed(2))
+            
+            // convert from "100 g/ml" to "currAmountg/ml"
+            let measurementType = rememberedIngredient["measure"].replace(/[0-9.]/g, '')
+            rememberedIngredient["measure"] = currAmount.toString() + measurementType
+            setCurrFoodData({ ...rememberedIngredient })
+        }
+    }, [fetchingFoodData])
 
     function isValidFoodItem(foodItem){
         return foodItems.has(foodItem + "|g") || foodItems.has(foodItem + "|ml")

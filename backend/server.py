@@ -129,7 +129,7 @@ def get_food_item_info():
         if macronutrient_type in ["calories", "carbohydrates", "fat", "fiber", "protein", "saturated_fat", "starch", "sugars"]:
             response["Item"][macronutrient_type] = round(response["Item"][macronutrient_type] / 100 * item_data["currAmount"], 2)
     
-    # convert from "100 g/ml" to "currAmount g/ml"
+    # convert from "100 g/ml" to "currAmountg/ml"
     response["Item"]["measure"] = str(item_data["currAmount"]) + response["Item"]["measure"].split()[1]
 
     response["Item"]["fetch_queue_length"] = len(aws_session_queue)

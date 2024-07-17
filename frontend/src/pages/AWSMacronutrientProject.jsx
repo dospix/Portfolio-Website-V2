@@ -1,22 +1,12 @@
 import { useState, useEffect, useRef } from "react"
+import ingredients from '../data/ingredients.json';
 import plus from "../assets/images/plus.png"
 import avocado_loading from "../assets/images/avocado-loading.png"
 import delete_x from "../assets/images/delete-x.png"
 
 export default function MySQLProject(props){
-    const foodItems = new Set(["whole milk|ml", "reduced fat milk|ml", "low fat milk|ml", "fat free milk|ml", "goat milk|ml", "almond milk|ml", "oat milk|ml", 
-        "soy milk|ml", "buttermilk|ml", "hot chocolate|ml", "plain nonfat greek yogurt|g", "plain whole milk greek yogurt|g", "strawberry nonfat greek yogurt|g", 
-        "plain nonfat yogurt|g", "plain whole milk yogurt|g", "vanilla ice cream|g", "chocolate ice cream|g", "strawberry ice cream|g", "heavy cream|g", 
-        "sour cream|g", "american cheese|g", "cheddar cheese|g", "cottage cheese|g", "feta cheese|g", "monterey jack cheese|g", "mozzarella cheese|g", 
-        "parmesan cheese|g", "provolone cheese|g", "ricotta cheese|g", "swiss cheese|g", "brie cheese|g", "blue cheese|g", "cream cheese|g", "egg|g", "egg white|g", 
-        "egg yolk|g", "butter|g", "almond butter|g", "peanut butter|g", "sesame butter|g", "lard|g", "margarine|g", "sunflower oil|ml", "olive oil|ml", 
-        "coconut oil|ml", "canola oil|ml", "corn oil|ml", "peanut oil|ml", "soybean oil|ml", "beef|g", "sirloin steak|g", "t-bone steak|g", "filet mignon steak|g", 
-        "chuck roast|g", "beef brisket|g", "rump roast|g", "flank steak|g", "tenderloin roast|g", "ribeye steak|g", "eye of round roast|g", "porterhouse steak|g", 
-        "beef stew meat|g", "beef short ribs|g", "ground beef|g", "chicken breast|g", "chicken thighs|g", "chicken drumsticks|g", "chicken wings|g", 
-        "ground chicken|g", "bacon|g", "pork chops|g", "pork loin|g", "pork tenderloin|g", "pork shoulder|g", "pork belly|g", "ground pork|g", "turkey|g", 
-        "turkey breast|g", "turkey drumsticks/thighs|g", "ground turkey|g", "beef breakfast sausage|g", "italian pork sausage|g", "chorizo sausage|g", 
-        "turkey sausage|g", "frankfurter|g", "ham|g", "deli turkey/chicken meat|g", "clams|g", "cod|g", "crab|g", "fish sticks|g", "flounder|g", "haddock|g", 
-        "halibut|g", "herring|g", "lobster|g", "mackerel|g", "oysters|g", "salmon|g"])
+    const foodItems = new Set(ingredients.ingredients)
+
     const [currFoodItem, setCurrFoodItem] = useState("")
     const [currAmount, setCurrAmount] = useState(0)
     const [currFoodData, setCurrFoodData] = useState(null)

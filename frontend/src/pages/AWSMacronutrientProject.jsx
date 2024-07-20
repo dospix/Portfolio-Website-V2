@@ -212,7 +212,14 @@ export default function MySQLProject(props){
                 <h1 className='text-xl md:text-3xl font-semibold font-Montserrat'>AWS macronutrient breakdown project</h1>
             </div>
 
-            <div className='mt-10 mx-4 flex items-center justify-center text-center'>
+            <p className="mt-12 2xl:mx-64 xl:mx-44 lg:mx-16 md:mx-10 mx-5 md:text-2xl sm:text-xl text-lg font-Open_Sans">
+                This project shows the macronutrients present in the meals consumed throughout the day. You can also see the macronutrients present in a single ingredient. <br />
+                The macronutrient data of the ingredients is present in an AWS dynamoDB database. <br />
+                Initially, AWS Lambda was used for some calculations, but in the end I decided to do those calculations on the server because the AWS requests took too long. <br />
+                Here is an example of a final meal table together with the macronutrients present:
+            </p>
+
+            <div className='mt-12 mx-4 flex items-center justify-center text-center'>
                 <h1 className="text-xl md:text-3xl font-Montserrat">Enter the food item and quantity whose macronutrients you would like to see</h1>
             </div>
 
@@ -278,8 +285,12 @@ export default function MySQLProject(props){
                     </table>
                 </div>
             </div>
+
+            <p className="mt-14 2xl:mx-64 xl:mx-44 lg:mx-16 md:mx-10 mx-5 md:text-2xl sm:text-xl text-lg font-Open_Sans">
+                Once you have a food item selected, you can add it to your meal plan below. The total macronutrients of your meal plan will update in real time.
+            </p>
             
-            <table className="mx-auto mt-36 border-separate border-spacing-0">
+            <table className="mx-auto mt-14 border-separate border-spacing-0">
                 <tr>
                     <td className="py-2 px-4 text-center border-black border-t-2 border-l-2 rounded-tl-xl">Breakfast</td>
                     <td className="py-2 px-4 text-center border-black border-t-2 border-l-2">First snack</td>
@@ -340,7 +351,7 @@ export default function MySQLProject(props){
                 ))}
             </table>
 
-            <table className="mt-36 mx-auto border-separate border-spacing-0">
+            <table className="mt-16 mx-auto border-separate border-spacing-0">
                 <tr>
                     <td className="py-2 px-4 text-center border-black border-t-2 border-l-2 rounded-tl-xl">Calories: {totalMacronutrients["calories"].toFixed(2) + " kcal"}</td>
                     <td className="py-2 px-4 text-center border-black border-t-2 border-x-2 rounded-tr-xl"></td>

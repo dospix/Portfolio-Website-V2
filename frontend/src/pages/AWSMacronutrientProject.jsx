@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react"
-import ingredients from '../data/ingredients.json';
+import ingredients from "../data/ingredients.json"
+import example_meals_white from "../assets/images/example-meals-white.png"
+import example_meals_black from "../assets/images/example-meals-black.png"
 import plus from "../assets/images/plus.png"
 import avocado_loading from "../assets/images/avocado-loading.png"
 import delete_x from "../assets/images/delete-x.png"
@@ -210,8 +212,8 @@ export default function MySQLProject(props){
 
     return (
         <>
-            <div className='mt-10 md:mt-16 mx-4 text-center'>
-                <h1 className='text-xl md:text-3xl font-semibold font-Montserrat'>AWS macronutrient breakdown project</h1>
+            <div className="mt-10 md:mt-16 mx-4 text-center">
+                <h1 className="text-xl md:text-3xl font-semibold font-Montserrat">AWS macronutrient breakdown project</h1>
             </div>
 
             <p className="mt-12 mx-24 text-xl font-Open_Sans">
@@ -220,6 +222,8 @@ export default function MySQLProject(props){
                 The macronutrient data used for this project was taken from the U.S. Department of Agriculture, <a className="text-blue-500 hover:text-blue-700 hover:underline" href="https://fdc.nal.usda.gov">FoodData Central</a> <br />
                 Here is an example of a final meal table together with the macronutrients present:
             </p>
+
+            <img className="mt-10 mx-auto w-3/4" src={props.isDarkMode ? example_meals_black : example_meals_white} alt="final meal table example" />
 
             <div className='mt-14 mx-4 flex items-center justify-center text-center'>
                 <h1 className="text-xl md:text-3xl font-Montserrat">Enter the food item and quantity whose macronutrients you would like to see</h1>

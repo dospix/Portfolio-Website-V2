@@ -6,9 +6,9 @@ import AWSMacronutrientProject from "./pages/AWSMacronutrientProject"
 const projects = [
     {
         key: 0,
-        name: "AWS macronutrient breakdown project",
-        description: "Using AWS modules to show the macronutrient amount in different kinds of food.",
-        image: "images/planning.jpg",
+        name: "AWS macronutrient calculator project",
+        description: "Using AWS to calculate the macronutrients in your meals.",
+        image: "images/macronutrients.jpg",
         path: "/asw-macronutrient-project",
         page: <AWSMacronutrientProject />
     },

@@ -212,24 +212,24 @@ export default function MySQLProject(props){
 
     return (
         <>
-            <div className="mt-10 md:mt-16 mx-4 text-center">
+            <div className="mt-12 md:mt-16 mx-4 text-center">
                 <h1 className="text-xl md:text-3xl font-semibold font-Montserrat">AWS macronutrient breakdown project</h1>
             </div>
 
-            <p className="mt-12 mx-24 text-xl font-Open_Sans">
-                This project shows the macronutrients present in the meals consumed throughout the day. You can also see the macronutrients present in a single ingredient. <br />
-                The macronutrient data of the ingredients is present in an AWS dynamoDB database. Initially, AWS Lambda was used for some calculations, but in the end I decided to do those calculations on the server because the AWS requests took too long. <br />
-                The macronutrient data used for this project was taken from the U.S. Department of Agriculture, <a className="text-blue-500 hover:text-blue-700 hover:underline" href="https://fdc.nal.usda.gov">FoodData Central</a> <br />
-                Here is an example of a final meal table together with the macronutrients present:
+            <p className="mt-12 mx-4 md:mx-12 lg:mx-24 text-sm md:text-xl font-Open_Sans">
+                This project shows the macronutrients present in the meals consumed throughout the day. You can also view the macronutrients present in a single ingredient. <br />
+                The macronutrient data of the ingredients is stored in an AWS dynamoDB database. Initially, AWS Lambda was used for some calculations, but ultimately, I decided to do those calculations on the server because the AWS requests took too long. <br />
+                The macronutrient data used for this project was sourced from the U.S. Department of Agriculture, <a className="text-blue-500 hover:text-blue-700 hover:underline" href="https://fdc.nal.usda.gov">FoodData Central</a> <br />
+                Below is an example of a final meal table along with the macronutrients present:
             </p>
 
-            <img className="mt-10 mx-auto w-3/4" src={props.isDarkMode ? example_meals_black : example_meals_white} alt="final meal table example" />
+            <img className="mt-10 mx-auto w-5/6 md:w-3/4" src={props.isDarkMode ? example_meals_black : example_meals_white} alt="final meal table example" />
 
             <div className='mt-14 mx-4 flex items-center justify-center text-center'>
                 <h1 className="text-xl md:text-3xl font-Montserrat">Enter the food item and quantity whose macronutrients you would like to see</h1>
             </div>
 
-            <form onSubmit={calculateMacronutrients} className="mx-auto mt-12 w-11/12 sm:w-1/3 flex justify-center flex-col font-Open_Sans">
+            <form onSubmit={calculateMacronutrients} className="mx-auto mt-12 w-5/6 sm:w-3/4 lg:w-1/2 xl:w-5/12 flex justify-center flex-col font-Open_Sans">
                 <label className="p-1 md:p-2 md:text-3xl text-lg" htmlFor="currFoodItem">Select food item:</label>
                 <input 
                     className="ml-2 p-1 md:p-2 border-[3px] border-black focus:outline-none focus:border-blue-500 rounded-md text-center md:text-3xl text-md text-black" 
@@ -262,10 +262,10 @@ export default function MySQLProject(props){
 
             <div className="flex mx-auto mt-16 w-11/12">
                 <div className="flex items-center w-1/2">
-                    <h1 className={`ml-auto mr-20 md:text-3xl text-lg ${currFoodData != null ? "" : "text-red-600"}`}>{currFoodData != null ? currFoodData["food_name"] + " - " + currFoodData["measure"] : fetchingFoodData ? "" : !isValidFoodItem(currFoodItem) ? "invalid food item" : !isValidAmount(currAmount) ? "invalid amount" : "Press the button above to calculate macronutrients"}</h1>
+                    <h1 className={`ml-auto mr-10 md:mr-20 md:text-3xl text-lg ${currFoodData != null ? "" : "text-red-600"}`}>{currFoodData != null ? currFoodData["food_name"] + " - " + currFoodData["measure"] : fetchingFoodData ? "" : !isValidFoodItem(currFoodItem) ? "invalid food item" : !isValidAmount(currAmount) ? "invalid amount" : "Press the button above to calculate macronutrients"}</h1>
                 </div>
                 <div className="w-1/2">
-                    <table className="mr-auto ml-28 border-separate border-spacing-0">
+                    <table className="mr-auto ml-14 md:ml-28 border-separate border-spacing-0">
                         <tr>
                             <td className={`py-2 px-4 text-center ${BORDER_COLOR} border-t-2 border-l-2 rounded-tl-xl`}>Calories: {fetchingFoodData ? <img className="inline w-7 mx-auto animate-spin" src={avocado_loading} alt="loading image" /> : currFoodData == null ? "" : currFoodData["calories"].toFixed(2) + " kcal"}</td>
                             <td className={`py-2 px-4 text-center ${BORDER_COLOR} border-t-2 border-x-2 rounded-tr-xl`}></td>

@@ -8,6 +8,7 @@ import delete_x from "../assets/images/delete-x.png"
 
 export default function MySQLProject(props){
     const BORDER_COLOR = props.isDarkMode ? "border-white" : "border-black"
+    const MAX_INGREDIENT_ROW_LIMIT = 25
     
     const foodItems = new Set(ingredients.ingredients)
 
@@ -114,28 +115,16 @@ export default function MySQLProject(props){
         if(name == "currFoodItem")
             setCurrFoodItem(value)
         else if(name == "currAmount")
-            if(value < 0 || isNaN(value))
+            if(value <= 0 || isNaN(value))
                 setCurrAmount(0)
-            else if(1000 < value)
-                setCurrAmount(1000)
+            if(!isValidAmount(value))
+                return
+            else if(value > 10000)
+                setCurrAmount(10000)
             else setCurrAmount(parseFloat(value))
     }
 
     function addCurrFoodDataToFinalTable(ingredientMeal) {
-        setTotalMacronutriets(prev => {
-            const newTotalMacronutrients = JSON.parse(JSON.stringify(prev))
-            newTotalMacronutrients["calories"] += currFoodData["calories"]
-            newTotalMacronutrients["carbohydrates"] += currFoodData["carbohydrates"]
-            newTotalMacronutrients["fat"] += currFoodData["fat"]
-            newTotalMacronutrients["fiber"] += currFoodData["fiber"]
-            newTotalMacronutrients["protein"] += currFoodData["protein"]
-            newTotalMacronutrients["saturated_fat"] += currFoodData["saturated_fat"]
-            newTotalMacronutrients["starch"] += currFoodData["starch"]
-            newTotalMacronutrients["sugars"] += currFoodData["sugars"]
-
-            return newTotalMacronutrients
-        })
-
         let columnIndex = null
         switch (ingredientMeal) {
             case "breakfast":
@@ -159,6 +148,8 @@ export default function MySQLProject(props){
 
         for(let row = 0; row < ingredientTableRows.length; row++)
             if(ingredientTableRows[row][columnIndex] == "add_button"){
+                if(row == MAX_INGREDIENT_ROW_LIMIT)
+                    return
                 setIngredientTableRows(prev => {
                     const newTableRows = JSON.parse(JSON.stringify(prev))
                     newTableRows[row][columnIndex] = currFoodData
@@ -172,6 +163,20 @@ export default function MySQLProject(props){
                 })
                 break
             }
+        
+        setTotalMacronutriets(prev => {
+            const newTotalMacronutrients = JSON.parse(JSON.stringify(prev))
+            newTotalMacronutrients["calories"] += currFoodData["calories"]
+            newTotalMacronutrients["carbohydrates"] += currFoodData["carbohydrates"]
+            newTotalMacronutrients["fat"] += currFoodData["fat"]
+            newTotalMacronutrients["fiber"] += currFoodData["fiber"]
+            newTotalMacronutrients["protein"] += currFoodData["protein"]
+            newTotalMacronutrients["saturated_fat"] += currFoodData["saturated_fat"]
+            newTotalMacronutrients["starch"] += currFoodData["starch"]
+            newTotalMacronutrients["sugars"] += currFoodData["sugars"]
+
+            return newTotalMacronutrients
+        })
     }
 
     function removeFoodDataFromFinalTable(rowIndex, cellIndex) {

@@ -86,7 +86,7 @@ export default function UsedCarsMachineLearningProject(props) {
     return (
     <>
         <div className='mt-12 md:mt-20 mx-4 text-center'>
-            <h1 className='text-xl md:text-3xl font-semibold font-Montserrat'>Predicting used car prices using machine learning & neural networks</h1>
+            <h1 className='text-xl md:text-3xl font-semibold font-Montserrat'>Predicting Used Car Prices Using Machine Learning & Neural Networks</h1>
         </div>
 
         <div className='mt-10 mx-4 flex items-center justify-center text-center'>

@@ -213,7 +213,7 @@ export default function MySQLProject(props){
     return (
         <>
             <div className="mt-12 md:mt-16 mx-4 text-center">
-                <h1 className="text-xl md:text-3xl font-semibold font-Montserrat">AWS macronutrient breakdown project</h1>
+                <h1 className="text-xl md:text-3xl font-semibold font-Montserrat">AWS Macronutrient Calculator Project</h1>
             </div>
 
             <p className="mt-12 mx-4 md:mx-12 lg:mx-24 text-xs sm:text-sm md:text-xl font-Open_Sans">

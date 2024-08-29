@@ -6,7 +6,7 @@ import AWSMacronutrientProject from "./pages/AWSMacronutrientProject"
 const projects = [
     {
         key: 0,
-        name: "AWS macronutrient calculator project",
+        name: "AWS Macronutrient Calculator Project",
         description: "Using AWS to calculate the macronutrients in your meals.",
         image: "images/macronutrients.jpg",
         path: "/asw-macronutrient-project",
@@ -14,7 +14,7 @@ const projects = [
     },
     {
         key: 1,
-        name: "Used cars machine learning project",
+        name: "Used Cars Machine Learning Project",
         description: "Predicting used car prices using pandas, matplotlib, scikit-learn and PyTorch.",
         image: "images/used-car.jpg",
         path: "/used-cars-machine-learning-project",
@@ -22,7 +22,7 @@ const projects = [
     },
     {
         key: 2,
-        name: "Task/Habit management MySQL project",
+        name: "Task/Habit Management MySQL Project",
         description: "This project uses MySQL to store your tasks and habits.",
         image: "images/planning.jpg",
         path: "/mysql-project",
@@ -30,7 +30,7 @@ const projects = [
     },
     {
         key: 3,
-        name: "Google Books API project",
+        name: "Google Books API Project",
         description: "This project uses the Google Books API to recommend books on various topics.",
         image: "images/google-books-api.jpg",
         path: "/google-api-project",

@@ -18,8 +18,10 @@ export default function MySQLProject(props){
     // This is a boolean, but starts as null because there is a useEffect that runs every time it is false
     const [fetchingFoodData, setFetchingFoodData] = useState(null)
     // This is a representation of all food items tracked for the final macronutrient calculation, each array inside represents a row in the table.
-    // Each row will have 5 items, representing the food item served for: breakfast, first snack, lunch, second snack, dinner.
-    // For meals that don't have a food item in a row, the value corresponding to the meal will be null, otherwise it will be an object. Example object: 
+    // Each row will have 5 items, representing the food item served for: breakfast, first snack, lunch, second snack or dinner.
+    // For meals that don't have a food item in a row, the value corresponding to the meal will be null, otherwise it will be an object.
+    // The last item in a column is a button used to add the current ingredient in the respective cell, which is why the array starts with 5 "add_button" strings.
+    // Example object: 
     // {
     //     "calories": 44.1,
     //     "carbohydrates": 0.23,

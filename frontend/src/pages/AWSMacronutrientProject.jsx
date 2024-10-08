@@ -2,8 +2,8 @@ import { useState, useEffect, useRef } from "react"
 import ingredients from "../data/ingredients.json"
 import example_meals_white from "../assets/images/example-meals-white.png"
 import example_meals_black from "../assets/images/example-meals-black.png"
-import plus from "../assets/images/plus.png"
 import avocado_loading from "../assets/images/avocado-loading.png"
+import plus from "../assets/images/plus.png"
 import delete_x from "../assets/images/delete-x.png"
 
 export default function MySQLProject(props){
@@ -48,7 +48,7 @@ export default function MySQLProject(props){
     })
     const [rememberedIngredients, setRememberedIngredients] = useState({})
     
-    // Used for initiating a fetch only if currFoodItem and currAmount did not change in a 2 second timeframe
+    // Used for initiating a fetch only if a newer fetch hasn't been initiated in a 100 millisecond timeframe
     const foodItemInfoFetchCounter = useRef(0)
     function calculateMacronutrients(event){
         event.preventDefault()

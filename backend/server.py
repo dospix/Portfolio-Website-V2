@@ -149,6 +149,7 @@ def fetch_books_from_google_api():
     author_keywords = "+".join([f"inauthor:{word}" for word in form_response_json["authorKeywords"].split()])
     subjects = "+".join([f"subject:{key}" for key in list(form_response_json.keys()) if key not in ["titleKeywords", "authorKeywords", "previewFilter"] and form_response_json[key] == True])
     preview_filter = "" if form_response_json['previewFilter'] == "none" else f"&filter={form_response_json['previewFilter']}"
+    google_books_api_key = f"&key={os.environ.get('GOOGLE_BOOKS_API_KEY')}"
     
     if author_keywords:
         title_keywords += "+"
@@ -164,17 +165,24 @@ def fetch_books_from_google_api():
         "User-Agent": "FlaskApp (gzip)"
     }
     # Make one request to see how many books there are that fit our search criteria, then another request that will use that number to get a random group of books
-    number_of_results = requests.get(f"{google_api_url_start}{title_keywords}{author_keywords}{subjects}{preview_filter}&fields=totalItems", headers=gzip_headers).json().get("totalItems")
+    number_of_results = requests.get(f"{google_api_url_start}{title_keywords}{author_keywords}{subjects}{preview_filter}{google_books_api_key}&fields=totalItems", headers=gzip_headers).json().get("totalItems")
     if (not number_of_results) or number_of_results <= 0:
-        return []
+        return json.dumps([])
     random_index =  return_index_for_random_batch(number_of_results, MAX_BOOKS_FETCHED)
 
     returned_fields = "&fields=items(id, volumeInfo/title, volumeInfo/subtitle, volumeInfo/authors, volumeInfo/description, \
                     volumeInfo/imageLinks/thumbnail, volumeInfo/ratingsCount, volumeInfo/averageRating, accessInfo/viewability, volumeInfo/previewLink)"
-    response = requests.get(f"{google_api_url_start}{title_keywords}{author_keywords}{subjects}{preview_filter}{returned_fields}&maxResults=40&startIndex={random_index}", headers=gzip_headers)
+    response = requests.get(f"{google_api_url_start}{title_keywords}{author_keywords}{subjects}{preview_filter}{google_books_api_key}{returned_fields}&maxResults=40&startIndex={random_index}", headers=gzip_headers)
+    for _tries in range(3):
+        if response.json() != {} and response.status_code == 200:
+            break
+        # Sometimes the number of results returned is more than the number of results that actually exist. If this happens, we will just start from the beginning.
+        response = requests.get(f"{google_api_url_start}{title_keywords}{author_keywords}{subjects}{preview_filter}{google_books_api_key}{returned_fields}&maxResults=40&startIndex=0", headers=gzip_headers)
+    if response.json() == {} or response.status_code != 200:
+        return json.dumps([])
+    
 
-    response = sorted(response.json().get("items"), key= lambda book: book.get("volumeInfo").get("ratingsCount", 0), reverse= True)
-
+    response = json.dumps(sorted(response.json().get("items"), key= lambda book: book.get("volumeInfo").get("ratingsCount", 0), reverse= True))
     return response
 
 def return_index_for_random_batch(total_items, items_per_batch):

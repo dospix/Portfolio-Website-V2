@@ -15,7 +15,6 @@ import torch.nn as nn
 import boto3
 import uuid
 import time
-import json
 import os
 from decimal import Decimal
 from dotenv import load_dotenv
@@ -44,31 +43,63 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 class Users(db.Model):
+    __tablename__ = "users"
+
     Username = db.Column(db.String(32), primary_key=True)
-    Days = db.relationship("Days", backref="users", cascade="all, delete-orphan")
-    Tasks = db.relationship("Tasks", backref="users", cascade="all, delete-orphan")
-    Habits = db.relationship("Habits", backref="users", cascade="all, delete-orphan")
+
+    Days = db.relationship(
+        "Days", backref="user", cascade="all, delete-orphan"
+    )
+
 
 class Days(db.Model):
-    Username = db.Column(db.String(32), db.ForeignKey('users.Username'), primary_key=True)
+    __tablename__ = "days"
+
+    Username = db.Column(
+        db.String(32), db.ForeignKey("users.Username"), primary_key=True
+    )
     DayIndex = db.Column(db.Integer, primary_key=True)
-    Tasks = db.relationship("Tasks", backref="days", cascade="all, delete-orphan")
-    Habits = db.relationship("Habits", backref="days", cascade="all, delete-orphan")
-    __table_args__ = (db.Index('index_name', 'DayIndex'),)
+
+    Tasks = db.relationship(
+        "Tasks", backref="day", cascade="all, delete-orphan"
+    )
+    Habits = db.relationship(
+        "Habits", backref="day", cascade="all, delete-orphan"
+    )
+
+    __table_args__ = (db.Index("index_days_dayindex", "DayIndex"),)
+
 
 class Tasks(db.Model):
-    Username = db.Column(db.String(32), db.ForeignKey('users.Username'), primary_key=True)
-    DayIndex = db.Column(db.Integer, db.ForeignKey('days.DayIndex'), primary_key=True)
+    __tablename__ = "tasks"
+
+    Username = db.Column(db.String(32), primary_key=True)
+    DayIndex = db.Column(db.Integer, primary_key=True)
     TaskIndex = db.Column(db.Integer, primary_key=True)
     Text = db.Column(db.String(32))
-    Completed = db.Column(db.Boolean)
+    Completed = db.Column(db.Boolean, nullable=False, default=False)
+
+    __table_args__ = (
+        db.ForeignKeyConstraint(
+            ["Username", "DayIndex"], ["days.Username", "days.DayIndex"]
+        ),
+    )
+
 
 class Habits(db.Model):
-    Username = db.Column(db.String(32), db.ForeignKey('users.Username'), primary_key=True)
-    DayIndex = db.Column(db.Integer, db.ForeignKey('days.DayIndex'), primary_key=True)
+    __tablename__ = "habits"
+
+    Username = db.Column(db.String(32), primary_key=True)
+    DayIndex = db.Column(db.Integer, primary_key=True)
     HabitIndex = db.Column(db.Integer, primary_key=True)
     Text = db.Column(db.String(32))
-    Completed = db.Column(db.Boolean)
+    Completed = db.Column(db.Boolean, nullable=False, default=False)
+
+    __table_args__ = (
+        db.ForeignKeyConstraint(
+            ["Username", "DayIndex"], ["days.Username", "days.DayIndex"]
+        ),
+    )
 
 
 @app.route("/", defaults={"path": ""})
@@ -167,7 +198,7 @@ def fetch_books_from_google_api():
     # Make one request to see how many books there are that fit our search criteria, then another request that will use that number to get a random group of books
     number_of_results = requests.get(f"{google_api_url_start}{title_keywords}{author_keywords}{subjects}{preview_filter}{google_books_api_key}&fields=totalItems", headers=gzip_headers).json().get("totalItems")
     if (not number_of_results) or number_of_results <= 0:
-        return json.dumps([])
+        return []
     random_index =  return_index_for_random_batch(number_of_results, MAX_BOOKS_FETCHED)
 
     returned_fields = "&fields=items(id, volumeInfo/title, volumeInfo/subtitle, volumeInfo/authors, volumeInfo/description, \
@@ -179,10 +210,10 @@ def fetch_books_from_google_api():
         # Sometimes the number of results returned is more than the number of results that actually exist. If this happens, we will just start from the beginning.
         response = requests.get(f"{google_api_url_start}{title_keywords}{author_keywords}{subjects}{preview_filter}{google_books_api_key}{returned_fields}&maxResults=40&startIndex=0", headers=gzip_headers)
     if response.json() == {} or response.status_code != 200:
-        return json.dumps([])
+        return []
     
 
-    response = json.dumps(sorted(response.json().get("items"), key= lambda book: book.get("volumeInfo").get("ratingsCount", 0), reverse= True))
+    response = sorted(response.json().get("items"), key= lambda book: book.get("volumeInfo").get("ratingsCount", 0), reverse= True)
     return response
 
 def return_index_for_random_batch(total_items, items_per_batch):

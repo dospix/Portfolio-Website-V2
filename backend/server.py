@@ -101,11 +101,13 @@ class Habits(db.Model):
         ),
     )
 
-
 @app.route("/", defaults={"path": ""})
-@app.route("/<path>")
+@app.route("/<path:path>")
 @cross_origin()
 def serve_react(path):
+    full_path = os.path.join(app.static_folder, path)
+    if path and os.path.isfile(full_path):
+        return send_from_directory(app.static_folder, path)
     return send_from_directory(app.static_folder, "index.html")
 
 

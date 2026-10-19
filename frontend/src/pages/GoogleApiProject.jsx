@@ -161,7 +161,7 @@ export default function GoogleApiProject(props) {
     <div className='mt-12 2xl:mx-80 xl:mx-44 lg:mx-16 md:mx-10 mx-5 md:text-2xl sm:text-xl text-lg font-Open_Sans'>
       <p className="lg:inline">The data from the form below is sent to the Flask server, which makes the request to the Google Books API. </p>
       <p className="lg:inline lg:mt-1 md:mt-3 mt-5">A random sample of books is taken from the results, which is ordered by the number of ratings and then returned to the client side for rendering. </p>
-      <p className="lg:inline lg:mt-1 md:mt-3 mt-5">To prevent form values from being accidentally erased they are saved in sessionStorage as they are inputed.</p>
+      <p className="lg:inline lg:mt-1 md:mt-3 mt-5">To prevent form values from being accidentally erased, they are saved in sessionStorage as they are entered.</p>
     </div>
 
     <div className='lg:mt-20 md:mt-16 sm:mt-14 mt-10 mx-2 flex items-center justify-center text-center'>

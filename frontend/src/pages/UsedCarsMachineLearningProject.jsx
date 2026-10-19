@@ -343,7 +343,7 @@ export default function UsedCarsMachineLearningProject(props) {
 
             <p className="mt-10 mx-3 md:mx-10 text-base md:text-xl font-Open_Sans">
                 The model used to predict car prices is a neural network with an R^2 score of 0.907. 
-                It uses a batch size of 128, 183 epochs, the MSELoss loss function, 0.0048 learning rate and the RMSprop optimizer. 
+                It uses a batch size of 128, 183 epochs, the MSELoss loss function, a 0.0048 learning rate, and the RMSprop optimizer. 
                 It has the following layers:
             </p>
             <ul className="mt-2 mx-12 md:mx-16 text-base md:text-xl font-Open_Sans list-disc">
@@ -364,7 +364,7 @@ export default function UsedCarsMachineLearningProject(props) {
 
             <p className="mt-10 mx-3 md:mx-10 text-base md:text-xl font-Open_Sans">
                 Out of the 23,092 values tested, 98.5% are within 10,000$ of the correct value, 91.6% are within 5,000$ of the correct value, 
-                73.8% are within 2,500$ of the correct value, 39.7% are within 1,000$ of the correct value and 20.8% are within 500$ of the correct value.
+                73.8% are within 2,500$ of the correct value, 39.7% are within 1,000$ of the correct value, and 20.8% are within 500$ of the correct value.
             </p>
             <p className="mt-2 mx-3 md:mx-10 text-base md:text-xl font-Open_Sans">
                 These are great scores considering the dataset that was used to train the model required heavy cleaning, 
@@ -379,7 +379,7 @@ export default function UsedCarsMachineLearningProject(props) {
             <h1 className="mt-10 mx-3 md:mx-10 text-lg md:text-2xl font-medium font-Montserrat">Cleaning the data</h1>
 
             <p className="mt-4 mx-3 md:mx-10 text-base md:text-xl font-Open_Sans">
-                All irrelevant columns were removed. Irrelevant columns are either the ones that can’t be tied to the price (such as id columns) 
+                All irrelevant columns were removed. Irrelevant columns are either the ones that can’t be tied to the price (such as ID columns) 
                 or the ones that are found to have no correlation using a correlation heatmap.
             </p>
             <p className="mt-2 mx-3 md:mx-10 text-base md:text-xl font-Open_Sans">
@@ -387,28 +387,28 @@ export default function UsedCarsMachineLearningProject(props) {
             </p>
 
             <p className="mt-10 mx-3 md:mx-10 text-base md:text-xl font-Open_Sans">
-                Missing values were replaced wherever possible, however there were some instances in which they had to be removed, 
+                Missing values were replaced wherever possible; however, there were some instances in which they had to be removed, 
                 resulting in a small reduction from 247k down to 241k. 
             </p>
             <p className="mt-2 mx-3 md:mx-10 text-base md:text-xl font-Open_Sans">
-                Afterwards string columns were label encoded where it made sense (car condition, number of cylinders, vehicle size).
+                Afterwards, string columns were label encoded where it made sense (car condition, number of cylinders, vehicle size).
             </p>
 
             <h1 className="mt-10 mx-3 md:mx-10 text-lg md:text-2xl font-medium font-Montserrat">Removing outliers</h1>
 
             <p className="mt-4 mx-3 md:mx-10 text-base md:text-xl font-Open_Sans">
-                The dataset had a lot of outliers/inconsistent data, thus removing outliers was done in multiple stages.
+                The dataset had a lot of outliers/inconsistent data; thus, removing outliers was done in multiple stages.
             </p>
             <img className="w-11/12 md:w-7/12 mt-10 mx-3 md:mx-32" src={props.isDarkMode ? outliers_before_plot_white : outliers_before_plot_black} alt="outliers before plot" />
             <p className="mt-2 mx-3 md:mx-10 text-base md:text-xl font-Open_Sans">
-                The first stage was only keeping entries within 3 standard deviations for price, entry_year and odometer.
+                The first stage was only keeping entries within 3 standard deviations for price, entry_year, and odometer.
             </p>
             <p className="mt-2 mx-3 md:mx-10 text-base md:text-xl font-Open_Sans">
-                In the second stage for each car model, only entries that had a price within 2 standard deviations for that particular car model were kept.
+                In the second stage, for each car model, only entries that had a price within 2 standard deviations for that particular car model were kept.
             </p>
             <p className="mt-2 mx-3 md:mx-10 text-base md:text-xl font-Open_Sans">
-                Other ways of removing outliers were tested, however this wielded the best results. 
-                After all stages the number of samples dropped from 241k down to 200k.
+                Other ways of removing outliers were tested; however, this yielded the best results. 
+                After all stages, the number of samples dropped from 241k down to 200k.
             </p>
             <img className="w-11/12 md:w-7/12 mt-10 mx-3 md:mx-32" src={props.isDarkMode ? outliers_after_plot_white : outliers_after_plot_black} alt="outliers after plot" />
 
@@ -416,14 +416,14 @@ export default function UsedCarsMachineLearningProject(props) {
 
             <p className="mt-4 mx-3 md:mx-10 text-base md:text-xl font-Open_Sans">
                 Removing outliers didn’t eliminate all inconsistent data from the dataset, 
-                which is why all cars objectively better than another car but with lower price were removed.
+                which is why all cars objectively better than another car but with a lower price were removed.
             </p>
             <p className="mt-2 mx-3 md:mx-10 text-base md:text-xl font-Open_Sans">
-                A car is defined as objectively better than another if for each of its quantifiable columns it has a better value (lower odometer, better condition etc.) 
-                and if all its non-quantifiable columns are the same (same model, same transmission etc.). 
+                A car is defined as objectively better than another if, for each of its quantifiable columns, it has a better value (lower odometer, better condition, etc.) 
+                and if all its non-quantifiable columns are the same (same model, same transmission, etc.). 
             </p>
             <p className="mt-2 mx-3 md:mx-10 text-base md:text-xl font-Open_Sans">
-                There are some edge cases that can bypass this filter, however these cases can only be removed manually. 
+                There are some edge cases that can bypass this filter; however, these cases can only be removed manually. 
                 After removing objectively better but cheaper cars, the number of samples dropped to 158k.
             </p>
 
@@ -435,9 +435,9 @@ export default function UsedCarsMachineLearningProject(props) {
             <h1 className="mt-10 mx-3 md:mx-10 text-lg md:text-2xl font-medium font-Montserrat">Last steps in data preparation</h1>
 
             <p className="mt-4 mx-3 md:mx-10 text-base md:text-xl font-Open_Sans">
-                A correlation heatmap was created, which is used in the beginning to eliminate irrelevant columns. 
-                The number of cylinders has the lowest correlation to price within the kept features, 
-                however after testing I determined that it was able to make a difference in the price prediction models.
+                A correlation heatmap was created, which was used at the beginning to eliminate irrelevant columns. 
+                The number of cylinders has the lowest correlation to price within the kept features; 
+                however, after testing, I determined that it was able to make a difference in the price prediction models.
             </p>
             <img className="w-11/12 md:w-7/12 mt-10 mx-3 md:mx-32" src={props.isDarkMode ? correlation_heatmap_white : correlation_heatmap_black} alt="correlation heatmap" />
 
@@ -450,28 +450,28 @@ export default function UsedCarsMachineLearningProject(props) {
             <h1 className="mt-10 mx-3 md:mx-10 text-lg md:text-2xl font-medium font-Montserrat">Hyperparameter tuning in phases</h1>
 
             <p className="mt-4 mx-3 md:mx-10 text-base md:text-xl font-Open_Sans">
-                Because it was too time intensive to pick hyperparameters using a complete grid search, picking hyperparameters was done in 3 phases.
+                Because it was too time-intensive to pick hyperparameters using a complete grid search, picking hyperparameters was done in 3 phases.
             </p>
             <ul className="mt-2 mx-8 md:mx-16 text-base md:text-xl font-Open_Sans list-disc">
-                <li>The first phase was testing 1,000 samples with different hyperparameter configurations of linear regression, K neighbors regression, 
-                Support vector regression, Random forest regression and Gradient boosting regression. The top 100 configurations advanced to the next phase.</li>
+                <li>The first phase was testing 1,000 samples with different hyperparameter configurations of linear regression, K-nearest neighbors regression, 
+                Support Vector Regression, Random Forest regression, and Gradient Boosting regression. The top 100 configurations advanced to the next phase.</li>
                 <li className="mt-2">The second phase took the winning configurations from the previous phase and used 10,000 samples to test them. 
                 The top 5 configurations entered the last phase.</li>
-                <li className="mt-2">In the last phase the remaining configurations were tested on all 115,000 samples, and the best configuration was picked.</li>
+                <li className="mt-2">In the last phase, the remaining configurations were tested on all 115,000 samples, and the best configuration was picked.</li>
             </ul>
             <p className="mt-2 mx-3 md:mx-10 text-base md:text-xl font-Open_Sans">
-                The winner was the Gradient boosting regressor with (learning_rate=0.1, max_depth=None, max_features="sqrt", 
+                The winner was the Gradient Boosting Regressor with (learning_rate=0.1, max_depth=None, max_features="sqrt", 
                 min_samples_leaf=2, min_samples_split=10, n_estimators=500). The R^2 score of this model is 0.902.
             </p>
 
             <h1 className="mt-10 mx-3 md:mx-10 text-lg md:text-2xl font-medium font-Montserrat">Tuning hyperparameters for a neural network</h1>
 
             <p className="mt-4 mx-3 md:mx-10 text-base md:text-xl font-Open_Sans">
-                The scikit learn model that won the previous stages was compared with a pytorch neural network optimized for this dataset. 
-                To tune the hyperparameters of the neural network the library optuna was used. 
+                The scikit-learn model that won the previous stages was compared with a PyTorch neural network optimized for this dataset. 
+                To tune the hyperparameters of the neural network, the library Optuna was used. 
             </p>
             <p className="mt-2 mx-3 md:mx-10 text-base md:text-xl font-Open_Sans">
-                The winning neural network is the one described in the “Model performance” section, which had a better R^2 score than the scikit learn model, 
+                The winning neural network is the one described in the “Model performance” section, which had a better R^2 score than the scikit-learn model, 
                 which is why it is used as the final model for predicting used car prices.
             </p>
         </div>

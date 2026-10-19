@@ -268,8 +268,8 @@ export default function MySQLProject(props){
             <h1 className='mt-12 mx-1 sm:mx-4 text-lg md:text-2xl lg:text-3xl text-center font-semibold font-Montserrat'>Using MySQL to Store Your Tasks/Habits</h1>
 
             <div className='mt-24 2xl:mx-80 xl:mx-44 lg:mx-16 md:mx-10 mx-5 md:text-2xl sm:text-xl text-lg font-Open_Sans'>
-                <p className="lg:inline">Once you register/log in you will be able to interact with the project. </p>
-                <p className="lg:inline lg:mt-1 md:mt-3 mt-5">Your username, along with your tasks and habits will be stored in a MySQL database, which is used when updating the states on the page.</p>
+                <p className="lg:inline">Once you register/log in, you will be able to interact with the project. </p>
+                <p className="lg:inline lg:mt-1 md:mt-3 mt-5">Your username, along with your tasks and habits, will be stored in a MySQL database, which is used when updating the states on the page.</p>
             </div>
 
             <form onSubmit={registerAndChangeUser} className="mx-auto mt-16 w-11/12 sm:w-1/2 flex justify-center flex-col font-Open_Sans">

@@ -15,7 +15,7 @@ const projects = [
     {
         key: 1,
         name: "Used Cars Machine Learning Project",
-        description: "Predicting used car prices using pandas, matplotlib, scikit-learn and PyTorch.",
+        description: "Predicting used car prices using pandas, matplotlib, scikit-learn, and PyTorch.",
         image: "images/used-car.jpg",
         path: "/used-cars-machine-learning-project",
         page: <UsedCarsMachineLearningProject />

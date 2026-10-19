@@ -485,7 +485,7 @@ def add_next_mysql_project_day():
 
     # Add the habits from the current day to the newly created day
     for habit in db.session.query(Habits).filter(Habits.Username == curr_user).filter(Habits.DayIndex == day_index - 1).all():
-        coppied_habit = Habits(Username=curr_user, DayIndex=day_index, HabitIndex=habit.HabitIndex, Text=habit.Text, Completed=habit.Completed)
+        coppied_habit = Habits(Username=curr_user, DayIndex=day_index, HabitIndex=habit.HabitIndex, Text=habit.Text, Completed=False)
         db.session.add(coppied_habit)
         db.session.commit()
 
@@ -512,13 +512,13 @@ def update_mysql_project_user_statistics():
     curr_longest_user_task_streak = 0
     curr_longest_user_habit_streak = 0
     for day in db.session.query(Days).filter(Days.Username == curr_user).all():
-        if db.session.query(Tasks).filter(Tasks.Username == curr_user).filter(Tasks.DayIndex == day.DayIndex).filter(Tasks.Completed == False).count() > 0:
+        if db.session.query(Tasks).filter(Tasks.Username == curr_user).filter(Tasks.DayIndex == day.DayIndex).filter(Tasks.Completed == False).count() > 0 or db.session.query(Tasks).filter(Tasks.Username == curr_user).filter(Tasks.DayIndex == day.DayIndex).count() == 0:
             if curr_longest_user_task_streak > longest_user_task_streak:
                 longest_user_task_streak = curr_longest_user_task_streak
             curr_longest_user_task_streak = 0
         else:
             curr_longest_user_task_streak += 1
-        if db.session.query(Habits).filter(Habits.Username == curr_user).filter(Habits.DayIndex == day.DayIndex).filter(Habits.Completed == False).count() > 0:
+        if db.session.query(Habits).filter(Habits.Username == curr_user).filter(Habits.DayIndex == day.DayIndex).filter(Habits.Completed == False).count() > 0 or db.session.query(Habits).filter(Habits.Username == curr_user).filter(Habits.DayIndex == day.DayIndex).count() == 0:
             if curr_longest_user_habit_streak > longest_user_habit_streak:
                 longest_user_habit_streak = curr_longest_user_habit_streak
             curr_longest_user_habit_streak = 0
